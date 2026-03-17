@@ -1,0 +1,14 @@
+{
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "supabase@claude-plugins-official": true,
+    "guardian@the-pantheon": true,
+    "product-forge@the-forge": true,
+    "forge-memory@the-forge": true,
+    "context7@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  }
+}

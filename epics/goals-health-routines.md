@@ -1,5 +1,5 @@
 ---
-title: "Goals & Health Routines"
+title: Goals & Health Routines
 type: epic
 status: Planning
 product: My Life App
@@ -9,12 +9,23 @@ team: null
 jira_card: null
 parent: null
 children:
-  []
-description: "Goals management screen supporting arbitrary goal types (financial, personal, strategic) with flexible data model, and health routines screen for exercise tracking and health goals. Both modules aggregate status to the main dashboard."
+- story-020-goal-data-model-and-crud-operations.md
+- story-021-goals-screen-layout-and-list-view.md
+- story-022-goal-creation-form.md
+- story-023-goal-progress-update-and-completion.md
+- story-024-health-routine-data-model-and-crud-operations.md
+- story-025-health-routines-screen-layout.md
+- story-026-health-routine-logging-and-metrics-entry.md
+- story-027-health-routine-streak-calculation.md
+- story-028-dashboard-goals-aggregation-widget.md
+- story-029-dashboard-health-routines-aggregation-widget.md
+description: Goals management screen supporting arbitrary goal types (financial, personal,
+  strategic) with flexible data model, and health routines screen for exercise tracking
+  and health goals. Both modules aggregate status to the main dashboard.
 source_intake: null
 source_conversation: null
 created: 2026-03-17
-updated: 2026-03-17
+updated: '2026-03-17'
 ---
 
 ## Background/Context

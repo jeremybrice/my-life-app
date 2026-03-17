@@ -1,5 +1,5 @@
 ---
-title: "Budget Module"
+title: Budget Module
 type: epic
 status: Planning
 product: My Life App
@@ -9,12 +9,25 @@ team: null
 jira_card: null
 parent: null
 children:
-  []
-description: "Full-featured budget tracking module ported from the Daily Budget Tracker. Monthly budget divided into daily amounts, color-coded balances, carry-over between months, additional funds, expense entry with categorization, month selector, summary reports, and monthly chaining."
+- story-009-budget-month-data-model-and-crud-operations.md
+- story-010-expense-data-model-and-crud-operations.md
+- story-011-budget-screen-layout-and-balance-display.md
+- story-012-expense-entry-form.md
+- story-013-expense-table-with-daily-grouping.md
+- story-014-expense-edit-and-delete.md
+- story-015-month-selector-and-historical-viewing.md
+- story-016-carry-over-and-monthly-chaining-logic.md
+- story-017-additional-funds-management.md
+- story-018-summary-reports-category-and-vendor-breakdown.md
+- story-019-dashboard-budget-cards-integration.md
+description: Full-featured budget tracking module ported from the Daily Budget Tracker.
+  Monthly budget divided into daily amounts, color-coded balances, carry-over between
+  months, additional funds, expense entry with categorization, month selector, summary
+  reports, and monthly chaining.
 source_intake: null
 source_conversation: null
 created: 2026-03-17
-updated: 2026-03-17
+updated: '2026-03-17'
 ---
 
 ## Background/Context

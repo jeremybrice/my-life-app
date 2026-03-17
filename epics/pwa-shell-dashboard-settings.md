@@ -1,5 +1,5 @@
 ---
-title: "PWA Shell, Dashboard & Settings"
+title: PWA Shell, Dashboard & Settings
 type: epic
 status: Planning
 product: My Life App
@@ -9,12 +9,22 @@ team: null
 jira_card: null
 parent: null
 children:
-  []
-description: "Foundational PWA infrastructure including service worker, manifest, IndexedDB schema design, main dashboard with configurable milestone countdown, daily budget and monthly performance summary cards, and a settings screen for API key, birth date, target dates, and budget configuration."
+- story-001-pwa-manifest-and-service-worker-setup.md
+- story-002-indexeddb-schema-design-and-initialization.md
+- story-003-app-shell-and-navigation-structure.md
+- story-004-settings-screen.md
+- story-005-dashboard-milestone-countdown.md
+- story-006-dashboard-budget-summary-cards-shell.md
+- story-007-dashboard-aggregation-slots-for-goals-and-health.md
+- story-008-offline-capability-verification.md
+description: Foundational PWA infrastructure including service worker, manifest, IndexedDB
+  schema design, main dashboard with configurable milestone countdown, daily budget
+  and monthly performance summary cards, and a settings screen for API key, birth
+  date, target dates, and budget configuration.
 source_intake: null
 source_conversation: null
 created: 2026-03-17
-updated: 2026-03-17
+updated: '2026-03-17'
 ---
 
 ## Background/Context

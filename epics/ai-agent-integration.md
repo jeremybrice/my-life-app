@@ -1,5 +1,5 @@
 ---
-title: "AI Agent Integration"
+title: AI Agent Integration
 type: epic
 status: Planning
 product: My Life App
@@ -9,12 +9,23 @@ team: null
 jira_card: null
 parent: null
 children:
-  []
-description: "Claude API chat interface within the app supporting text and image/receipt input for conversational data entry. The agent writes to the same data stores as manual forms, handles natural language expense logging, and degrades gracefully when the API is unreachable."
+- story-030-chat-ui-layout-and-message-thread.md
+- story-031-claude-api-client-integration.md
+- story-032-network-connectivity-detection-and-graceful-degrad.md
+- story-033-api-key-validation.md
+- story-034-natural-language-expense-parsing.md
+- story-035-expense-confirmation-and-data-store-write.md
+- story-036-image-upload-and-receipt-processing.md
+- story-037-transient-image-handling-and-user-disclosure.md
+- story-038-conversation-context-management.md
+description: Claude API chat interface within the app supporting text and image/receipt
+  input for conversational data entry. The agent writes to the same data stores as
+  manual forms, handles natural language expense logging, and degrades gracefully
+  when the API is unreachable.
 source_intake: null
 source_conversation: null
 created: 2026-03-17
-updated: 2026-03-17
+updated: '2026-03-17'
 ---
 
 ## Background/Context

@@ -1,5 +1,5 @@
 ---
-title: "Notifications, Import/Export & Polish"
+title: Notifications, Import/Export & Polish
 type: epic
 status: Planning
 product: My Life App
@@ -9,12 +9,24 @@ team: null
 jira_card: null
 parent: null
 children:
-  []
-description: "Push and badge notifications for budget thresholds and milestone alerts, browser capability detection for notification support, full data import/export for backup, cross-browser testing, and UX polish for release readiness."
+- story-039-notification-permission-request-flow.md
+- story-040-browser-notification-capability-detection.md
+- story-041-budget-threshold-alert-notifications.md
+- story-042-milestone-countdown-alert-notifications.md
+- story-043-badge-notification-updates.md
+- story-044-in-app-notification-fallback.md
+- story-045-data-export-to-file.md
+- story-046-data-import-from-file.md
+- story-047-cross-browser-testing-and-fixes.md
+- story-048-ux-polish-pass.md
+- story-049-notification-threshold-settings-ui.md
+description: Push and badge notifications for budget thresholds and milestone alerts,
+  browser capability detection for notification support, full data import/export for
+  backup, cross-browser testing, and UX polish for release readiness.
 source_intake: null
 source_conversation: null
 created: 2026-03-17
-updated: 2026-03-17
+updated: '2026-03-17'
 ---
 
 ## Background/Context
