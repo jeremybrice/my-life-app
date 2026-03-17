@@ -1,5 +1,5 @@
 ---
-title: "My Life App - Personal Life Management"
+title: My Life App - Personal Life Management
 type: intake
 status: Submitted
 product: My Life App
@@ -9,13 +9,13 @@ team: null
 source: Founder/Owner direct request
 requested_by: Jeremy Brice
 priority: High
-generated_initiatives:
-  []
-generated_epics:
-  []
+generated_initiatives: []
+generated_epics: []
 source_conversation: null
 created: 2026-03-17
-updated: 2026-03-17
+updated: '2026-03-17'
+children:
+- my-life-app-v1-personal-life-management-pwa.md
 ---
 
 ## Intake Summary

@@ -15,7 +15,10 @@
       "requested_by": "Jeremy Brice",
       "priority": "High",
       "created": "2026-03-17",
-      "updated": "2026-03-17"
+      "updated": "2026-03-17",
+      "children": [
+        "my-life-app-v1-personal-life-management-pwa.md"
+      ]
     }
   ]
 }

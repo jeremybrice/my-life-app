@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "plugin": "",
+  "updated": "2026-03-17",
+  "entries": [
+    {
+      "file": "pwa-shell-dashboard-settings.md",
+      "type": "epic",
+      "title": "PWA Shell, Dashboard & Settings",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Core Infrastructure",
+      "client": null,
+      "team": null,
+      "description": "Foundational PWA infrastructure including service worker, manifest, IndexedDB schema design, main dashboard with configurable milestone countdown, daily budget and monthly performance summary cards, and a settings screen for API key, birth date, target dates, and budget configuration.",
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "budget-module.md",
+      "type": "epic",
+      "title": "Budget Module",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Budget",
+      "client": null,
+      "team": null,
+      "description": "Full-featured budget tracking module ported from the Daily Budget Tracker. Monthly budget divided into daily amounts, color-coded balances, carry-over between months, additional funds, expense entry with categorization, month selector, summary reports, and monthly chaining.",
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "goals-health-routines.md",
+      "type": "epic",
+      "title": "Goals & Health Routines",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Goals & Health",
+      "client": null,
+      "team": null,
+      "description": "Goals management screen supporting arbitrary goal types (financial, personal, strategic) with flexible data model, and health routines screen for exercise tracking and health goals. Both modules aggregate status to the main dashboard.",
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "ai-agent-integration.md",
+      "type": "epic",
+      "title": "AI Agent Integration",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "AI Agent",
+      "client": null,
+      "team": null,
+      "description": "Claude API chat interface within the app supporting text and image/receipt input for conversational data entry. The agent writes to the same data stores as manual forms, handles natural language expense logging, and degrades gracefully when the API is unreachable.",
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "notifications-importexport-polish.md",
+      "type": "epic",
+      "title": "Notifications, Import/Export & Polish",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Platform",
+      "client": null,
+      "team": null,
+      "description": "Push and badge notifications for budget thresholds and milestone alerts, browser capability detection for notification support, full data import/export for backup, cross-browser testing, and UX polish for release readiness.",
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    }
+  ]
+}
