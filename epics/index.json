@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0",
+  "plugin": "",
+  "updated": "2026-03-17",
+  "entries": [
+    {
+      "file": "pwa-shell-dashboard-settings.md",
+      "type": "epic",
+      "title": "PWA Shell, Dashboard & Settings",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Core Infrastructure",
+      "client": null,
+      "team": null,
+      "description": "Foundational PWA infrastructure including service worker, manifest, IndexedDB schema design, main dashboard with configurable milestone countdown, daily budget and monthly performance summary cards, and a settings screen for API key, birth date, target dates, and budget configuration.",
+      "created": "2026-03-17",
+      "updated": "2026-03-17",
+      "children": [
+        "story-001-pwa-manifest-and-service-worker-setup.md",
+        "story-002-indexeddb-schema-design-and-initialization.md",
+        "story-003-app-shell-and-navigation-structure.md",
+        "story-004-settings-screen.md",
+        "story-005-dashboard-milestone-countdown.md",
+        "story-006-dashboard-budget-summary-cards-shell.md",
+        "story-007-dashboard-aggregation-slots-for-goals-and-health.md",
+        "story-008-offline-capability-verification.md"
+      ]
+    },
+    {
+      "file": "budget-module.md",
+      "type": "epic",
+      "title": "Budget Module",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Budget",
+      "client": null,
+      "team": null,
+      "description": "Full-featured budget tracking module ported from the Daily Budget Tracker. Monthly budget divided into daily amounts, color-coded balances, carry-over between months, additional funds, expense entry with categorization, month selector, summary reports, and monthly chaining.",
+      "created": "2026-03-17",
+      "updated": "2026-03-17",
+      "children": [
+        "story-009-budget-month-data-model-and-crud-operations.md",
+        "story-010-expense-data-model-and-crud-operations.md",
+        "story-011-budget-screen-layout-and-balance-display.md",
+        "story-012-expense-entry-form.md",
+        "story-013-expense-table-with-daily-grouping.md",
+        "story-014-expense-edit-and-delete.md",
+        "story-015-month-selector-and-historical-viewing.md",
+        "story-016-carry-over-and-monthly-chaining-logic.md",
+        "story-017-additional-funds-management.md",
+        "story-018-summary-reports-category-and-vendor-breakdown.md",
+        "story-019-dashboard-budget-cards-integration.md"
+      ]
+    },
+    {
+      "file": "goals-health-routines.md",
+      "type": "epic",
+      "title": "Goals & Health Routines",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Goals & Health",
+      "client": null,
+      "team": null,
+      "description": "Goals management screen supporting arbitrary goal types (financial, personal, strategic) with flexible data model, and health routines screen for exercise tracking and health goals. Both modules aggregate status to the main dashboard.",
+      "created": "2026-03-17",
+      "updated": "2026-03-17",
+      "children": [
+        "story-020-goal-data-model-and-crud-operations.md",
+        "story-021-goals-screen-layout-and-list-view.md",
+        "story-022-goal-creation-form.md",
+        "story-023-goal-progress-update-and-completion.md",
+        "story-024-health-routine-data-model-and-crud-operations.md",
+        "story-025-health-routines-screen-layout.md",
+        "story-026-health-routine-logging-and-metrics-entry.md",
+        "story-027-health-routine-streak-calculation.md",
+        "story-028-dashboard-goals-aggregation-widget.md",
+        "story-029-dashboard-health-routines-aggregation-widget.md"
+      ]
+    },
+    {
+      "file": "ai-agent-integration.md",
+      "type": "epic",
+      "title": "AI Agent Integration",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "AI Agent",
+      "client": null,
+      "team": null,
+      "description": "Claude API chat interface within the app supporting text and image/receipt input for conversational data entry. The agent writes to the same data stores as manual forms, handles natural language expense logging, and degrades gracefully when the API is unreachable.",
+      "created": "2026-03-17",
+      "updated": "2026-03-17",
+      "children": [
+        "story-030-chat-ui-layout-and-message-thread.md",
+        "story-031-claude-api-client-integration.md",
+        "story-032-network-connectivity-detection-and-graceful-degrad.md",
+        "story-033-api-key-validation.md",
+        "story-034-natural-language-expense-parsing.md",
+        "story-035-expense-confirmation-and-data-store-write.md",
+        "story-036-image-upload-and-receipt-processing.md",
+        "story-037-transient-image-handling-and-user-disclosure.md",
+        "story-038-conversation-context-management.md"
+      ]
+    },
+    {
+      "file": "notifications-importexport-polish.md",
+      "type": "epic",
+      "title": "Notifications, Import/Export & Polish",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Platform",
+      "client": null,
+      "team": null,
+      "description": "Push and badge notifications for budget thresholds and milestone alerts, browser capability detection for notification support, full data import/export for backup, cross-browser testing, and UX polish for release readiness.",
+      "created": "2026-03-17",
+      "updated": "2026-03-17",
+      "children": [
+        "story-039-notification-permission-request-flow.md",
+        "story-040-browser-notification-capability-detection.md",
+        "story-041-budget-threshold-alert-notifications.md",
+        "story-042-milestone-countdown-alert-notifications.md",
+        "story-043-badge-notification-updates.md",
+        "story-044-in-app-notification-fallback.md",
+        "story-045-data-export-to-file.md",
+        "story-046-data-import-from-file.md",
+        "story-047-cross-browser-testing-and-fixes.md",
+        "story-048-ux-polish-pass.md",
+        "story-049-notification-threshold-settings-ui.md"
+      ]
+    }
+  ]
+}
