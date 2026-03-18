@@ -1,1 +1,126 @@
-{"cards": [], "last_updated": "2026-03-17"}
+{
+  "schema_version": "1.0",
+  "plugin": "",
+  "updated": "2026-03-17",
+  "entries": [
+    {
+      "file": "budget-module.md",
+      "type": "epic",
+      "title": "Budget Module",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Budget",
+      "client": null,
+      "parent": "my-life-app-v1-personal-life-management-pwa",
+      "children": [
+        "story-009-budget-month-data-model-and-crud-operations",
+        "story-010-expense-data-model-and-crud-operations",
+        "story-011-budget-screen-layout-and-balance-display",
+        "story-012-expense-entry-form",
+        "story-013-expense-table-with-daily-grouping",
+        "story-014-expense-edit-and-delete",
+        "story-015-month-selector-and-historical-viewing",
+        "story-016-carry-over-and-monthly-chaining-logic",
+        "story-017-additional-funds-management",
+        "story-018-summary-reports-category-and-vendor-breakdown",
+        "story-019-dashboard-budget-cards-integration"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "goals-health-routines.md",
+      "type": "epic",
+      "title": "Goals & Health Routines",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Goals & Health",
+      "client": null,
+      "parent": "my-life-app-v1-personal-life-management-pwa",
+      "children": [
+        "story-020-goal-data-model-and-crud-operations",
+        "story-021-goals-screen-layout-and-list-view",
+        "story-022-goal-creation-form",
+        "story-023-goal-progress-update-and-completion",
+        "story-024-health-routine-data-model-and-crud-operations",
+        "story-025-health-routines-screen-layout",
+        "story-026-health-routine-logging-and-metrics-entry",
+        "story-027-health-routine-streak-calculation",
+        "story-028-dashboard-goals-aggregation-widget",
+        "story-029-dashboard-health-routines-aggregation-widget"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "ai-agent-integration.md",
+      "type": "epic",
+      "title": "AI Agent Integration",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "AI Agent",
+      "client": null,
+      "parent": "my-life-app-v1-personal-life-management-pwa",
+      "children": [
+        "story-030-chat-ui-layout-and-message-thread",
+        "story-031-claude-api-client-integration",
+        "story-032-network-connectivity-detection-and-graceful-degrad",
+        "story-033-api-key-validation",
+        "story-034-natural-language-expense-parsing",
+        "story-035-expense-confirmation-and-data-store-write",
+        "story-036-image-upload-and-receipt-processing",
+        "story-037-transient-image-handling-and-user-disclosure",
+        "story-038-conversation-context-management"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "pwa-shell-dashboard-settings.md",
+      "type": "epic",
+      "title": "PWA Shell, Dashboard & Settings",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Core Infrastructure",
+      "client": null,
+      "parent": "my-life-app-v1-personal-life-management-pwa",
+      "children": [
+        "story-001-pwa-manifest-and-service-worker-setup",
+        "story-002-indexeddb-schema-design-and-initialization",
+        "story-003-app-shell-and-navigation-structure",
+        "story-004-settings-screen",
+        "story-005-dashboard-milestone-countdown",
+        "story-006-dashboard-budget-summary-cards-shell",
+        "story-007-dashboard-aggregation-slots-for-goals-and-health",
+        "story-008-offline-capability-verification"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "notifications-importexport-polish.md",
+      "type": "epic",
+      "title": "Notifications, Import/Export & Polish",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Platform",
+      "client": null,
+      "parent": "my-life-app-v1-personal-life-management-pwa",
+      "children": [
+        "story-039-notification-permission-request-flow",
+        "story-040-browser-notification-capability-detection",
+        "story-041-budget-threshold-alert-notifications",
+        "story-042-milestone-countdown-alert-notifications",
+        "story-043-badge-notification-updates",
+        "story-044-in-app-notification-fallback",
+        "story-045-data-export-to-file",
+        "story-046-data-import-from-file",
+        "story-047-cross-browser-testing-and-fixes",
+        "story-048-ux-polish-pass",
+        "story-049-notification-threshold-settings-ui"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    }
+  ]
+}

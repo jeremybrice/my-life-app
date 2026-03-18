@@ -1,1 +1,25 @@
-{"cards": [], "last_updated": "2026-03-17"}
+{
+  "schema_version": "1.0",
+  "plugin": "",
+  "updated": "2026-03-17",
+  "entries": [
+    {
+      "file": "my-life-app-v1-personal-life-management-pwa.md",
+      "type": "initiative",
+      "title": "My Life App v1: Personal Life Management PWA",
+      "status": "Draft",
+      "product": "My Life App",
+      "module": null,
+      "client": null,
+      "children": [
+        "pwa-shell-dashboard-settings",
+        "budget-module",
+        "goals-health-routines",
+        "ai-agent-integration",
+        "notifications-importexport-polish"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    }
+  ]
+}

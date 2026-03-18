@@ -4,7 +4,40 @@
   "updated": "2026-03-17",
   "entries": [
     {
-      "file": "story-028-dashboard-goals-aggregation-widget.md",
+      "file": "intakes/intake-my-life-app-personal-life-management.md",
+      "type": "intake",
+      "title": "My Life App - Personal Life Management",
+      "status": "Submitted",
+      "product": "My Life App",
+      "module": null,
+      "client": null,
+      "children": [
+        "my-life-app-v1-personal-life-management-pwa.md"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17",
+      "priority": "High"
+    },
+    {
+      "file": "initiatives/my-life-app-v1-personal-life-management-pwa.md",
+      "type": "initiative",
+      "title": "My Life App v1: Personal Life Management PWA",
+      "status": "Draft",
+      "product": "My Life App",
+      "module": null,
+      "client": null,
+      "children": [
+        "pwa-shell-dashboard-settings",
+        "budget-module",
+        "goals-health-routines",
+        "ai-agent-integration",
+        "notifications-importexport-polish"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "stories/story-028-dashboard-goals-aggregation-widget.md",
       "type": "story",
       "title": "Dashboard Goals Aggregation Widget",
       "status": "Draft",
@@ -16,7 +49,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-003-app-shell-and-navigation-structure.md",
+      "file": "stories/story-003-app-shell-and-navigation-structure.md",
       "type": "story",
       "title": "App Shell and Navigation Structure",
       "status": "Draft",
@@ -28,7 +61,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-040-browser-notification-capability-detection.md",
+      "file": "stories/story-040-browser-notification-capability-detection.md",
       "type": "story",
       "title": "Browser Notification Capability Detection",
       "status": "Draft",
@@ -40,7 +73,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-011-budget-screen-layout-and-balance-display.md",
+      "file": "stories/story-011-budget-screen-layout-and-balance-display.md",
       "type": "story",
       "title": "Budget Screen Layout and Balance Display",
       "status": "Draft",
@@ -52,7 +85,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-037-transient-image-handling-and-user-disclosure.md",
+      "file": "stories/story-037-transient-image-handling-and-user-disclosure.md",
       "type": "story",
       "title": "Transient Image Handling and User Disclosure",
       "status": "Draft",
@@ -64,7 +97,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-045-data-export-to-file.md",
+      "file": "stories/story-045-data-export-to-file.md",
       "type": "story",
       "title": "Data Export to File",
       "status": "Draft",
@@ -76,7 +109,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-025-health-routines-screen-layout.md",
+      "file": "stories/story-025-health-routines-screen-layout.md",
       "type": "story",
       "title": "Health Routines Screen Layout",
       "status": "Draft",
@@ -88,7 +121,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-013-expense-table-with-daily-grouping.md",
+      "file": "stories/story-013-expense-table-with-daily-grouping.md",
       "type": "story",
       "title": "Expense Table with Daily Grouping",
       "status": "Draft",
@@ -100,7 +133,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-004-settings-screen.md",
+      "file": "stories/story-004-settings-screen.md",
       "type": "story",
       "title": "Settings Screen",
       "status": "Draft",
@@ -112,7 +145,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-042-milestone-countdown-alert-notifications.md",
+      "file": "stories/story-042-milestone-countdown-alert-notifications.md",
       "type": "story",
       "title": "Milestone Countdown Alert Notifications",
       "status": "Draft",
@@ -124,7 +157,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-017-additional-funds-management.md",
+      "file": "stories/story-017-additional-funds-management.md",
       "type": "story",
       "title": "Additional Funds Management",
       "status": "Draft",
@@ -136,7 +169,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-005-dashboard-milestone-countdown.md",
+      "file": "stories/story-005-dashboard-milestone-countdown.md",
       "type": "story",
       "title": "Dashboard Milestone Countdown",
       "status": "Draft",
@@ -148,7 +181,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-026-health-routine-logging-and-metrics-entry.md",
+      "file": "stories/story-026-health-routine-logging-and-metrics-entry.md",
       "type": "story",
       "title": "Health Routine Logging and Metrics Entry",
       "status": "Draft",
@@ -160,7 +193,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-046-data-import-from-file.md",
+      "file": "stories/story-046-data-import-from-file.md",
       "type": "story",
       "title": "Data Import from File",
       "status": "Draft",
@@ -172,7 +205,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-048-ux-polish-pass.md",
+      "file": "stories/story-048-ux-polish-pass.md",
       "type": "story",
       "title": "UX Polish Pass",
       "status": "Draft",
@@ -184,7 +217,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-022-goal-creation-form.md",
+      "file": "stories/story-022-goal-creation-form.md",
       "type": "story",
       "title": "Goal Creation Form",
       "status": "Draft",
@@ -196,7 +229,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-030-chat-ui-layout-and-message-thread.md",
+      "file": "stories/story-030-chat-ui-layout-and-message-thread.md",
       "type": "story",
       "title": "Chat UI Layout and Message Thread",
       "status": "Draft",
@@ -208,7 +241,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-033-api-key-validation.md",
+      "file": "stories/story-033-api-key-validation.md",
       "type": "story",
       "title": "API Key Validation",
       "status": "Draft",
@@ -220,7 +253,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-038-conversation-context-management.md",
+      "file": "stories/story-038-conversation-context-management.md",
       "type": "story",
       "title": "Conversation Context Management",
       "status": "Draft",
@@ -232,7 +265,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-035-expense-confirmation-and-data-store-write.md",
+      "file": "stories/story-035-expense-confirmation-and-data-store-write.md",
       "type": "story",
       "title": "Expense Confirmation and Data Store Write",
       "status": "Draft",
@@ -244,7 +277,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-019-dashboard-budget-cards-integration.md",
+      "file": "stories/story-019-dashboard-budget-cards-integration.md",
       "type": "story",
       "title": "Dashboard Budget Cards Integration",
       "status": "Draft",
@@ -256,7 +289,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-039-notification-permission-request-flow.md",
+      "file": "stories/story-039-notification-permission-request-flow.md",
       "type": "story",
       "title": "Notification Permission Request Flow",
       "status": "Draft",
@@ -268,7 +301,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-031-claude-api-client-integration.md",
+      "file": "stories/story-031-claude-api-client-integration.md",
       "type": "story",
       "title": "Claude API Client Integration",
       "status": "Draft",
@@ -280,7 +313,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-036-image-upload-and-receipt-processing.md",
+      "file": "stories/story-036-image-upload-and-receipt-processing.md",
       "type": "story",
       "title": "Image Upload and Receipt Processing",
       "status": "Draft",
@@ -292,7 +325,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-027-health-routine-streak-calculation.md",
+      "file": "stories/story-027-health-routine-streak-calculation.md",
       "type": "story",
       "title": "Health Routine Streak Calculation",
       "status": "Draft",
@@ -304,7 +337,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-010-expense-data-model-and-crud-operations.md",
+      "file": "stories/story-010-expense-data-model-and-crud-operations.md",
       "type": "story",
       "title": "Expense Data Model and CRUD Operations",
       "status": "Draft",
@@ -316,7 +349,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-009-budget-month-data-model-and-crud-operations.md",
+      "file": "stories/story-009-budget-month-data-model-and-crud-operations.md",
       "type": "story",
       "title": "Budget Month Data Model and CRUD Operations",
       "status": "Draft",
@@ -328,7 +361,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-016-carry-over-and-monthly-chaining-logic.md",
+      "file": "stories/story-016-carry-over-and-monthly-chaining-logic.md",
       "type": "story",
       "title": "Carry-Over and Monthly Chaining Logic",
       "status": "Draft",
@@ -340,7 +373,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-029-dashboard-health-routines-aggregation-widget.md",
+      "file": "stories/story-029-dashboard-health-routines-aggregation-widget.md",
       "type": "story",
       "title": "Dashboard Health Routines Aggregation Widget",
       "status": "Draft",
@@ -352,7 +385,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-008-offline-capability-verification.md",
+      "file": "stories/story-008-offline-capability-verification.md",
       "type": "story",
       "title": "Offline Capability Verification",
       "status": "Draft",
@@ -364,7 +397,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-047-cross-browser-testing-and-fixes.md",
+      "file": "stories/story-047-cross-browser-testing-and-fixes.md",
       "type": "story",
       "title": "Cross-Browser Testing and Fixes",
       "status": "Draft",
@@ -376,7 +409,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-021-goals-screen-layout-and-list-view.md",
+      "file": "stories/story-021-goals-screen-layout-and-list-view.md",
       "type": "story",
       "title": "Goals Screen Layout and List View",
       "status": "Draft",
@@ -388,7 +421,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-032-network-connectivity-detection-and-graceful-degrad.md",
+      "file": "stories/story-032-network-connectivity-detection-and-graceful-degrad.md",
       "type": "story",
       "title": "Network Connectivity Detection and Graceful Degradation",
       "status": "Draft",
@@ -400,7 +433,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-002-indexeddb-schema-design-and-initialization.md",
+      "file": "stories/story-002-indexeddb-schema-design-and-initialization.md",
       "type": "story",
       "title": "IndexedDB Schema Design and Initialization",
       "status": "Draft",
@@ -412,7 +445,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-034-natural-language-expense-parsing.md",
+      "file": "stories/story-034-natural-language-expense-parsing.md",
       "type": "story",
       "title": "Natural Language Expense Parsing",
       "status": "Draft",
@@ -424,7 +457,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-020-goal-data-model-and-crud-operations.md",
+      "file": "stories/story-020-goal-data-model-and-crud-operations.md",
       "type": "story",
       "title": "Goal Data Model and CRUD Operations",
       "status": "Draft",
@@ -436,7 +469,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-043-badge-notification-updates.md",
+      "file": "stories/story-043-badge-notification-updates.md",
       "type": "story",
       "title": "Badge Notification Updates",
       "status": "Draft",
@@ -448,7 +481,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-001-pwa-manifest-and-service-worker-setup.md",
+      "file": "stories/story-001-pwa-manifest-and-service-worker-setup.md",
       "type": "story",
       "title": "PWA Manifest and Service Worker Setup",
       "status": "Draft",
@@ -460,7 +493,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-007-dashboard-aggregation-slots-for-goals-and-health.md",
+      "file": "stories/story-007-dashboard-aggregation-slots-for-goals-and-health.md",
       "type": "story",
       "title": "Dashboard Aggregation Slots for Goals and Health",
       "status": "Draft",
@@ -472,7 +505,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-044-in-app-notification-fallback.md",
+      "file": "stories/story-044-in-app-notification-fallback.md",
       "type": "story",
       "title": "In-App Notification Fallback",
       "status": "Draft",
@@ -484,7 +517,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-014-expense-edit-and-delete.md",
+      "file": "stories/story-014-expense-edit-and-delete.md",
       "type": "story",
       "title": "Expense Edit and Delete",
       "status": "Draft",
@@ -496,7 +529,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-041-budget-threshold-alert-notifications.md",
+      "file": "stories/story-041-budget-threshold-alert-notifications.md",
       "type": "story",
       "title": "Budget Threshold Alert Notifications",
       "status": "Draft",
@@ -508,7 +541,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-015-month-selector-and-historical-viewing.md",
+      "file": "stories/story-015-month-selector-and-historical-viewing.md",
       "type": "story",
       "title": "Month Selector and Historical Viewing",
       "status": "Draft",
@@ -520,7 +553,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-049-notification-threshold-settings-ui.md",
+      "file": "stories/story-049-notification-threshold-settings-ui.md",
       "type": "story",
       "title": "Notification Threshold Settings UI",
       "status": "Draft",
@@ -532,7 +565,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-012-expense-entry-form.md",
+      "file": "stories/story-012-expense-entry-form.md",
       "type": "story",
       "title": "Expense Entry Form",
       "status": "Draft",
@@ -544,7 +577,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-024-health-routine-data-model-and-crud-operations.md",
+      "file": "stories/story-024-health-routine-data-model-and-crud-operations.md",
       "type": "story",
       "title": "Health Routine Data Model and CRUD Operations",
       "status": "Draft",
@@ -556,7 +589,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-018-summary-reports-category-and-vendor-breakdown.md",
+      "file": "stories/story-018-summary-reports-category-and-vendor-breakdown.md",
       "type": "story",
       "title": "Summary Reports Category and Vendor Breakdown",
       "status": "Draft",
@@ -568,7 +601,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-023-goal-progress-update-and-completion.md",
+      "file": "stories/story-023-goal-progress-update-and-completion.md",
       "type": "story",
       "title": "Goal Progress Update and Completion",
       "status": "Draft",
@@ -580,7 +613,7 @@
       "updated": "2026-03-17"
     },
     {
-      "file": "story-006-dashboard-budget-summary-cards-shell.md",
+      "file": "stories/story-006-dashboard-budget-summary-cards-shell.md",
       "type": "story",
       "title": "Dashboard Budget Summary Cards Shell",
       "status": "Draft",
@@ -588,6 +621,125 @@
       "module": "Core Infrastructure",
       "client": null,
       "parent": "pwa-shell-dashboard-settings",
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "epics/budget-module.md",
+      "type": "epic",
+      "title": "Budget Module",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Budget",
+      "client": null,
+      "parent": "my-life-app-v1-personal-life-management-pwa",
+      "children": [
+        "story-009-budget-month-data-model-and-crud-operations",
+        "story-010-expense-data-model-and-crud-operations",
+        "story-011-budget-screen-layout-and-balance-display",
+        "story-012-expense-entry-form",
+        "story-013-expense-table-with-daily-grouping",
+        "story-014-expense-edit-and-delete",
+        "story-015-month-selector-and-historical-viewing",
+        "story-016-carry-over-and-monthly-chaining-logic",
+        "story-017-additional-funds-management",
+        "story-018-summary-reports-category-and-vendor-breakdown",
+        "story-019-dashboard-budget-cards-integration"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "epics/goals-health-routines.md",
+      "type": "epic",
+      "title": "Goals & Health Routines",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Goals & Health",
+      "client": null,
+      "parent": "my-life-app-v1-personal-life-management-pwa",
+      "children": [
+        "story-020-goal-data-model-and-crud-operations",
+        "story-021-goals-screen-layout-and-list-view",
+        "story-022-goal-creation-form",
+        "story-023-goal-progress-update-and-completion",
+        "story-024-health-routine-data-model-and-crud-operations",
+        "story-025-health-routines-screen-layout",
+        "story-026-health-routine-logging-and-metrics-entry",
+        "story-027-health-routine-streak-calculation",
+        "story-028-dashboard-goals-aggregation-widget",
+        "story-029-dashboard-health-routines-aggregation-widget"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "epics/ai-agent-integration.md",
+      "type": "epic",
+      "title": "AI Agent Integration",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "AI Agent",
+      "client": null,
+      "parent": "my-life-app-v1-personal-life-management-pwa",
+      "children": [
+        "story-030-chat-ui-layout-and-message-thread",
+        "story-031-claude-api-client-integration",
+        "story-032-network-connectivity-detection-and-graceful-degrad",
+        "story-033-api-key-validation",
+        "story-034-natural-language-expense-parsing",
+        "story-035-expense-confirmation-and-data-store-write",
+        "story-036-image-upload-and-receipt-processing",
+        "story-037-transient-image-handling-and-user-disclosure",
+        "story-038-conversation-context-management"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "epics/pwa-shell-dashboard-settings.md",
+      "type": "epic",
+      "title": "PWA Shell, Dashboard & Settings",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Core Infrastructure",
+      "client": null,
+      "parent": "my-life-app-v1-personal-life-management-pwa",
+      "children": [
+        "story-001-pwa-manifest-and-service-worker-setup",
+        "story-002-indexeddb-schema-design-and-initialization",
+        "story-003-app-shell-and-navigation-structure",
+        "story-004-settings-screen",
+        "story-005-dashboard-milestone-countdown",
+        "story-006-dashboard-budget-summary-cards-shell",
+        "story-007-dashboard-aggregation-slots-for-goals-and-health",
+        "story-008-offline-capability-verification"
+      ],
+      "created": "2026-03-17",
+      "updated": "2026-03-17"
+    },
+    {
+      "file": "epics/notifications-importexport-polish.md",
+      "type": "epic",
+      "title": "Notifications, Import/Export & Polish",
+      "status": "Planning",
+      "product": "My Life App",
+      "module": "Platform",
+      "client": null,
+      "parent": "my-life-app-v1-personal-life-management-pwa",
+      "children": [
+        "story-039-notification-permission-request-flow",
+        "story-040-browser-notification-capability-detection",
+        "story-041-budget-threshold-alert-notifications",
+        "story-042-milestone-countdown-alert-notifications",
+        "story-043-badge-notification-updates",
+        "story-044-in-app-notification-fallback",
+        "story-045-data-export-to-file",
+        "story-046-data-import-from-file",
+        "story-047-cross-browser-testing-and-fixes",
+        "story-048-ux-polish-pass",
+        "story-049-notification-threshold-settings-ui"
+      ],
       "created": "2026-03-17",
       "updated": "2026-03-17"
     }
