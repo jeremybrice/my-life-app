@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Life App - Offline</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8fafc;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .container {
+      text-align: center;
+      max-width: 24rem;
+    }
+    .icon {
+      width: 4rem;
+      height: 4rem;
+      margin: 0 auto 1.5rem;
+      color: #94a3b8;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+    button {
+      padding: 0.625rem 1.5rem;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.15s;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { background-color: #0f172a; color: #cbd5e1; }
+      h1 { color: #f1f5f9; }
+      p { color: #94a3b8; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <svg class="icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+    </svg>
+    <h1>You're Offline</h1>
+    <p>
+      It looks like you've lost your internet connection. Most features of My Life App work offline once loaded. Please check your connection and try again.
+    </p>
+    <button onclick="window.location.reload()">Retry</button>
+  </div>
+</body>
+</html>
