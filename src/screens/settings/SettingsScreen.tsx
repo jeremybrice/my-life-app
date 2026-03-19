@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSettings } from '@/hooks/useSettings';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { ErrorState } from '@/components/ErrorState';
+import { roundCurrency } from '@/lib/currency';
 
 export function SettingsScreen() {
   const { settings, loading, error, save } = useSettings();
@@ -47,8 +48,8 @@ export function SettingsScreen() {
         birthDate: birthDate || undefined,
         targetDate: targetDate || undefined,
         targetDateLabel: targetDateLabel || undefined,
-        monthlyBudget: monthlyBudget ? parseFloat(monthlyBudget) : undefined,
-        dailyBudget: dailyBudget ? parseFloat(dailyBudget) : undefined,
+        monthlyBudget: monthlyBudget && !isNaN(parseFloat(monthlyBudget)) ? roundCurrency(parseFloat(monthlyBudget)) : undefined,
+        dailyBudget: dailyBudget && !isNaN(parseFloat(dailyBudget)) ? roundCurrency(parseFloat(dailyBudget)) : undefined,
       });
       setSaveMessage('Settings saved successfully');
       setTimeout(() => setSaveMessage(''), 3000);

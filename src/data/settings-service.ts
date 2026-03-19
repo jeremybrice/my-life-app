@@ -39,12 +39,22 @@ export async function saveSettings(input: SaveSettingsInput): Promise<Settings> 
     }
   }
 
-  // Validate budget amounts are non-negative if provided
-  if (input.monthlyBudget !== undefined && input.monthlyBudget < 0) {
-    throw new Error('Monthly budget must be non-negative');
+  // Validate budget amounts are valid numbers and non-negative if provided
+  if (input.monthlyBudget !== undefined) {
+    if (isNaN(input.monthlyBudget)) {
+      throw new Error('Monthly budget must be a valid number');
+    }
+    if (input.monthlyBudget < 0) {
+      throw new Error('Monthly budget must be non-negative');
+    }
   }
-  if (input.dailyBudget !== undefined && input.dailyBudget < 0) {
-    throw new Error('Daily budget must be non-negative');
+  if (input.dailyBudget !== undefined) {
+    if (isNaN(input.dailyBudget)) {
+      throw new Error('Daily budget must be a valid number');
+    }
+    if (input.dailyBudget < 0) {
+      throw new Error('Daily budget must be non-negative');
+    }
   }
 
   const existing = await db.settings.get(SETTINGS_ID);
