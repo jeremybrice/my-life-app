@@ -30,6 +30,10 @@ export const NAV_ITEMS = [
   { path: ROUTES.SETTINGS, label: 'Settings', icon: 'settings' },
 ] as const;
 
+/** App version for export metadata */
+export const APP_VERSION = '1.0.0';
+export const SCHEMA_VERSION = 2; // matches Dexie schema version
+
 /** Default notification preferences */
 export const DEFAULT_NOTIFICATION_PREFERENCES = {
   masterEnabled: true,

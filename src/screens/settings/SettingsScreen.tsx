@@ -3,6 +3,8 @@ import { useSettings } from '@/hooks/useSettings';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { ErrorState } from '@/components/ErrorState';
 import { roundCurrency } from '@/lib/currency';
+import { ExportButton } from './ExportButton';
+import { ImportButton } from './ImportButton';
 
 export function SettingsScreen() {
   const { settings, loading, error, save } = useSettings();
@@ -240,6 +242,17 @@ export function SettingsScreen() {
             </div>
           )}
         </div>
+
+        {/* Data Management */}
+        <section className="rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+            Data Management
+          </h3>
+          <div className="space-y-3">
+            <ExportButton />
+            <ImportButton />
+          </div>
+        </section>
       </div>
     </div>
   );
