@@ -23,6 +23,7 @@ export interface SaveSettingsInput {
   dailyBudget?: number;
   notificationPreferences?: import('@/lib/types').NotificationPreferences;
   notificationPromptDeferred?: number;
+  notificationPromptDeferredAtSession?: number;
   notificationPromptLastShown?: string;
   hasQualifyingAction?: boolean;
   sessionCount?: number;

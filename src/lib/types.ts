@@ -30,6 +30,7 @@ export interface Settings {
   dailyBudget?: number;
   notificationPreferences?: NotificationPreferences;
   notificationPromptDeferred?: number;   // count of "Not Now" taps
+  notificationPromptDeferredAtSession?: number; // session count when last deferred
   notificationPromptLastShown?: string;  // ISO datetime of last prompt
   hasQualifyingAction?: boolean;         // true after first budget/expense/goal action
   sessionCount?: number;                 // incremented on each app launch

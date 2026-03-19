@@ -89,9 +89,9 @@ export async function shouldShowPermissionPrompt(): Promise<boolean> {
 
   const deferred = settings.notificationPromptDeferred ?? 0;
   if (deferred > 0) {
-    const sessionsSinceStart = settings.sessionCount ?? 0;
-    const lastShownSession = deferred * SESSIONS_BEFORE_RE_PROMPT + 1;
-    if (sessionsSinceStart < lastShownSession + SESSIONS_BEFORE_RE_PROMPT) {
+    const currentSession = settings.sessionCount ?? 0;
+    const deferredAtSession = settings.notificationPromptDeferredAtSession ?? 0;
+    if (currentSession - deferredAtSession < SESSIONS_BEFORE_RE_PROMPT) {
       return false;
     }
   }
@@ -115,6 +115,7 @@ export async function deferPermissionPrompt(): Promise<void> {
 
   await updateSettings({
     notificationPromptDeferred: (settings.notificationPromptDeferred ?? 0) + 1,
+    notificationPromptDeferredAtSession: settings.sessionCount ?? 0,
     notificationPromptLastShown: new Date().toISOString(),
   });
 }
