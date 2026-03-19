@@ -365,7 +365,7 @@ export function AgentScreen() {
   }
 
   return (
-    <div className="animate-fade-in flex flex-col h-full" data-testid="agent-screen">
+    <div className="animate-fade-in flex flex-col fixed inset-0 top-14 bottom-16 md:left-64 md:bottom-0 z-30" data-testid="agent-screen">
       {/* Offline banner mid-conversation */}
       {status === 'offline' && messages.length > 1 && (
         <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-sm text-amber-800 text-center" data-testid="offline-banner">
