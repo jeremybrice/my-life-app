@@ -8,6 +8,7 @@ import {
   deleteExpense,
   validateExpenseInput,
 } from '@/data/expense-service';
+import { createBudgetMonth } from '@/data/budget-service';
 
 beforeEach(async () => {
   await db.expenses.clear();
@@ -316,5 +317,81 @@ describe('deleteExpense', () => {
     const remaining = await getExpensesByMonth('2026-03');
     expect(remaining).toHaveLength(1);
     expect(remaining[0]!.vendor).toBe('B');
+  });
+});
+
+describe('expense write carry-over propagation', () => {
+  beforeEach(async () => {
+    await db.budgetMonths.clear();
+    await db.expenses.clear();
+  });
+
+  it('should propagate carry-over when creating expense in past month', async () => {
+    await createBudgetMonth({
+      yearMonth: '2025-12',
+      monthlyAmount: 3100,
+      carryOver: 0,
+      additionalFunds: 0,
+    });
+    await createBudgetMonth({
+      yearMonth: '2026-01',
+      monthlyAmount: 3100,
+      carryOver: 3100, // initially full carry-over from Dec
+      additionalFunds: 0,
+    });
+
+    // Add expense to past month (Dec 2025)
+    await createExpense({ date: '2025-12-15', vendor: 'Store', amount: 500 });
+
+    const jan = await db.budgetMonths.get('2026-01');
+    // Dec ending balance: 3100 - 500 = 2600
+    expect(jan!.carryOver).toBe(2600);
+  });
+
+  it('should propagate carry-over when updating expense in past month', async () => {
+    await createBudgetMonth({
+      yearMonth: '2025-12',
+      monthlyAmount: 3100,
+      carryOver: 0,
+      additionalFunds: 0,
+    });
+    const expense = await createExpense({ date: '2025-12-15', vendor: 'Store', amount: 500 });
+
+    await createBudgetMonth({
+      yearMonth: '2026-01',
+      monthlyAmount: 3100,
+      carryOver: 2600, // 3100 - 500
+      additionalFunds: 0,
+    });
+
+    // Update expense amount in Dec
+    await updateExpense(expense.id!, { amount: 800 });
+
+    const jan = await db.budgetMonths.get('2026-01');
+    // Dec ending balance: 3100 - 800 = 2300
+    expect(jan!.carryOver).toBe(2300);
+  });
+
+  it('should propagate carry-over when deleting expense in past month', async () => {
+    await createBudgetMonth({
+      yearMonth: '2025-12',
+      monthlyAmount: 3100,
+      carryOver: 0,
+      additionalFunds: 0,
+    });
+    const expense = await createExpense({ date: '2025-12-15', vendor: 'Store', amount: 500 });
+
+    await createBudgetMonth({
+      yearMonth: '2026-01',
+      monthlyAmount: 3100,
+      carryOver: 2600, // 3100 - 500
+      additionalFunds: 0,
+    });
+
+    await deleteExpense(expense.id!);
+
+    const jan = await db.budgetMonths.get('2026-01');
+    // Dec ending balance: 3100 - 0 = 3100
+    expect(jan!.carryOver).toBe(3100);
   });
 });

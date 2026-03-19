@@ -1,73 +1,105 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { MonthlyPerformanceCard } from '../../../src/screens/dashboard/MonthlyPerformanceCard';
-import type { MonthlyPerformanceCardProps } from '../../../src/screens/dashboard/MonthlyPerformanceCard';
+import { createBudgetMonth } from '../../../src/data/budget-service';
+import { createExpense } from '../../../src/data/expense-service';
+import { db } from '../../../src/data/db';
+import { currentYearMonth } from '../../../src/lib/dates';
+
+const mockNavigate = vi.fn();
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
+  return { ...actual, useNavigate: () => mockNavigate };
+});
+
+function renderCard() {
+  return render(
+    <MemoryRouter>
+      <MonthlyPerformanceCard />
+    </MemoryRouter>
+  );
+}
 
 describe('MonthlyPerformanceCard', () => {
-  it('should render zero-state when no data provided', () => {
-    render(<MonthlyPerformanceCard />);
-    expect(screen.getByTestId('monthly-performance-card')).toBeInTheDocument();
-    expect(screen.getByTestId('monthly-performance-zero-state')).toBeInTheDocument();
-    expect(screen.getByText(/monthly spending overview/i)).toBeInTheDocument();
+  beforeEach(async () => {
+    await db.budgetMonths.clear();
+    await db.expenses.clear();
+    mockNavigate.mockClear();
   });
 
-  it('should show "--" placeholder in zero state', () => {
-    render(<MonthlyPerformanceCard />);
-    expect(screen.getByText('--')).toBeInTheDocument();
+  it('should show zero state when no budget month exists', async () => {
+    renderCard();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('monthly-performance-zero-state')).toBeInTheDocument();
+    });
   });
 
-  it('should render with live data when under budget', () => {
-    const data: MonthlyPerformanceCardProps = {
-      totalBudget: 2000.00,
-      totalSpent: 800.00,
-      netChange: 1200.00,
-      monthLabel: 'March 2026',
-    };
-    render(<MonthlyPerformanceCard data={data} />);
-    expect(screen.getByTestId('monthly-performance-remaining')).toHaveTextContent('$1200.00');
-    expect(screen.getByTestId('monthly-performance-budget')).toHaveTextContent('Budget: $2000.00');
-    expect(screen.getByTestId('monthly-performance-spent')).toHaveTextContent('Spent: $800.00');
-    expect(screen.getByTestId('monthly-performance-month')).toHaveTextContent('March 2026');
+  it('should display total budget, total spent, and net change', async () => {
+    const ym = currentYearMonth();
+    await createBudgetMonth({
+      yearMonth: ym,
+      monthlyAmount: 3100,
+      carryOver: 100,
+      additionalFunds: 50,
+    });
+    await createExpense({ date: `${ym}-01`, vendor: 'Store', amount: 1500 });
+
+    renderCard();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('monthly-total-budget')).toHaveTextContent('$3,250.00');
+      expect(screen.getByTestId('monthly-total-spent')).toHaveTextContent('$1,500.00');
+      expect(screen.getByTestId('monthly-net-change')).toHaveTextContent('$1,750.00');
+    });
   });
 
-  it('should display green text for positive net change', () => {
-    const data: MonthlyPerformanceCardProps = {
-      totalBudget: 2000.00,
-      totalSpent: 800.00,
-      netChange: 1200.00,
-      monthLabel: 'March 2026',
-    };
-    render(<MonthlyPerformanceCard data={data} />);
-    const remaining = screen.getByTestId('monthly-performance-remaining');
-    expect(remaining.className).toContain('text-green-600');
+  it('should show net change in green when positive', async () => {
+    const ym = currentYearMonth();
+    await createBudgetMonth({
+      yearMonth: ym,
+      monthlyAmount: 3100,
+      carryOver: 0,
+      additionalFunds: 0,
+    });
+
+    renderCard();
+
+    await waitFor(() => {
+      const netChange = screen.getByTestId('monthly-net-change');
+      expect(netChange.className).toContain('text-green-600');
+    });
   });
 
-  it('should display yellow text for zero net change', () => {
-    const data: MonthlyPerformanceCardProps = {
-      totalBudget: 2000.00,
-      totalSpent: 2000.00,
-      netChange: 0,
-      monthLabel: 'March 2026',
-    };
-    render(<MonthlyPerformanceCard data={data} />);
-    const remaining = screen.getByTestId('monthly-performance-remaining');
-    expect(remaining.className).toContain('text-yellow-600');
+  it('should show net change in red when negative', async () => {
+    const ym = currentYearMonth();
+    await createBudgetMonth({
+      yearMonth: ym,
+      monthlyAmount: 3100,
+      carryOver: 0,
+      additionalFunds: 0,
+    });
+    await createExpense({ date: `${ym}-01`, vendor: 'Store', amount: 4000 });
+
+    renderCard();
+
+    await waitFor(() => {
+      const netChange = screen.getByTestId('monthly-net-change');
+      expect(netChange.className).toContain('text-red-600');
+    });
   });
 
-  it('should display red text for negative net change', () => {
-    const data: MonthlyPerformanceCardProps = {
-      totalBudget: 2000.00,
-      totalSpent: 2200.00,
-      netChange: -200.00,
-      monthLabel: 'March 2026',
-    };
-    render(<MonthlyPerformanceCard data={data} />);
-    const remaining = screen.getByTestId('monthly-performance-remaining');
-    expect(remaining.className).toContain('text-red-600');
-  });
+  it('should navigate to /budget when clicked', async () => {
+    const user = userEvent.setup();
+    renderCard();
 
-  it('should have the card title "Monthly Performance"', () => {
-    render(<MonthlyPerformanceCard />);
-    expect(screen.getByText('Monthly Performance')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('monthly-performance-card')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByTestId('monthly-performance-card'));
+    expect(mockNavigate).toHaveBeenCalledWith('/budget');
   });
 });

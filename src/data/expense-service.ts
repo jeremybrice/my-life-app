@@ -1,8 +1,9 @@
 import { db } from '@/data/db';
 import type { Expense } from '@/lib/types';
 import { roundCurrency } from '@/lib/currency';
-import { today as getToday } from '@/lib/dates';
+import { today as getToday, currentYearMonth } from '@/lib/dates';
 import { MAX_VENDOR_LENGTH } from '@/lib/constants';
+import { propagateCarryOver } from '@/data/budget-service';
 
 // --- Input Types ---
 
@@ -107,6 +108,11 @@ export async function createExpense(input: CreateExpenseInput): Promise<Expense>
   const id = await db.expenses.add(expense);
   expense.id = id as number;
 
+  // Propagate carry-over if this is a past month
+  if (yearMonth !== currentYearMonth()) {
+    await propagateCarryOver(yearMonth);
+  }
+
   return expense;
 }
 
@@ -148,6 +154,12 @@ export async function updateExpense(
   };
 
   await db.expenses.put(updated);
+
+  // Propagate carry-over if this is a past month
+  if (updated.yearMonth !== currentYearMonth()) {
+    await propagateCarryOver(updated.yearMonth);
+  }
+
   return updated;
 }
 
@@ -157,5 +169,11 @@ export async function deleteExpense(id: number): Promise<void> {
     throw new Error(`Expense with id ${id} not found`);
   }
 
+  const { yearMonth } = existing;
   await db.expenses.delete(id);
+
+  // Propagate carry-over if this was a past month
+  if (yearMonth !== currentYearMonth()) {
+    await propagateCarryOver(yearMonth);
+  }
 }
