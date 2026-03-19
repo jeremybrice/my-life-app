@@ -1,8 +1,31 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { DashboardScreen } from '../../src/screens/dashboard/DashboardScreen';
 import { AgentScreen } from '../../src/screens/agent/AgentScreen';
+
+// Mock claude-client so AgentScreen's validateApiKey call resolves
+vi.mock('../../src/services/claude-client', () => ({
+  validateApiKey: vi.fn().mockResolvedValue(true),
+  ClaudeClientError: class ClaudeClientError extends Error {
+    errorType: string;
+    constructor(message: string, errorType: string) {
+      super(message);
+      this.errorType = errorType;
+      this.name = 'ClaudeClientError';
+    }
+  },
+}));
+
+// Mock expense-parser (imported by AgentScreen)
+vi.mock('../../src/services/expense-parser', () => ({
+  parseExpenseMessage: vi.fn().mockResolvedValue({ type: 'clarification', message: 'ok' }),
+}));
+
+// Mock receipt-processor (imported by AgentScreen)
+vi.mock('../../src/services/receipt-processor', () => ({
+  processReceipt: vi.fn(),
+}));
 
 // Mock dependencies
 vi.mock('../../src/hooks/useSettings', () => ({
@@ -25,11 +48,6 @@ vi.mock('../../src/lib/dates', async () => {
     today: vi.fn(() => '2026-03-18'),
   };
 });
-
-const mockOnlineStatus = vi.fn();
-vi.mock('../../src/hooks/useOnlineStatus', () => ({
-  useOnlineStatus: () => mockOnlineStatus(),
-}));
 
 describe('Offline Verification (Story 008)', () => {
   it('should render dashboard correctly (simulating offline — no network dependencies)', () => {
@@ -62,8 +80,7 @@ describe('Offline Verification (Story 008)', () => {
     expect(screen.queryByText(/no connection/i)).not.toBeInTheDocument();
   });
 
-  it('should show network-required message on Agent screen when offline', () => {
-    mockOnlineStatus.mockReturnValue(false);
+  it('should render Agent screen with chat UI when online', async () => {
     render(
       <MemoryRouter initialEntries={['/agent']}>
         <Routes>
@@ -71,12 +88,13 @@ describe('Offline Verification (Story 008)', () => {
         </Routes>
       </MemoryRouter>
     );
-    expect(screen.getByTestId('agent-offline-message')).toBeInTheDocument();
-    expect(screen.getByText(/internet required/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('agent-screen')).toBeInTheDocument();
+    });
+    expect(screen.getByText(/expense assistant/i)).toBeInTheDocument();
   });
 
-  it('should show placeholder on Agent screen when online', () => {
-    mockOnlineStatus.mockReturnValue(true);
+  it('should show chat input on Agent screen', async () => {
     render(
       <MemoryRouter initialEntries={['/agent']}>
         <Routes>
@@ -84,7 +102,9 @@ describe('Offline Verification (Story 008)', () => {
         </Routes>
       </MemoryRouter>
     );
-    expect(screen.queryByTestId('agent-offline-message')).not.toBeInTheDocument();
-    expect(screen.getByTestId('agent-placeholder')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('chat-input')).toBeInTheDocument();
+    });
+    expect(screen.getByTestId('send-btn')).toBeInTheDocument();
   });
 });

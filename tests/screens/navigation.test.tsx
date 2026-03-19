@@ -1,7 +1,30 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '@/App';
+
+// Mock claude-client so AgentScreen's validateApiKey call resolves
+vi.mock('../../src/services/claude-client', () => ({
+  validateApiKey: vi.fn().mockResolvedValue(true),
+  ClaudeClientError: class ClaudeClientError extends Error {
+    errorType: string;
+    constructor(message: string, errorType: string) {
+      super(message);
+      this.errorType = errorType;
+      this.name = 'ClaudeClientError';
+    }
+  },
+}));
+
+// Mock expense-parser (imported by AgentScreen)
+vi.mock('../../src/services/expense-parser', () => ({
+  parseExpenseMessage: vi.fn().mockResolvedValue({ type: 'clarification', message: 'ok' }),
+}));
+
+// Mock receipt-processor (imported by AgentScreen)
+vi.mock('../../src/services/receipt-processor', () => ({
+  processReceipt: vi.fn(),
+}));
 
 describe('Navigation', () => {
   it('should render the Dashboard by default', () => {
@@ -52,7 +75,9 @@ describe('Navigation', () => {
     const agentLinks = screen.getAllByText('AI Agent');
     await user.click(agentLinks[0]!);
 
-    expect(screen.getByText(/Coming Soon/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/expense assistant/i)).toBeInTheDocument();
+    });
   });
 
   it('should navigate to Settings screen', async () => {

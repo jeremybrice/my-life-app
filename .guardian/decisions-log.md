@@ -1,6 +1,6 @@
 # Decisions Log
 
-**Mission:** Stage 5 — Goals & Health Routines
+**Mission:** Stage 6 — AI Agent Integration
 **Started:** 2026-03-18
 
 ---
