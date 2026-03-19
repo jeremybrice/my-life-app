@@ -8,7 +8,7 @@ import { db } from '@/data/db';
 import { getSettings, updateSettings } from '@/data/settings-service';
 import { getExpensesByMonth } from '@/data/expense-service';
 import { getBudgetMonth } from '@/data/budget-service';
-import { currentYearMonth, today, daysBetween } from '@/lib/dates';
+import { currentYearMonth, today } from '@/lib/dates';
 import { roundCurrency } from '@/lib/currency';
 
 // --- Capability Detection ---

@@ -47,12 +47,12 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
     const updated = [...metrics];
     if (field === 'type') {
       updated[index] = {
-        ...updated[index],
+        ...updated[index]!,
         type: value as TrackedMetric['type'],
         unit: value === 'duration' ? 'minutes' : '',
       };
     } else {
-      updated[index] = { ...updated[index], unit: value };
+      updated[index] = { ...updated[index]!, unit: value };
     }
     setMetrics(updated);
   }

@@ -1,6 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/data/db';
-import type { BudgetMonth } from '@/lib/types';
 import {
   calculateBalance,
   createBudgetMonth,
@@ -8,7 +7,6 @@ import {
   updateAdditionalFunds as updateAdditionalFundsService,
   type CreateBudgetMonthInput,
   type UpdateBudgetMonthInput,
-  type BalanceSnapshot,
 } from '@/data/budget-service';
 import { currentYearMonth } from '@/lib/dates';
 

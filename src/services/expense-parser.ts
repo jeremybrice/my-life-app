@@ -90,7 +90,7 @@ export function extractJson(text: string): string | null {
   // Try to extract from ```json ... ``` code block
   const codeBlockMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
   if (codeBlockMatch) {
-    return codeBlockMatch[1].trim();
+    return codeBlockMatch[1]!.trim();
   }
 
   // Try to find raw JSON object

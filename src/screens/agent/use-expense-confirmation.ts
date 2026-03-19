@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { createExpense } from '@/data/expense-service';
 import { roundCurrency } from '@/lib/currency';
-import type { ChatMessage, ParsedExpense } from './agent-types';
+import type { ChatMessage } from './agent-types';
 
 interface UseExpenseConfirmationProps {
   updateMessage: (id: string, updates: Partial<ChatMessage>) => void;

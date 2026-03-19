@@ -57,7 +57,7 @@ export function trimConversationHistory(
   }
 
   // Ensure the first message is from the user (Claude API requires alternating roles starting with user)
-  while (trimmed.length > 0 && trimmed[0].role !== 'user') {
+  while (trimmed.length > 0 && trimmed[0]!.role !== 'user') {
     trimmed.shift();
   }
 
