@@ -112,11 +112,11 @@ describe('Navigation', () => {
     });
   });
 
-  it('should navigate to AI Agent workflow selector', async () => {
+  it('should navigate to Agents workflow selector', async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const agentLinks = screen.getAllByText('AI Agent');
+    const agentLinks = screen.getAllByText('Agents');
     await user.click(agentLinks[0]!);
 
     await waitFor(() => {
@@ -144,7 +144,7 @@ describe('Navigation', () => {
     expect(screen.getAllByText('Budget').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Goals').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Health').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText('AI Agent').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Agents').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Settings').length).toBeGreaterThanOrEqual(1);
   });
 });
