@@ -1,0 +1,85 @@
+import type { RoutineWithAdherence } from '@/hooks/useHealth';
+
+interface RoutineCardProps {
+  routine: RoutineWithAdherence;
+  onQuickLog: (routineId: number) => void;
+  onEdit: (routine: RoutineWithAdherence) => void;
+  onDelete: (routineId: number) => void;
+}
+
+export function RoutineCard({
+  routine,
+  onQuickLog,
+  onEdit,
+  onDelete,
+}: RoutineCardProps) {
+  const isOnTarget = routine.weeklyCount >= routine.targetFrequency;
+
+  return (
+    <div
+      className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 shadow-sm"
+      data-testid={`routine-card-${routine.id}`}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <h3 className="font-medium text-slate-900 dark:text-white">{routine.name}</h3>
+          <div className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            {routine.targetFrequency}x / week
+          </div>
+        </div>
+        <div className="flex gap-1">
+          <button
+            type="button"
+            onClick={() => onEdit(routine)}
+            className="rounded p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-600 dark:hover:text-slate-300"
+            aria-label={`Edit ${routine.name}`}
+            data-testid={`edit-routine-${routine.id}`}
+          >
+            &#9998;
+          </button>
+          <button
+            type="button"
+            onClick={() => onDelete(routine.id!)}
+            className="rounded p-1 text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600"
+            aria-label={`Delete ${routine.name}`}
+            data-testid={`delete-routine-${routine.id}`}
+          >
+            &#10005;
+          </button>
+        </div>
+      </div>
+
+      {/* Adherence indicator */}
+      <div className="mt-3 flex items-center justify-between">
+        <div
+          className={`text-sm font-medium ${
+            isOnTarget ? 'text-green-600' : 'text-slate-600 dark:text-slate-400'
+          }`}
+          data-testid={`adherence-${routine.id}`}
+        >
+          {routine.weeklyCount} of {routine.targetFrequency} this week
+          {isOnTarget && ' \u2713'}
+        </div>
+
+        {routine.streak > 0 && (
+          <div
+            className="text-sm font-medium text-orange-600"
+            data-testid={`streak-${routine.id}`}
+          >
+            {routine.streak} week{routine.streak !== 1 ? 's' : ''} streak
+          </div>
+        )}
+      </div>
+
+      {/* Quick log button */}
+      <button
+        type="button"
+        onClick={() => onQuickLog(routine.id!)}
+        className="mt-3 w-full rounded-lg bg-primary-600 px-3 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors"
+        data-testid={`quick-log-${routine.id}`}
+      >
+        Log Today
+      </button>
+    </div>
+  );
+}

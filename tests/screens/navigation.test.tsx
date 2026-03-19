@@ -28,7 +28,9 @@ describe('Navigation', () => {
     const goalLinks = screen.getAllByText('Goals');
     await user.click(goalLinks[0]!);
 
-    expect(screen.getByText(/Set and track financial/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/No goals yet/i)).toBeInTheDocument();
+    });
   });
 
   it('should navigate to Health screen', async () => {
@@ -38,7 +40,9 @@ describe('Navigation', () => {
     const healthLinks = screen.getAllByText('Health');
     await user.click(healthLinks[0]!);
 
-    expect(screen.getByText(/Build and maintain healthy habits/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/No health routines yet/i)).toBeInTheDocument();
+    });
   });
 
   it('should navigate to AI Agent screen', async () => {

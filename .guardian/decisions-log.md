@@ -1,6 +1,6 @@
 # Decisions Log
 
-**Mission:** Stage 4 — Budget Advanced (Carry-Over, Additional Funds, Reports, Dashboard Integration)
+**Mission:** Stage 5 — Goals & Health Routines
 **Started:** 2026-03-18
 
 ---

@@ -1,8 +1,8 @@
 import { MilestoneCountdown } from './MilestoneCountdown';
 import { DailyBudgetCard } from './DailyBudgetCard';
 import { MonthlyPerformanceCard } from './MonthlyPerformanceCard';
-import { GoalsWidget } from './GoalsWidget';
-import { HealthWidget } from './HealthWidget';
+import { GoalsWidgetContainer } from './GoalsWidgetContainer';
+import { HealthWidgetContainer } from './HealthWidgetContainer';
 
 export function DashboardScreen() {
   // Stage 2: All cards render in zero-state / placeholder mode.
@@ -20,10 +20,10 @@ export function DashboardScreen() {
       </div>
 
       {/* 3. Goals Aggregation */}
-      <GoalsWidget />
+      <GoalsWidgetContainer />
 
       {/* 4. Health Routines Aggregation */}
-      <HealthWidget />
+      <HealthWidgetContainer />
     </div>
   );
 }
