@@ -133,7 +133,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
         return (
           <>
             <div>
-              <label htmlFor="targetValue" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="targetValue" className="block text-sm font-medium text-fg-secondary">
                 Target Value *
               </label>
               <input
@@ -143,7 +143,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
                 step="any"
                 value={targetValue}
                 onChange={(e) => setTargetValue(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2"
+                className="mt-1 block w-full rounded-lg border border-edge px-3 py-2"
                 data-testid="target-value-input"
               />
               {errors.targetValue && (
@@ -153,7 +153,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
               )}
             </div>
             <div>
-              <label htmlFor="currentValue" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="currentValue" className="block text-sm font-medium text-fg-secondary">
                 Starting Value
               </label>
               <input
@@ -163,7 +163,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
                 step="any"
                 value={currentValue}
                 onChange={(e) => setCurrentValue(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2"
+                className="mt-1 block w-full rounded-lg border border-edge px-3 py-2"
                 data-testid="current-value-input"
               />
               {errors.currentValue && (
@@ -178,7 +178,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
       case 'date-based':
         return (
           <div>
-            <label htmlFor="targetDate" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="targetDate" className="block text-sm font-medium text-fg-secondary">
               Target Date *
             </label>
             <input
@@ -186,7 +186,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
               type="date"
               value={targetDate}
               onChange={(e) => setTargetDate(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2"
+              className="mt-1 block w-full rounded-lg border border-edge px-3 py-2"
               data-testid="target-date-input"
             />
             {errors.targetDate && (
@@ -200,7 +200,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
       case 'percentage':
         return (
           <div>
-            <label htmlFor="percentage" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="percentage" className="block text-sm font-medium text-fg-secondary">
               Starting Percentage
             </label>
             <input
@@ -210,7 +210,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
               max="100"
               value={percentage}
               onChange={(e) => setPercentage(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2"
+              className="mt-1 block w-full rounded-lg border border-edge px-3 py-2"
               data-testid="percentage-input"
             />
             {errors.percentage && (
@@ -224,7 +224,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
       case 'freeform':
         return (
           <div>
-            <label htmlFor="statusLabel" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="statusLabel" className="block text-sm font-medium text-fg-secondary">
               Initial Status Label *
             </label>
             <input
@@ -233,7 +233,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
               value={statusLabel}
               onChange={(e) => setStatusLabel(e.target.value)}
               placeholder='e.g., "Not Started", "Planning"'
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2"
+              className="mt-1 block w-full rounded-lg border border-edge px-3 py-2"
               data-testid="status-label-input"
             />
             {errors.statusLabel && (
@@ -251,12 +251,12 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
 
   return (
     <div className="mx-auto max-w-lg p-4">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Create Goal</h1>
+      <h1 className="mb-6 text-2xl font-bold text-fg">Create Goal</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4" data-testid="goal-form">
         {/* Title */}
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="title" className="block text-sm font-medium text-fg-secondary">
             Title *
           </label>
           <input
@@ -265,7 +265,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="What do you want to achieve?"
-            className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2"
+            className="mt-1 block w-full rounded-lg border border-edge px-3 py-2"
             data-testid="title-input"
           />
           {errors.title && (
@@ -277,14 +277,14 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
 
         {/* Type */}
         <div>
-          <label htmlFor="type" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="type" className="block text-sm font-medium text-fg-secondary">
             Type *
           </label>
           <select
             id="type"
             value={type}
             onChange={(e) => setType(e.target.value as Goal['type'])}
-            className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+            className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2"
             data-testid="type-select"
           >
             <option value="">Select type...</option>
@@ -303,14 +303,14 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
 
         {/* Progress Model */}
         <div>
-          <label htmlFor="progressModel" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="progressModel" className="block text-sm font-medium text-fg-secondary">
             Progress Model *
           </label>
           <select
             id="progressModel"
             value={progressModel}
             onChange={(e) => setProgressModel(e.target.value as Goal['progressModel'])}
-            className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+            className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2"
             data-testid="progress-model-select"
           >
             <option value="">Select progress model...</option>
@@ -332,7 +332,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
 
         {/* Description */}
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="description" className="block text-sm font-medium text-fg-secondary">
             Description (optional)
           </label>
           <textarea
@@ -341,7 +341,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Any additional context or notes..."
             rows={3}
-            className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2"
+            className="mt-1 block w-full rounded-lg border border-edge px-3 py-2"
             data-testid="description-input"
           />
         </div>
@@ -358,7 +358,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
           <button
             type="submit"
             disabled={submitting}
-            className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            className="flex-1 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50"
             data-testid="submit-button"
           >
             {submitting ? 'Creating...' : 'Create Goal'}
@@ -366,7 +366,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="flex-1 rounded-lg border border-edge px-4 py-2 text-sm font-medium text-fg-secondary hover:bg-surface-hover"
             data-testid="cancel-button"
           >
             Cancel

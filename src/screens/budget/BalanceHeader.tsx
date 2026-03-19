@@ -12,7 +12,7 @@ export function BalanceHeader({ balance, today }: BalanceHeaderProps) {
   return (
     <div className="px-4 py-6 text-center" data-testid="balance-header">
       {/* Current Balance */}
-      <p className="text-sm text-gray-500 uppercase tracking-wide">
+      <p className="text-sm text-fg-muted uppercase tracking-wide">
         Current Balance
       </p>
       <p
@@ -25,18 +25,18 @@ export function BalanceHeader({ balance, today }: BalanceHeaderProps) {
       </p>
 
       {/* Today's info row */}
-      <div className="mt-4 flex justify-center gap-6 text-sm text-gray-600">
+      <div className="mt-4 flex justify-center gap-6 text-sm text-fg-secondary">
         <div>
           <p className="font-medium">{today}</p>
-          <p className="text-xs text-gray-400">Today</p>
+          <p className="text-xs text-fg-muted">Today</p>
         </div>
         <div>
           <p className="font-medium">${formatCurrency(balance.dailyAllowance)}</p>
-          <p className="text-xs text-gray-400">Daily Budget</p>
+          <p className="text-xs text-fg-muted">Daily Budget</p>
         </div>
         <div>
           <p className="font-medium">${formatCurrency(balance.todaySpent)}</p>
-          <p className="text-xs text-gray-400">Spent Today</p>
+          <p className="text-xs text-fg-muted">Spent Today</p>
         </div>
       </div>
     </div>

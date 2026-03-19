@@ -1,39 +1,102 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,500&display=swap');
+
+/* --- Forge semantic tokens (light) --- */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --bg-hover: #f0f1f3;
+  --bg-card: #ffffff;
+  --text-primary: #1a1a2e;
+  --text-secondary: #495057;
+  --text-muted: #868e96;
+  --border-color: #dee2e6;
+  --border-light: #e9ecef;
+  --accent: #4a6cf7;
+  --accent-hover: #3b5de7;
+  --accent-light: #eef0ff;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Forge semantic tokens (dark — warm neutrals + burnt orange accent) --- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #262625;
+    --bg-secondary: #2e2e2e;
+    --bg-tertiary: #353534;
+    --bg-hover: #3a3938;
+    --bg-card: #2c2b29;
+    --text-primary: #e0e0e8;
+    --text-secondary: #b6b5b1;
+    --text-muted: #8a8983;
+    --border-color: #565551;
+    --border-light: #2b2a28;
+    --accent: #c76140;
+    --accent-hover: #d4724f;
+    --accent-light: rgba(199, 97, 64, 0.15);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+}
 
 @theme {
-  /* --- Color tokens --- */
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
+  /* --- Font family --- */
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, 'Fira Code', Menlo, Monaco, Consolas, 'Courier New', monospace;
 
-  --color-positive: #16a34a;
-  --color-negative: #dc2626;
-  --color-warning: #f59e0b;
+  /* --- Semantic color tokens (auto light/dark via CSS vars) --- */
+  --color-surface: var(--bg-primary);
+  --color-surface-secondary: var(--bg-secondary);
+  --color-surface-tertiary: var(--bg-tertiary);
+  --color-surface-hover: var(--bg-hover);
+  --color-surface-card: var(--bg-card);
+  --color-fg: var(--text-primary);
+  --color-fg-secondary: var(--text-secondary);
+  --color-fg-muted: var(--text-muted);
+  --color-edge: var(--border-color);
+  --color-edge-light: var(--border-light);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-light: var(--accent-light);
 
-  --color-success-50: #f0fdf4;
-  --color-success-100: #dcfce7;
-  --color-success-500: #22c55e;
-  --color-success-600: #16a34a;
-  --color-success-700: #15803d;
+  /* --- Primary color scale (Forge blue) --- */
+  --color-primary-50: #eef0ff;
+  --color-primary-100: #dee2ff;
+  --color-primary-200: #c4caff;
+  --color-primary-300: #9ba6fc;
+  --color-primary-400: #7280f7;
+  --color-primary-500: #4a6cf7;
+  --color-primary-600: #3b5de7;
+  --color-primary-700: #2f4ad4;
+  --color-primary-800: #273dab;
+  --color-primary-900: #253887;
 
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
-  --color-warning-500: #f59e0b;
-  --color-warning-600: #d97706;
-  --color-warning-700: #b45309;
+  /* --- Status colors (Forge palette) --- */
+  --color-positive: #27ae60;
+  --color-negative: #e74c3c;
+  --color-warning: #f39c12;
 
-  --color-danger-50: #fef2f2;
-  --color-danger-100: #fee2e2;
-  --color-danger-500: #ef4444;
-  --color-danger-600: #dc2626;
-  --color-danger-700: #b91c1c;
+  --color-success-50: #eafaf1;
+  --color-success-100: #d5f5e3;
+  --color-success-500: #2ecc71;
+  --color-success-600: #27ae60;
+  --color-success-700: #1e8449;
+
+  --color-warning-50: #fef9e7;
+  --color-warning-100: #fdebd0;
+  --color-warning-500: #f39c12;
+  --color-warning-600: #e67e22;
+  --color-warning-700: #d68910;
+
+  --color-danger-50: #fdedec;
+  --color-danger-100: #fadbd8;
+  --color-danger-500: #e74c3c;
+  --color-danger-600: #c0392b;
+  --color-danger-700: #a93226;
 
   /* --- Spacing tokens --- */
   --spacing-card: 1rem;
@@ -43,6 +106,7 @@
   --spacing-screen-y: 1.5rem;
 
   /* --- Border radius tokens --- */
+  --radius-sm: 0.25rem;
   --radius-card: 0.75rem;
   --radius-button: 0.5rem;
   --radius-input: 0.5rem;

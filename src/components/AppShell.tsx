@@ -5,15 +5,15 @@ import { APP_NAME } from '@/lib/constants';
 
 export function AppShell() {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen bg-surface">
       {/* Desktop sidebar */}
       <Sidebar />
 
       {/* Main content area */}
       <div className="md:ml-64">
         {/* Mobile header */}
-        <header className="sticky top-0 z-40 flex items-center h-14 px-4 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 pt-safe md:hidden">
-          <h1 className="text-lg font-bold text-slate-900 dark:text-white">
+        <header className="sticky top-0 z-40 flex items-center h-14 px-4 bg-surface-card border-b border-edge pt-safe md:hidden">
+          <h1 className="text-lg font-bold text-fg">
             {APP_NAME}
           </h1>
         </header>

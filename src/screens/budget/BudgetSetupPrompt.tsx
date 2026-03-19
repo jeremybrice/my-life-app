@@ -36,10 +36,10 @@ export function BudgetSetupPrompt({ yearMonth, onSetup }: BudgetSetupPromptProps
       className="flex flex-col items-center justify-center px-4 py-12"
       data-testid="budget-setup-prompt"
     >
-      <h2 className="text-xl font-semibold text-gray-700 mb-2">
+      <h2 className="text-xl font-semibold text-fg-secondary mb-2">
         No Budget Configured
       </h2>
-      <p className="text-gray-500 mb-6 text-center max-w-sm">
+      <p className="text-fg-muted mb-6 text-center max-w-sm">
         Set your monthly budget to start tracking expenses for{' '}
         <span className="font-medium">{yearMonth}</span>.
       </p>
@@ -48,7 +48,7 @@ export function BudgetSetupPrompt({ yearMonth, onSetup }: BudgetSetupPromptProps
         <div>
           <label
             htmlFor="monthly-amount"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-fg-secondary mb-1"
           >
             Monthly Budget Amount
           </label>
@@ -60,7 +60,7 @@ export function BudgetSetupPrompt({ yearMonth, onSetup }: BudgetSetupPromptProps
             value={monthlyAmount}
             onChange={(e) => setMonthlyAmount(e.target.value)}
             placeholder="e.g. 3100.00"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-edge rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
             required
           />
         </div>
@@ -74,7 +74,7 @@ export function BudgetSetupPrompt({ yearMonth, onSetup }: BudgetSetupPromptProps
         <button
           type="submit"
           disabled={submitting}
-          className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-2 px-4 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting ? 'Setting up...' : 'Set Budget'}
         </button>

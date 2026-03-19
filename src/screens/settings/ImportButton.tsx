@@ -83,7 +83,7 @@ export function ImportButton() {
       <button
         onClick={handleButtonClick}
         disabled={status === 'validating' || status === 'importing'}
-        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+        className="w-full rounded-lg border border-edge bg-surface-card px-4 py-3 text-sm font-medium text-fg-secondary hover:bg-surface-hover disabled:opacity-50"
       >
         {status === 'validating'
           ? 'Validating...'

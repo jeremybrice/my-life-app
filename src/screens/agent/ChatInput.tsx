@@ -44,12 +44,12 @@ export function ChatInput({ onSendMessage, onImageUpload, disabled = false, load
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-end gap-2 p-3 border-t border-gray-200 bg-white">
+    <form onSubmit={handleSubmit} className="flex items-end gap-2 p-3 border-t border-edge bg-surface-card">
       <button
         type="button"
         onClick={handleImageClick}
         disabled={disabled || loading}
-        className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50"
+        className="flex-shrink-0 p-2 text-fg-muted hover:text-fg-secondary disabled:opacity-50"
         aria-label="Upload image"
         data-testid="upload-image-btn"
       >
@@ -72,13 +72,13 @@ export function ChatInput({ onSendMessage, onImageUpload, disabled = false, load
         placeholder="Describe an expense..."
         disabled={disabled || loading}
         rows={1}
-        className="flex-1 resize-none border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+        className="flex-1 resize-none border border-edge rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50"
         data-testid="chat-input"
       />
       <button
         type="submit"
         disabled={!canSend}
-        className="flex-shrink-0 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex-shrink-0 bg-accent text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
         data-testid="send-btn"
       >
         {loading ? 'Sending...' : 'Send'}

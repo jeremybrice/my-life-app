@@ -104,7 +104,7 @@ export function NotificationSettings() {
   return (
     <section className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">Notifications</h2>
+        <h2 className="text-lg font-semibold text-fg">Notifications</h2>
         <label className="relative inline-flex cursor-pointer items-center">
           <input
             type="checkbox"
@@ -113,7 +113,7 @@ export function NotificationSettings() {
             className="peer sr-only"
             aria-label="Enable all notifications"
           />
-          <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white" />
+          <div className="peer h-6 w-11 rounded-full bg-surface-tertiary after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-edge after:bg-white after:transition-all after:content-[''] peer-checked:bg-accent peer-checked:after:translate-x-full peer-checked:after:border-white" />
         </label>
       </div>
 
@@ -135,8 +135,8 @@ export function NotificationSettings() {
         </div>
       )}
       {capabilities.permissionState === 'unsupported' && (
-        <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
-          <p className="text-sm text-gray-600">
+        <div className="rounded-lg border border-edge bg-surface-secondary p-3">
+          <p className="text-sm text-fg-secondary">
             Push notifications are not supported in this browser. Alerts will
             appear as banners on the dashboard instead.
           </p>
@@ -144,16 +144,16 @@ export function NotificationSettings() {
       )}
 
       <div className={isDisabled ? 'opacity-50 pointer-events-none' : ''}>
-        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-fg-muted">
           Budget Alerts
         </h3>
 
-        <div className="flex items-center justify-between rounded-lg bg-gray-50 p-3">
+        <div className="flex items-center justify-between rounded-lg bg-surface-secondary p-3">
           <div>
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-fg">
               Daily Overspend
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-fg-muted">
               Alert when daily spending exceeds allowance
             </p>
           </div>
@@ -165,20 +165,20 @@ export function NotificationSettings() {
               className="peer sr-only"
               aria-label="Enable daily overspend alerts"
             />
-            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white" />
+            <div className="peer h-6 w-11 rounded-full bg-surface-tertiary after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-edge after:bg-white after:transition-all after:content-[''] peer-checked:bg-accent peer-checked:after:translate-x-full peer-checked:after:border-white" />
           </label>
         </div>
 
         <div className="mt-3 space-y-2">
-          <p className="text-sm font-medium text-gray-700">
+          <p className="text-sm font-medium text-fg-secondary">
             Monthly Thresholds
           </p>
           {prefs.monthlyThresholds.map((threshold, index) => (
             <div
               key={threshold.percentage}
-              className="flex items-center justify-between rounded-lg bg-gray-50 p-3"
+              className="flex items-center justify-between rounded-lg bg-surface-secondary p-3"
             >
-              <span className="text-sm text-gray-900">
+              <span className="text-sm text-fg">
                 {threshold.percentage}% of monthly budget
               </span>
               <div className="flex items-center gap-2">
@@ -190,11 +190,11 @@ export function NotificationSettings() {
                     className="peer sr-only"
                     aria-label={`Enable ${threshold.percentage}% threshold`}
                   />
-                  <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white" />
+                  <div className="peer h-6 w-11 rounded-full bg-surface-tertiary after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-edge after:bg-white after:transition-all after:content-[''] peer-checked:bg-accent peer-checked:after:translate-x-full peer-checked:after:border-white" />
                 </label>
                 <button
                   onClick={() => handleRemoveThreshold(index)}
-                  className="rounded p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+                  className="rounded p-1 text-fg-muted hover:bg-surface-hover hover:text-fg-secondary"
                   aria-label={`Remove ${threshold.percentage}% threshold`}
                 >
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
@@ -213,12 +213,12 @@ export function NotificationSettings() {
               value={newThreshold}
               onChange={e => setNewThreshold(e.target.value)}
               placeholder="Add %"
-              className="w-24 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-24 rounded-lg border border-edge px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
               aria-label="New threshold percentage"
             />
             <button
               onClick={handleAddThreshold}
-              className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="rounded-lg bg-accent px-3 py-2 text-sm font-medium text-white hover:bg-accent-hover"
             >
               Add
             </button>
@@ -230,7 +230,7 @@ export function NotificationSettings() {
       </div>
 
       <div className={isDisabled ? 'opacity-50 pointer-events-none' : ''}>
-        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-fg-muted">
           Milestone Alerts
         </h3>
 
@@ -238,9 +238,9 @@ export function NotificationSettings() {
           {prefs.milestoneIntervals.map((interval, index) => (
             <div
               key={interval.days}
-              className="flex items-center justify-between rounded-lg bg-gray-50 p-3"
+              className="flex items-center justify-between rounded-lg bg-surface-secondary p-3"
             >
-              <span className="text-sm text-gray-900">
+              <span className="text-sm text-fg">
                 {interval.days} {interval.days === 1 ? 'day' : 'days'} before
               </span>
               <div className="flex items-center gap-2">
@@ -252,11 +252,11 @@ export function NotificationSettings() {
                     className="peer sr-only"
                     aria-label={`Enable ${interval.days}-day interval`}
                   />
-                  <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white" />
+                  <div className="peer h-6 w-11 rounded-full bg-surface-tertiary after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-edge after:bg-white after:transition-all after:content-[''] peer-checked:bg-accent peer-checked:after:translate-x-full peer-checked:after:border-white" />
                 </label>
                 <button
                   onClick={() => handleRemoveInterval(index)}
-                  className="rounded p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+                  className="rounded p-1 text-fg-muted hover:bg-surface-hover hover:text-fg-secondary"
                   aria-label={`Remove ${interval.days}-day interval`}
                 >
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
@@ -274,12 +274,12 @@ export function NotificationSettings() {
               value={newInterval}
               onChange={e => setNewInterval(e.target.value)}
               placeholder="Days"
-              className="w-24 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-24 rounded-lg border border-edge px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
               aria-label="New milestone interval in days"
             />
             <button
               onClick={handleAddInterval}
-              className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="rounded-lg bg-accent px-3 py-2 text-sm font-medium text-white hover:bg-accent-hover"
             >
               Add
             </button>

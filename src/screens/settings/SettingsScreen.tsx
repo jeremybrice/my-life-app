@@ -77,20 +77,20 @@ export function SettingsScreen() {
 
   return (
     <div className="animate-fade-in max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+      <h2 className="text-2xl font-bold text-fg mb-6">
         Settings
       </h2>
 
       <div className="space-y-8">
         {/* AI Configuration */}
-        <section className="rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+        <section className="rounded-xl bg-surface-card shadow-sm border border-edge p-6">
+          <h3 className="text-lg font-semibold text-fg mb-4">
             AI Configuration
           </h3>
           <div>
             <label
               htmlFor="apiKey"
-              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              className="block text-sm font-medium text-fg-secondary mb-1"
             >
               Claude API Key
             </label>
@@ -101,33 +101,33 @@ export function SettingsScreen() {
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder="sk-ant-api03-..."
-                className="w-full px-3 py-2 pr-20 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                className="w-full px-3 py-2 pr-20 rounded-lg border border-edge bg-surface-card text-fg placeholder-fg-muted focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
               />
               <button
                 type="button"
                 onClick={() => setShowApiKey(!showApiKey)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs font-medium text-fg-secondary hover:text-fg transition-colors"
                 aria-label={showApiKey ? 'Hide API key' : 'Show API key'}
               >
                 {showApiKey ? 'Hide' : 'Show'}
               </button>
             </div>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            <p className="mt-1 text-xs text-fg-muted">
               Stored locally on your device. Never sent anywhere except directly to the Claude API.
             </p>
           </div>
         </section>
 
         {/* Life Milestone */}
-        <section className="rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+        <section className="rounded-xl bg-surface-card shadow-sm border border-edge p-6">
+          <h3 className="text-lg font-semibold text-fg mb-4">
             Life Milestone
           </h3>
           <div className="space-y-4">
             <div>
               <label
                 htmlFor="birthDate"
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+                className="block text-sm font-medium text-fg-secondary mb-1"
               >
                 Birth Date
               </label>
@@ -137,13 +137,13 @@ export function SettingsScreen() {
                 value={birthDate}
                 max={todayStr}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                className="w-full px-3 py-2 rounded-lg border border-edge bg-surface-card text-fg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
               />
             </div>
             <div>
               <label
                 htmlFor="targetDate"
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+                className="block text-sm font-medium text-fg-secondary mb-1"
               >
                 Target Date
               </label>
@@ -152,13 +152,13 @@ export function SettingsScreen() {
                 type="date"
                 value={targetDate}
                 onChange={(e) => setTargetDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                className="w-full px-3 py-2 rounded-lg border border-edge bg-surface-card text-fg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
               />
             </div>
             <div>
               <label
                 htmlFor="targetDateLabel"
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+                className="block text-sm font-medium text-fg-secondary mb-1"
               >
                 Target Date Label
               </label>
@@ -168,22 +168,22 @@ export function SettingsScreen() {
                 value={targetDateLabel}
                 onChange={(e) => setTargetDateLabel(e.target.value)}
                 placeholder="e.g., Financial Freedom, Retirement"
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                className="w-full px-3 py-2 rounded-lg border border-edge bg-surface-card text-fg placeholder-fg-muted focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
               />
             </div>
           </div>
         </section>
 
         {/* Budget Configuration */}
-        <section className="rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+        <section className="rounded-xl bg-surface-card shadow-sm border border-edge p-6">
+          <h3 className="text-lg font-semibold text-fg mb-4">
             Budget Configuration
           </h3>
           <div className="space-y-4">
             <div>
               <label
                 htmlFor="monthlyBudget"
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+                className="block text-sm font-medium text-fg-secondary mb-1"
               >
                 Monthly Budget ($)
               </label>
@@ -196,13 +196,13 @@ export function SettingsScreen() {
                 value={monthlyBudget}
                 onChange={(e) => setMonthlyBudget(e.target.value)}
                 placeholder="0.00"
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                className="w-full px-3 py-2 rounded-lg border border-edge bg-surface-card text-fg placeholder-fg-muted focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
               />
             </div>
             <div>
               <label
                 htmlFor="dailyBudget"
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+                className="block text-sm font-medium text-fg-secondary mb-1"
               >
                 Daily Budget ($)
               </label>
@@ -215,7 +215,7 @@ export function SettingsScreen() {
                 value={dailyBudget}
                 onChange={(e) => setDailyBudget(e.target.value)}
                 placeholder="0.00"
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                className="w-full px-3 py-2 rounded-lg border border-edge bg-surface-card text-fg placeholder-fg-muted focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
               />
             </div>
           </div>
@@ -226,7 +226,7 @@ export function SettingsScreen() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="w-full py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-3 bg-accent text-white font-medium rounded-lg hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {saving ? 'Saving...' : 'Save Settings'}
           </button>
@@ -245,13 +245,13 @@ export function SettingsScreen() {
         </div>
 
         {/* Notification Settings */}
-        <section className="rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+        <section className="rounded-xl bg-surface-card shadow-sm border border-edge p-6">
           <NotificationSettings />
         </section>
 
         {/* Data Management */}
-        <section className="rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+        <section className="rounded-xl bg-surface-card shadow-sm border border-edge p-6">
+          <h3 className="text-lg font-semibold text-fg mb-4">
             Data Management
           </h3>
           <div className="space-y-3">
@@ -259,6 +259,11 @@ export function SettingsScreen() {
             <ImportButton />
           </div>
         </section>
+
+        {/* Version */}
+        <p className="text-center text-xs text-fg-muted pb-4">
+          Version 0.2
+        </p>
       </div>
     </div>
   );

@@ -44,14 +44,14 @@ export default function AdditionalFundsInput({ currentAmount, onUpdate }: Additi
   if (!isEditing) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-600">Additional Funds:</span>
+        <span className="text-sm text-fg-secondary">Additional Funds:</span>
         <span className="text-sm font-medium" data-testid="additional-funds-display">
           ${formatCurrency(currentAmount)}
         </span>
         <button
           type="button"
           onClick={() => setIsEditing(true)}
-          className="text-sm text-blue-600 hover:text-blue-800 underline"
+          className="text-sm text-accent hover:text-accent-hover underline"
           aria-label="Edit additional funds"
         >
           Edit
@@ -62,7 +62,7 @@ export default function AdditionalFundsInput({ currentAmount, onUpdate }: Additi
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-gray-600">Additional Funds: $</span>
+      <span className="text-sm text-fg-secondary">Additional Funds: $</span>
       <input
         type="number"
         min="0"
@@ -73,7 +73,7 @@ export default function AdditionalFundsInput({ currentAmount, onUpdate }: Additi
           if (e.key === 'Enter') handleSave();
           if (e.key === 'Escape') handleCancel();
         }}
-        className="w-24 px-2 py-1 text-sm border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="w-24 px-2 py-1 text-sm border rounded focus:ring-2 focus:ring-accent focus:border-accent"
         data-testid="additional-funds-input"
         autoFocus
       />
@@ -87,7 +87,7 @@ export default function AdditionalFundsInput({ currentAmount, onUpdate }: Additi
       <button
         type="button"
         onClick={handleCancel}
-        className="text-sm text-gray-500 hover:text-gray-700"
+        className="text-sm text-fg-muted hover:text-fg-secondary"
       >
         Cancel
       </button>

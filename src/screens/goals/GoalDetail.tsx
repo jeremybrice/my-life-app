@@ -162,7 +162,7 @@ export default function GoalDetail({
         return (
           <div className="mt-3 space-y-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
             <div>
-              <label htmlFor="absoluteValue" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="absoluteValue" className="block text-sm font-medium text-fg-secondary">
                 Set absolute value
               </label>
               <div className="mt-1 flex gap-2">
@@ -173,13 +173,13 @@ export default function GoalDetail({
                   step="any"
                   value={numericValue}
                   onChange={(e) => setNumericValue(e.target.value)}
-                  className="block w-full rounded border border-gray-300 px-3 py-1"
+                  className="block w-full rounded border border-edge px-3 py-1"
                   data-testid="absolute-value-input"
                 />
                 <button
                   type="button"
                   onClick={() => handleUpdateNumeric('absolute')}
-                  className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                  className="rounded bg-accent px-3 py-1 text-sm text-white hover:bg-accent-hover"
                   data-testid="set-value-button"
                 >
                   Set
@@ -187,7 +187,7 @@ export default function GoalDetail({
               </div>
             </div>
             <div>
-              <label htmlFor="incrementValue" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="incrementValue" className="block text-sm font-medium text-fg-secondary">
                 Increment by
               </label>
               <div className="mt-1 flex gap-2">
@@ -197,13 +197,13 @@ export default function GoalDetail({
                   step="any"
                   value={incrementValue}
                   onChange={(e) => setIncrementValue(e.target.value)}
-                  className="block w-full rounded border border-gray-300 px-3 py-1"
+                  className="block w-full rounded border border-edge px-3 py-1"
                   data-testid="increment-value-input"
                 />
                 <button
                   type="button"
                   onClick={() => handleUpdateNumeric('increment')}
-                  className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                  className="rounded bg-accent px-3 py-1 text-sm text-white hover:bg-accent-hover"
                   data-testid="increment-button"
                 >
                   Add
@@ -216,7 +216,7 @@ export default function GoalDetail({
       case 'percentage':
         return (
           <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
-            <label htmlFor="percentageEdit" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="percentageEdit" className="block text-sm font-medium text-fg-secondary">
               Update percentage
             </label>
             <div className="mt-1 flex gap-2">
@@ -227,13 +227,13 @@ export default function GoalDetail({
                 max="100"
                 value={percentValue}
                 onChange={(e) => setPercentValue(e.target.value)}
-                className="block w-full rounded border border-gray-300 px-3 py-1"
+                className="block w-full rounded border border-edge px-3 py-1"
                 data-testid="percentage-edit-input"
               />
               <button
                 type="button"
                 onClick={handleUpdatePercentage}
-                className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                className="rounded bg-accent px-3 py-1 text-sm text-white hover:bg-accent-hover"
                 data-testid="update-percentage-button"
               >
                 Update
@@ -245,7 +245,7 @@ export default function GoalDetail({
       case 'freeform':
         return (
           <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
-            <label htmlFor="freeformEdit" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="freeformEdit" className="block text-sm font-medium text-fg-secondary">
               Update status label
             </label>
             <div className="mt-1 flex gap-2">
@@ -254,13 +254,13 @@ export default function GoalDetail({
                 type="text"
                 value={freeformLabel}
                 onChange={(e) => setFreeformLabel(e.target.value)}
-                className="block w-full rounded border border-gray-300 px-3 py-1"
+                className="block w-full rounded border border-edge px-3 py-1"
                 data-testid="freeform-edit-input"
               />
               <button
                 type="button"
                 onClick={handleUpdateFreeform}
-                className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                className="rounded bg-accent px-3 py-1 text-sm text-white hover:bg-accent-hover"
                 data-testid="update-freeform-button"
               >
                 Update
@@ -272,7 +272,7 @@ export default function GoalDetail({
       case 'date-based':
         return (
           <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
-            <label htmlFor="targetDateEdit" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="targetDateEdit" className="block text-sm font-medium text-fg-secondary">
               Update target date
             </label>
             <div className="mt-1 flex gap-2">
@@ -281,13 +281,13 @@ export default function GoalDetail({
                 type="date"
                 value={targetDateValue}
                 onChange={(e) => setTargetDateValue(e.target.value)}
-                className="block w-full rounded border border-gray-300 px-3 py-1"
+                className="block w-full rounded border border-edge px-3 py-1"
                 data-testid="target-date-edit-input"
               />
               <button
                 type="button"
                 onClick={handleUpdateTargetDate}
-                className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                className="rounded bg-accent px-3 py-1 text-sm text-white hover:bg-accent-hover"
                 data-testid="update-date-button"
               >
                 Update
@@ -306,17 +306,17 @@ export default function GoalDetail({
       <button
         type="button"
         onClick={onBack}
-        className="mb-4 text-sm text-blue-600 hover:underline"
+        className="mb-4 text-sm text-accent hover:underline"
         data-testid="back-button"
       >
         &larr; Back to Goals
       </button>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <h1 className="text-2xl font-bold text-gray-900">{goal.title}</h1>
+      <div className="rounded-lg border border-edge bg-surface-card p-6">
+        <h1 className="text-2xl font-bold text-fg">{goal.title}</h1>
 
         <div className="mt-2 flex gap-2">
-          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+          <span className="rounded-full bg-surface-tertiary px-2 py-0.5 text-xs text-fg-secondary">
             {goal.type}
           </span>
           <span
@@ -325,7 +325,7 @@ export default function GoalDetail({
                 ? 'bg-blue-100 text-blue-700'
                 : goal.status === 'completed'
                   ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-500'
+                  : 'bg-surface-tertiary text-fg-muted'
             }`}
             data-testid="goal-status"
           >
@@ -334,7 +334,7 @@ export default function GoalDetail({
         </div>
 
         {goal.description && (
-          <p className="mt-3 text-sm text-gray-600">{goal.description}</p>
+          <p className="mt-3 text-sm text-fg-secondary">{goal.description}</p>
         )}
 
         {/* Progress display */}
@@ -344,7 +344,7 @@ export default function GoalDetail({
               <div className="text-lg font-medium">
                 {(goal.currentValue ?? 0).toLocaleString()} / {(goal.targetValue ?? 0).toLocaleString()}
               </div>
-              <div className="mt-1 h-3 w-full rounded-full bg-gray-200">
+              <div className="mt-1 h-3 w-full rounded-full bg-surface-tertiary">
                 <div
                   className="h-3 rounded-full bg-blue-500"
                   style={{
@@ -357,7 +357,7 @@ export default function GoalDetail({
           {goal.progressModel === 'percentage' && (
             <div>
               <div className="text-lg font-medium">{goal.percentage ?? 0}%</div>
-              <div className="mt-1 h-3 w-full rounded-full bg-gray-200">
+              <div className="mt-1 h-3 w-full rounded-full bg-surface-tertiary">
                 <div
                   className="h-3 rounded-full bg-green-500"
                   style={{ width: `${goal.percentage ?? 0}%` }}
@@ -417,7 +417,7 @@ export default function GoalDetail({
         )}
 
         {/* Status transition buttons */}
-        <div className="mt-6 flex flex-wrap gap-2 border-t border-gray-200 pt-4">
+        <div className="mt-6 flex flex-wrap gap-2 border-t border-edge pt-4">
           {goal.status === 'active' && (
             <>
               <button
@@ -431,7 +431,7 @@ export default function GoalDetail({
               <button
                 type="button"
                 onClick={handleArchive}
-                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="rounded-lg border border-edge px-4 py-2 text-sm font-medium text-fg-secondary hover:bg-surface-hover"
                 data-testid="archive-button"
               >
                 Archive
@@ -443,7 +443,7 @@ export default function GoalDetail({
               <button
                 type="button"
                 onClick={handleReactivate}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover"
                 data-testid="reactivate-button"
               >
                 Reactivate
@@ -451,7 +451,7 @@ export default function GoalDetail({
               <button
                 type="button"
                 onClick={handleArchive}
-                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="rounded-lg border border-edge px-4 py-2 text-sm font-medium text-fg-secondary hover:bg-surface-hover"
                 data-testid="archive-button"
               >
                 Archive
@@ -462,7 +462,7 @@ export default function GoalDetail({
             <button
               type="button"
               onClick={handleReactivate}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover"
               data-testid="reactivate-button"
             >
               Reactivate
@@ -480,7 +480,7 @@ export default function GoalDetail({
         </div>
 
         {/* Timestamps */}
-        <div className="mt-4 text-xs text-gray-400">
+        <div className="mt-4 text-xs text-fg-muted">
           Created: {new Date(goal.createdAt).toLocaleDateString()}
           {goal.completedAt && (
             <> | Completed: {new Date(goal.completedAt).toLocaleDateString()}</>

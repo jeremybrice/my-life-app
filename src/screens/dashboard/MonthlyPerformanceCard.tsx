@@ -51,9 +51,9 @@ export function MonthlyPerformanceCard() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-4 animate-pulse" data-testid="monthly-performance-card">
-        <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
-        <div className="h-6 bg-gray-200 rounded w-2/3"></div>
+      <div className="bg-surface-card rounded-xl shadow-sm p-4 animate-pulse" data-testid="monthly-performance-card">
+        <div className="h-4 bg-surface-tertiary rounded w-1/3 mb-2"></div>
+        <div className="h-6 bg-surface-tertiary rounded w-2/3"></div>
       </div>
     );
   }
@@ -61,15 +61,15 @@ export function MonthlyPerformanceCard() {
   if (!data) {
     return (
       <div
-        className="bg-white rounded-xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+        className="bg-surface-card rounded-xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
         onClick={handleClick}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === 'Enter' && handleClick()}
         data-testid="monthly-performance-card"
       >
-        <h3 className="text-sm font-medium text-gray-500 mb-1">Monthly Performance</h3>
-        <p className="text-gray-400 text-sm" data-testid="monthly-performance-zero-state">
+        <h3 className="text-sm font-medium text-fg-muted mb-1">Monthly Performance</h3>
+        <p className="text-fg-muted text-sm" data-testid="monthly-performance-zero-state">
           Set up your monthly budget to see performance tracking.
         </p>
       </div>
@@ -78,29 +78,29 @@ export function MonthlyPerformanceCard() {
 
   return (
     <div
-      className="bg-white rounded-xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+      className="bg-surface-card rounded-xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
       onClick={handleClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
       data-testid="monthly-performance-card"
     >
-      <h3 className="text-sm font-medium text-gray-500 mb-1">Monthly Performance</h3>
+      <h3 className="text-sm font-medium text-fg-muted mb-1">Monthly Performance</h3>
       <div className="space-y-1">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Total Budget</span>
+          <span className="text-fg-secondary">Total Budget</span>
           <span className="font-medium" data-testid="monthly-total-budget">
             ${formatCurrency(data.totalBudget)}
           </span>
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Total Spent</span>
+          <span className="text-fg-secondary">Total Spent</span>
           <span className="font-medium" data-testid="monthly-total-spent">
             ${formatCurrency(data.totalSpent)}
           </span>
         </div>
-        <div className="flex justify-between text-sm font-semibold pt-1 border-t border-gray-100">
-          <span className="text-gray-700">Net Change</span>
+        <div className="flex justify-between text-sm font-semibold pt-1 border-t border-edge">
+          <span className="text-fg-secondary">Net Change</span>
           <span
             className={data.netChange >= 0 ? 'text-green-600' : 'text-red-600'}
             data-testid="monthly-net-change"
