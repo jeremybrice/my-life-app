@@ -1,6 +1,6 @@
 # Decisions Log
 
-**Mission:** Stage 1 — PWA Foundation + Data Layer + Navigation + Settings
+**Mission:** Stage 2 — Dashboard Live + Offline Verification
 **Started:** 2026-03-18
 
 ---

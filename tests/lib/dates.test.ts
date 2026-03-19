@@ -7,6 +7,8 @@ import {
   nextYearMonth,
   today,
   currentYearMonth,
+  daysBetweenInclusive,
+  lifetimeProgress,
 } from '@/lib/dates';
 
 describe('daysInMonth', () => {
@@ -100,5 +102,54 @@ describe('currentYearMonth', () => {
   it('should return a string in YYYY-MM format', () => {
     const result = currentYearMonth();
     expect(result).toMatch(/^\d{4}-\d{2}$/);
+  });
+});
+
+describe('daysBetweenInclusive', () => {
+  it('should return 0 for same day', () => {
+    expect(daysBetweenInclusive('2026-03-18', '2026-03-18')).toBe(0);
+  });
+
+  it('should return 1 for adjacent days', () => {
+    expect(daysBetweenInclusive('2026-03-18', '2026-03-19')).toBe(1);
+  });
+
+  it('should return positive for future target', () => {
+    expect(daysBetweenInclusive('2026-03-18', '2026-04-18')).toBe(31);
+  });
+
+  it('should return positive for past target (absolute value)', () => {
+    expect(daysBetweenInclusive('2026-03-18', '2026-02-18')).toBe(28);
+  });
+
+  it('should handle large spans', () => {
+    expect(daysBetweenInclusive('1985-06-15', '2035-06-15')).toBe(18262);
+  });
+});
+
+describe('lifetimeProgress', () => {
+  it('should return 0.5 when today is midpoint', () => {
+    const progress = lifetimeProgress('2000-01-01', '2050-01-01', '2025-01-01');
+    expect(progress).toBeCloseTo(0.5, 1);
+  });
+
+  it('should return 0 when today equals birth date', () => {
+    expect(lifetimeProgress('2026-01-01', '2036-01-01', '2026-01-01')).toBe(0);
+  });
+
+  it('should return 1 when today equals target date', () => {
+    expect(lifetimeProgress('2000-01-01', '2026-03-18', '2026-03-18')).toBe(1);
+  });
+
+  it('should clamp to 1 when today is past target', () => {
+    expect(lifetimeProgress('2000-01-01', '2020-01-01', '2026-03-18')).toBe(1);
+  });
+
+  it('should clamp to 0 when today is before birth', () => {
+    expect(lifetimeProgress('2030-01-01', '2050-01-01', '2026-01-01')).toBe(0);
+  });
+
+  it('should return 1 when birth equals target (zero span)', () => {
+    expect(lifetimeProgress('2026-01-01', '2026-01-01', '2026-03-18')).toBe(1);
   });
 });

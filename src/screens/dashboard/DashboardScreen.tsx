@@ -1,14 +1,29 @@
+import { MilestoneCountdown } from './MilestoneCountdown';
+import { DailyBudgetCard } from './DailyBudgetCard';
+import { MonthlyPerformanceCard } from './MonthlyPerformanceCard';
+import { GoalsWidget } from './GoalsWidget';
+import { HealthWidget } from './HealthWidget';
+
 export function DashboardScreen() {
+  // Stage 2: All cards render in zero-state / placeholder mode.
+  // Stage 4 will connect DailyBudgetCard and MonthlyPerformanceCard to live data.
+  // Stage 5 will connect GoalsWidget and HealthWidget to live data.
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-        Dashboard
-      </h2>
-      <div className="rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-        <p className="text-slate-500 dark:text-slate-400">
-          Your life at a glance. Milestone countdown, budget summary, goals progress, and health routine tracking will appear here.
-        </p>
+    <div data-testid="dashboard-screen" className="space-y-4 p-4 pb-24">
+      {/* 1. Milestone Countdown — most prominent, top of dashboard */}
+      <MilestoneCountdown />
+
+      {/* 2. Budget Summary Cards */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <DailyBudgetCard />
+        <MonthlyPerformanceCard />
       </div>
+
+      {/* 3. Goals Aggregation */}
+      <GoalsWidget />
+
+      {/* 4. Health Routines Aggregation */}
+      <HealthWidget />
     </div>
   );
 }

@@ -46,7 +46,7 @@ describe('Navigation', () => {
     const agentLinks = screen.getAllByText('AI Agent');
     await user.click(agentLinks[0]!);
 
-    expect(screen.getByText(/Chat with your AI assistant/)).toBeInTheDocument();
+    expect(screen.getByText(/Coming Soon/)).toBeInTheDocument();
   });
 
   it('should navigate to Settings screen', async () => {

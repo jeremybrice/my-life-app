@@ -81,3 +81,30 @@ export function nextYearMonth(yearMonth: string): string {
   }
   return `${year}-${String(month! + 1).padStart(2, '0')}`;
 }
+
+/**
+ * Calendar days from `from` to `to`, inclusive of both endpoints.
+ * Returns a positive number regardless of direction.
+ * Same day returns 0 (target is today = "0 days remaining").
+ */
+export function daysBetweenInclusive(from: string, to: string): number {
+  const f = new Date(from + 'T00:00:00');
+  const t = new Date(to + 'T00:00:00');
+  const diffMs = t.getTime() - f.getTime();
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+  return Math.abs(diffDays);
+}
+
+/**
+ * Calculates the progress ratio between birth and target,
+ * based on today's position. Clamps to [0, 1].
+ */
+export function lifetimeProgress(birthDate: string, targetDate: string, todayDate: string): number {
+  const birth = new Date(birthDate + 'T00:00:00').getTime();
+  const target = new Date(targetDate + 'T00:00:00').getTime();
+  const now = new Date(todayDate + 'T00:00:00').getTime();
+  const totalSpan = target - birth;
+  if (totalSpan <= 0) return 1;
+  const elapsed = now - birth;
+  return Math.max(0, Math.min(1, elapsed / totalSpan));
+}
