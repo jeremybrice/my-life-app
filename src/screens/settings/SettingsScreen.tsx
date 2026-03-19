@@ -5,6 +5,7 @@ import { ErrorState } from '@/components/ErrorState';
 import { roundCurrency } from '@/lib/currency';
 import { ExportButton } from './ExportButton';
 import { ImportButton } from './ImportButton';
+import { NotificationSettings } from './NotificationSettings';
 
 export function SettingsScreen() {
   const { settings, loading, error, save } = useSettings();
@@ -75,7 +76,7 @@ export function SettingsScreen() {
   const todayStr = new Date().toISOString().split('T')[0]!;
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="animate-fade-in max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
         Settings
       </h2>
@@ -242,6 +243,11 @@ export function SettingsScreen() {
             </div>
           )}
         </div>
+
+        {/* Notification Settings */}
+        <section className="rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+          <NotificationSettings />
+        </section>
 
         {/* Data Management */}
         <section className="rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-6">

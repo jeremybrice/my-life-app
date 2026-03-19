@@ -4,6 +4,7 @@ import type { Goal } from '@/lib/types';
 import GoalCard from './GoalCard';
 import { EmptyState } from '@/components/EmptyState';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { ErrorState } from '@/components/ErrorState';
 
 type TypeFilter = Goal['type'] | 'all';
 type StatusFilter = Goal['status'] | 'all';
@@ -32,17 +33,26 @@ export default function GoalsScreen({ onCreateGoal, onSelectGoal }: GoalsScreenP
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('active');
 
-  const { goals, loading } = useGoals({
+  const { goals, loading, error } = useGoals({
     status: statusFilter === 'all' ? undefined : statusFilter,
     type: typeFilter === 'all' ? undefined : typeFilter,
   });
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner label="Loading goals..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorState
+        message="Could not load your goals."
+        onRetry={() => window.location.reload()}
+      />
+    );
   }
 
   return (
-    <div className="mx-auto max-w-2xl p-4">
+    <div className="animate-fade-in mx-auto max-w-2xl p-4">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Goals</h1>
         <button

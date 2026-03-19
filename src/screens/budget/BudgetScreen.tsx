@@ -3,6 +3,7 @@ import { useBudget } from '@/hooks/useBudget';
 import { useExpenses } from '@/hooks/useExpenses';
 import { today as getToday, currentYearMonth } from '@/lib/dates';
 import { initializeMonth } from '@/data/budget-service';
+import { clearBadgeForScreen } from '@/data/notification-service';
 import { BalanceHeader } from './BalanceHeader';
 import { BudgetSetupPrompt } from './BudgetSetupPrompt';
 import { ExpenseForm } from './ExpenseForm';
@@ -21,6 +22,7 @@ export function BudgetScreen() {
   // Reset to current month on screen re-entry (component mount)
   useEffect(() => {
     setSelectedMonth(currentYearMonth());
+    clearBadgeForScreen('budget').catch(() => {});
   }, []);
 
   const handleMonthChange = async (yearMonth: string) => {
@@ -55,7 +57,7 @@ export function BudgetScreen() {
   }
 
   return (
-    <div className="pb-20" data-testid="budget-screen">
+    <div className="animate-fade-in pb-20" data-testid="budget-screen">
       <MonthSelector
         selectedMonth={selectedMonth}
         onMonthChange={handleMonthChange}

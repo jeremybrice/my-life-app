@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  /* --- Color tokens --- */
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
   --color-primary-200: #bfdbfe;
@@ -15,6 +16,54 @@
   --color-positive: #16a34a;
   --color-negative: #dc2626;
   --color-warning: #f59e0b;
+
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+
+  /* --- Spacing tokens --- */
+  --spacing-card: 1rem;
+  --spacing-card-gap: 0.75rem;
+  --spacing-section: 1.5rem;
+  --spacing-screen-x: 1rem;
+  --spacing-screen-y: 1.5rem;
+
+  /* --- Border radius tokens --- */
+  --radius-card: 0.75rem;
+  --radius-button: 0.5rem;
+  --radius-input: 0.5rem;
+
+  /* --- Transition duration tokens --- */
+  --transition-duration-fast: 150ms;
+  --transition-duration-normal: 200ms;
+  --transition-duration-slow: 300ms;
+
+  /* --- Font size tokens --- */
+  --font-size-heading-1: 1.5rem;
+  --font-size-heading-2: 1.25rem;
+  --font-size-heading-3: 1rem;
+  --font-size-body: 0.875rem;
+  --font-size-caption: 0.75rem;
+
+  --line-height-heading-1: 2rem;
+  --line-height-heading-2: 1.75rem;
+  --line-height-heading-3: 1.5rem;
+  --line-height-body: 1.25rem;
+  --line-height-caption: 1rem;
 }
 
 /* Base styles */
