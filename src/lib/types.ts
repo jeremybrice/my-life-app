@@ -77,7 +77,9 @@ export interface Goal {
 export interface HealthRoutine {
   id?: number; // auto-increment
   name: string;
-  targetFrequency: number; // per week (positive integer)
+  frequencyType: 'daily' | 'weekly'; // daily = X times per day, weekly = X times per week
+  dailyTarget: number; // how many times per day (used when frequencyType is 'daily')
+  targetFrequency: number; // per week (positive integer) — auto-calculated as dailyTarget*7 for daily routines
   trackedMetrics: TrackedMetric[];
   createdAt: string;
   updatedAt: string;

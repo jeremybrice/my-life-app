@@ -18,7 +18,15 @@ const METRIC_TYPE_OPTIONS: { value: TrackedMetric['type']; label: string }[] = [
 export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
   const isEditing = !!routine;
   const [name, setName] = useState(routine?.name ?? '');
-  const [frequency, setFrequency] = useState(String(routine?.targetFrequency ?? ''));
+  const [frequencyType, setFrequencyType] = useState<'daily' | 'weekly'>(
+    routine?.frequencyType ?? 'daily'
+  );
+  const [dailyTarget, setDailyTarget] = useState(
+    String(routine?.dailyTarget ?? '1')
+  );
+  const [weeklyFrequency, setWeeklyFrequency] = useState(
+    String(routine?.frequencyType === 'weekly' ? routine.targetFrequency : '')
+  );
   const [metrics, setMetrics] = useState<TrackedMetric[]>(
     routine?.trackedMetrics ?? []
   );
@@ -28,9 +36,17 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
   function validate(): Record<string, string> {
     const errs: Record<string, string> = {};
     if (!name.trim()) errs.name = 'Routine name is required';
-    const freq = parseInt(frequency, 10);
-    if (!frequency || isNaN(freq) || freq <= 0 || !Number.isInteger(freq)) {
-      errs.frequency = 'Frequency must be a positive whole number';
+
+    if (frequencyType === 'daily') {
+      const target = parseInt(dailyTarget, 10);
+      if (!dailyTarget || isNaN(target) || target <= 0 || !Number.isInteger(target)) {
+        errs.dailyTarget = 'Daily target must be a positive whole number';
+      }
+    } else {
+      const freq = parseInt(weeklyFrequency, 10);
+      if (!weeklyFrequency || isNaN(freq) || freq <= 0 || !Number.isInteger(freq)) {
+        errs.weeklyFrequency = 'Frequency must be a positive whole number';
+      }
     }
     return errs;
   }
@@ -65,9 +81,11 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
 
     setSubmitting(true);
     try {
-      const input = {
+      const input: CreateRoutineInput = {
         name: name.trim(),
-        targetFrequency: parseInt(frequency, 10),
+        frequencyType,
+        dailyTarget: frequencyType === 'daily' ? parseInt(dailyTarget, 10) : undefined,
+        targetFrequency: frequencyType === 'weekly' ? parseInt(weeklyFrequency, 10) : undefined,
         trackedMetrics: metrics,
       };
       await onSubmit(input);
@@ -97,7 +115,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g., Morning Run, Yoga, Meditation"
+            placeholder="e.g., Brush Teeth, Take Medicine, Morning Run"
             className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2 text-fg"
             data-testid="routine-name-input"
           />
@@ -108,28 +126,88 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
           )}
         </div>
 
-        {/* Frequency */}
+        {/* Frequency Type Toggle */}
         <div>
-          <label htmlFor="frequency" className="block text-sm font-medium text-fg-secondary">
-            Target Frequency (per week) *
+          <label className="block text-sm font-medium text-fg-secondary mb-2">
+            How often? *
           </label>
-          <input
-            id="frequency"
-            type="number"
-            min="1"
-            step="1"
-            value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
-            placeholder="e.g., 3"
-            className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2 text-fg"
-            data-testid="frequency-input"
-          />
-          {errors.frequency && (
-            <p className="mt-1 text-sm text-red-600" data-testid="error-frequency">
-              {errors.frequency}
-            </p>
-          )}
+          <div className="flex gap-2" data-testid="frequency-type-toggle">
+            <button
+              type="button"
+              onClick={() => setFrequencyType('daily')}
+              className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                frequencyType === 'daily'
+                  ? 'bg-accent text-white'
+                  : 'border border-edge text-fg-secondary hover:bg-surface-hover'
+              }`}
+              data-testid="frequency-type-daily"
+            >
+              Times per day
+            </button>
+            <button
+              type="button"
+              onClick={() => setFrequencyType('weekly')}
+              className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                frequencyType === 'weekly'
+                  ? 'bg-accent text-white'
+                  : 'border border-edge text-fg-secondary hover:bg-surface-hover'
+              }`}
+              data-testid="frequency-type-weekly"
+            >
+              Times per week
+            </button>
+          </div>
         </div>
+
+        {/* Daily Target or Weekly Frequency */}
+        {frequencyType === 'daily' ? (
+          <div>
+            <label htmlFor="dailyTarget" className="block text-sm font-medium text-fg-secondary">
+              How many times per day? *
+            </label>
+            <input
+              id="dailyTarget"
+              type="number"
+              min="1"
+              step="1"
+              value={dailyTarget}
+              onChange={(e) => setDailyTarget(e.target.value)}
+              placeholder="e.g., 2"
+              className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2 text-fg"
+              data-testid="daily-target-input"
+            />
+            <p className="mt-1 text-xs text-fg-muted">
+              Weekly target will be {parseInt(dailyTarget, 10) > 0 ? parseInt(dailyTarget, 10) * 7 : '...'} per week
+            </p>
+            {errors.dailyTarget && (
+              <p className="mt-1 text-sm text-red-600" data-testid="error-dailyTarget">
+                {errors.dailyTarget}
+              </p>
+            )}
+          </div>
+        ) : (
+          <div>
+            <label htmlFor="frequency" className="block text-sm font-medium text-fg-secondary">
+              How many times per week? *
+            </label>
+            <input
+              id="frequency"
+              type="number"
+              min="1"
+              step="1"
+              value={weeklyFrequency}
+              onChange={(e) => setWeeklyFrequency(e.target.value)}
+              placeholder="e.g., 3"
+              className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2 text-fg"
+              data-testid="frequency-input"
+            />
+            {errors.weeklyFrequency && (
+              <p className="mt-1 text-sm text-red-600" data-testid="error-frequency">
+                {errors.weeklyFrequency}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Tracked Metrics */}
         <div>

@@ -14,6 +14,7 @@ import {
   deleteLogEntry,
   calculateStreak,
   getWeeklyCount,
+  getDailyCount,
   getRoutinesCompletedToday,
   isRoutineOnTrack,
   getHealthAggregation,
@@ -37,9 +38,10 @@ afterEach(() => {
 // --- Routine CRUD tests ---
 
 describe('createRoutine', () => {
-  it('should create a routine with frequency and metrics', async () => {
+  it('should create a weekly routine with frequency and metrics', async () => {
     const routine = await createRoutine({
       name: 'Morning Run',
+      frequencyType: 'weekly',
       targetFrequency: 3,
       trackedMetrics: [
         { type: 'duration', unit: 'minutes' },
@@ -49,14 +51,39 @@ describe('createRoutine', () => {
 
     expect(routine.id).toBeDefined();
     expect(routine.name).toBe('Morning Run');
+    expect(routine.frequencyType).toBe('weekly');
     expect(routine.targetFrequency).toBe(3);
+    expect(routine.dailyTarget).toBe(1);
     expect(routine.trackedMetrics).toHaveLength(2);
     expect(routine.createdAt).toBeDefined();
+  });
+
+  it('should create a daily routine with dailyTarget', async () => {
+    const routine = await createRoutine({
+      name: 'Brush Teeth',
+      frequencyType: 'daily',
+      dailyTarget: 2,
+    });
+
+    expect(routine.frequencyType).toBe('daily');
+    expect(routine.dailyTarget).toBe(2);
+    expect(routine.targetFrequency).toBe(14); // 2 * 7
+  });
+
+  it('should default dailyTarget to 1 for daily routines', async () => {
+    const routine = await createRoutine({
+      name: 'Take Medicine',
+      frequencyType: 'daily',
+    });
+
+    expect(routine.dailyTarget).toBe(1);
+    expect(routine.targetFrequency).toBe(7);
   });
 
   it('should create a routine with no tracked metrics', async () => {
     const routine = await createRoutine({
       name: 'Meditation',
+      frequencyType: 'weekly',
       targetFrequency: 7,
     });
 
@@ -65,25 +92,38 @@ describe('createRoutine', () => {
 
   it('should reject routine with empty name', async () => {
     await expect(
-      createRoutine({ name: '', targetFrequency: 3 })
+      createRoutine({ name: '', frequencyType: 'weekly', targetFrequency: 3 })
     ).rejects.toThrow('Routine name is required');
   });
 
   it('should reject routine with non-positive frequency', async () => {
     await expect(
-      createRoutine({ name: 'Test', targetFrequency: 0 })
+      createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 0 })
     ).rejects.toThrow('Target frequency must be a positive integer');
   });
 
   it('should reject routine with non-integer frequency', async () => {
     await expect(
-      createRoutine({ name: 'Test', targetFrequency: 2.5 })
+      createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 2.5 })
+    ).rejects.toThrow('Target frequency must be a positive integer');
+  });
+
+  it('should reject routine with invalid frequencyType', async () => {
+    await expect(
+      createRoutine({ name: 'Test', frequencyType: 'monthly' as any, targetFrequency: 3 })
+    ).rejects.toThrow('Frequency type must be "daily" or "weekly"');
+  });
+
+  it('should reject daily routine with non-positive dailyTarget', async () => {
+    await expect(
+      createRoutine({ name: 'Test', frequencyType: 'daily', dailyTarget: 0 })
     ).rejects.toThrow('Target frequency must be a positive integer');
   });
 
   it('should trim routine name', async () => {
     const routine = await createRoutine({
       name: '  Running  ',
+      frequencyType: 'weekly',
       targetFrequency: 3,
     });
     expect(routine.name).toBe('Running');
@@ -92,9 +132,9 @@ describe('createRoutine', () => {
 
 describe('getAllRoutines', () => {
   it('should return routines sorted alphabetically', async () => {
-    await createRoutine({ name: 'Yoga', targetFrequency: 5 });
-    await createRoutine({ name: 'Abs', targetFrequency: 3 });
-    await createRoutine({ name: 'Meditation', targetFrequency: 7 });
+    await createRoutine({ name: 'Yoga', frequencyType: 'weekly', targetFrequency: 5 });
+    await createRoutine({ name: 'Abs', frequencyType: 'weekly', targetFrequency: 3 });
+    await createRoutine({ name: 'Meditation', frequencyType: 'daily', dailyTarget: 1 });
 
     const routines = await getAllRoutines();
     expect(routines.map((r) => r.name)).toEqual(['Abs', 'Meditation', 'Yoga']);
@@ -103,9 +143,17 @@ describe('getAllRoutines', () => {
 
 describe('updateRoutine', () => {
   it('should update routine name', async () => {
-    const routine = await createRoutine({ name: 'Run', targetFrequency: 3 });
+    const routine = await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 3 });
     const updated = await updateRoutine(routine.id!, { name: 'Morning Run' });
     expect(updated.name).toBe('Morning Run');
+  });
+
+  it('should update frequencyType from weekly to daily', async () => {
+    const routine = await createRoutine({ name: 'Brush Teeth', frequencyType: 'weekly', targetFrequency: 14 });
+    const updated = await updateRoutine(routine.id!, { frequencyType: 'daily', dailyTarget: 2 });
+    expect(updated.frequencyType).toBe('daily');
+    expect(updated.dailyTarget).toBe(2);
+    expect(updated.targetFrequency).toBe(14);
   });
 
   it('should reject update for non-existent routine', async () => {
@@ -115,7 +163,7 @@ describe('updateRoutine', () => {
 
 describe('deleteRoutine', () => {
   it('should delete routine and cascade log entries', async () => {
-    const routine = await createRoutine({ name: 'Run', targetFrequency: 3 });
+    const routine = await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 3 });
     mockToday('2026-03-18');
     await createLogEntry({ routineId: routine.id!, date: '2026-03-16' });
     await createLogEntry({ routineId: routine.id!, date: '2026-03-17' });
@@ -142,6 +190,7 @@ describe('createLogEntry', () => {
     mockToday('2026-03-18');
     const routine = await createRoutine({
       name: 'Run',
+      frequencyType: 'weekly',
       targetFrequency: 3,
       trackedMetrics: [{ type: 'duration', unit: 'minutes' }],
     });
@@ -160,7 +209,7 @@ describe('createLogEntry', () => {
 
   it('should create a log entry without metrics', async () => {
     mockToday('2026-03-18');
-    const routine = await createRoutine({ name: 'Meditation', targetFrequency: 7 });
+    const routine = await createRoutine({ name: 'Meditation', frequencyType: 'daily', dailyTarget: 1 });
     const entry = await createLogEntry({
       routineId: routine.id!,
       date: '2026-03-18',
@@ -171,14 +220,14 @@ describe('createLogEntry', () => {
 
   it('should default date to today', async () => {
     mockToday('2026-03-18');
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 1 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 1 });
     const entry = await createLogEntry({ routineId: routine.id! });
     expect(entry.date).toBe('2026-03-18');
   });
 
   it('should allow back-dated entries', async () => {
     mockToday('2026-03-18');
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 1 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 1 });
     const entry = await createLogEntry({
       routineId: routine.id!,
       date: '2026-03-15',
@@ -188,7 +237,7 @@ describe('createLogEntry', () => {
 
   it('should reject future dates', async () => {
     mockToday('2026-03-18');
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 1 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 1 });
     await expect(
       createLogEntry({ routineId: routine.id!, date: '2026-03-19' })
     ).rejects.toThrow('Log date cannot be in the future');
@@ -202,7 +251,7 @@ describe('createLogEntry', () => {
 
   it('should reject negative metric values', async () => {
     mockToday('2026-03-18');
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 1 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 1 });
     await expect(
       createLogEntry({
         routineId: routine.id!,
@@ -214,7 +263,7 @@ describe('createLogEntry', () => {
 
   it('should allow multiple entries same routine same day', async () => {
     mockToday('2026-03-18');
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 1 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'daily', dailyTarget: 2 });
     await createLogEntry({ routineId: routine.id!, date: '2026-03-18' });
     await createLogEntry({ routineId: routine.id!, date: '2026-03-18' });
 
@@ -226,7 +275,7 @@ describe('createLogEntry', () => {
 describe('getLogEntriesByRoutineAndDateRange', () => {
   it('should return entries within date range', async () => {
     mockToday('2026-03-18');
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 1 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 1 });
     await createLogEntry({ routineId: routine.id!, date: '2026-03-10' });
     await createLogEntry({ routineId: routine.id!, date: '2026-03-15' });
     await createLogEntry({ routineId: routine.id!, date: '2026-03-18' });
@@ -241,23 +290,43 @@ describe('getLogEntriesByRoutineAndDateRange', () => {
   });
 });
 
+// --- Daily count tests ---
+
+describe('getDailyCount', () => {
+  it('should count entries for a routine on a specific date', async () => {
+    mockToday('2026-03-18');
+    const routine = await createRoutine({ name: 'Brush Teeth', frequencyType: 'daily', dailyTarget: 2 });
+    await createLogEntry({ routineId: routine.id!, date: '2026-03-18' });
+    await createLogEntry({ routineId: routine.id!, date: '2026-03-18' });
+    await createLogEntry({ routineId: routine.id!, date: '2026-03-17' }); // different day
+
+    const count = await getDailyCount(routine.id!, '2026-03-18');
+    expect(count).toBe(2);
+  });
+
+  it('should default to today', async () => {
+    mockToday('2026-03-18');
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'daily', dailyTarget: 1 });
+    await createLogEntry({ routineId: routine.id!, date: '2026-03-18' });
+
+    const count = await getDailyCount(routine.id!);
+    expect(count).toBe(1);
+  });
+});
+
 // --- Streak calculation tests ---
 
 describe('calculateStreak', () => {
   it('should return 0 for new routine with no entries', async () => {
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 3 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 3 });
     const streak = await calculateStreak(routine.id!);
     expect(streak).toBe(0);
   });
 
   it('should calculate multi-week streak', async () => {
-    // Week starts Monday. Today is Wednesday 2026-03-18.
-    // Week of 3/16 (Mon) - current week
-    // Week of 3/9 (Mon) - previous week
-    // Week of 3/2 (Mon) - two weeks ago
     mockToday('2026-03-18');
 
-    const routine = await createRoutine({ name: 'Run', targetFrequency: 3 });
+    const routine = await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 3 });
 
     // Week of 3/2 (3 entries)
     await createLogEntry({ routineId: routine.id!, date: '2026-03-02' });
@@ -281,7 +350,7 @@ describe('calculateStreak', () => {
   it('should reset streak on missed week', async () => {
     mockToday('2026-03-18');
 
-    const routine = await createRoutine({ name: 'Run', targetFrequency: 3 });
+    const routine = await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 3 });
 
     // Week of 3/2 (3 entries - met)
     await createLogEntry({ routineId: routine.id!, date: '2026-03-02' });
@@ -303,7 +372,7 @@ describe('calculateStreak', () => {
   it('should not count current week if target not met', async () => {
     mockToday('2026-03-18');
 
-    const routine = await createRoutine({ name: 'Run', targetFrequency: 3 });
+    const routine = await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 3 });
 
     // Week of 3/9 (3 entries - met)
     await createLogEntry({ routineId: routine.id!, date: '2026-03-09' });
@@ -320,7 +389,7 @@ describe('calculateStreak', () => {
   it('should count current week if target already met', async () => {
     mockToday('2026-03-18');
 
-    const routine = await createRoutine({ name: 'Run', targetFrequency: 3 });
+    const routine = await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 3 });
 
     // Week of 3/9 (3 entries - met)
     await createLogEntry({ routineId: routine.id!, date: '2026-03-09' });
@@ -339,7 +408,7 @@ describe('calculateStreak', () => {
   it('should recalculate on back-dated entry filling a missed week', async () => {
     mockToday('2026-03-18');
 
-    const routine = await createRoutine({ name: 'Run', targetFrequency: 2 });
+    const routine = await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 2 });
 
     // Week of 3/2 (2 entries - met)
     await createLogEntry({ routineId: routine.id!, date: '2026-03-02' });
@@ -368,7 +437,7 @@ describe('calculateStreak', () => {
 describe('getWeeklyCount', () => {
   it('should count entries for current week', async () => {
     mockToday('2026-03-18'); // Wednesday
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 3 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 3 });
 
     // Current week (Mon 3/16 - Sun 3/22)
     await createLogEntry({ routineId: routine.id!, date: '2026-03-16' });
@@ -383,25 +452,39 @@ describe('getWeeklyCount', () => {
 });
 
 describe('getRoutinesCompletedToday', () => {
-  it('should count distinct routines with entries today', async () => {
+  it('should count distinct routines with entries today (weekly routines)', async () => {
     mockToday('2026-03-18');
-    const r1 = await createRoutine({ name: 'Run', targetFrequency: 3 });
-    const r2 = await createRoutine({ name: 'Yoga', targetFrequency: 5 });
-    await createRoutine({ name: 'Swim', targetFrequency: 2 }); // no entry today
+    const r1 = await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 3 });
+    const r2 = await createRoutine({ name: 'Yoga', frequencyType: 'weekly', targetFrequency: 5 });
+    await createRoutine({ name: 'Swim', frequencyType: 'weekly', targetFrequency: 2 }); // no entry today
 
     await createLogEntry({ routineId: r1.id!, date: '2026-03-18' });
     await createLogEntry({ routineId: r1.id!, date: '2026-03-18' }); // same routine twice
     await createLogEntry({ routineId: r2.id!, date: '2026-03-18' });
 
     const count = await getRoutinesCompletedToday();
-    expect(count).toBe(2); // r1 and r2, even though r1 logged twice
+    expect(count).toBe(2); // r1 and r2
+  });
+
+  it('should require daily target met for daily routines', async () => {
+    mockToday('2026-03-18');
+    const r1 = await createRoutine({ name: 'Brush Teeth', frequencyType: 'daily', dailyTarget: 2 });
+    const r2 = await createRoutine({ name: 'Take Medicine', frequencyType: 'daily', dailyTarget: 1 });
+
+    // Only 1 of 2 for Brush Teeth
+    await createLogEntry({ routineId: r1.id!, date: '2026-03-18' });
+    // 1 of 1 for Take Medicine
+    await createLogEntry({ routineId: r2.id!, date: '2026-03-18' });
+
+    const count = await getRoutinesCompletedToday();
+    expect(count).toBe(1); // Only Take Medicine met its daily target
   });
 });
 
 describe('isRoutineOnTrack', () => {
   it('should return true when target already met', async () => {
     mockToday('2026-03-18'); // Wednesday
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 2 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 2 });
     await createLogEntry({ routineId: routine.id!, date: '2026-03-16' });
     await createLogEntry({ routineId: routine.id!, date: '2026-03-17' });
 
@@ -411,7 +494,7 @@ describe('isRoutineOnTrack', () => {
 
   it('should return true when remaining is achievable', async () => {
     mockToday('2026-03-16'); // Monday, 7 days remaining in week
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 3 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 3 });
     // 0 entries but 7 days left -> 3 needed in 7 days = on track
 
     const onTrack = await isRoutineOnTrack(routine.id!);
@@ -420,7 +503,7 @@ describe('isRoutineOnTrack', () => {
 
   it('should return false when behind pace', async () => {
     mockToday('2026-03-22'); // Sunday, last day of week
-    const routine = await createRoutine({ name: 'Test', targetFrequency: 5 });
+    const routine = await createRoutine({ name: 'Test', frequencyType: 'weekly', targetFrequency: 5 });
     await createLogEntry({ routineId: routine.id!, date: '2026-03-16' });
     // 1 entry, 4 more needed, but only 1 day left -> behind
 
@@ -444,8 +527,8 @@ describe('getHealthAggregation', () => {
   it('should aggregate data across routines', async () => {
     mockToday('2026-03-18');
 
-    const r1 = await createRoutine({ name: 'Run', targetFrequency: 3 });
-    const r2 = await createRoutine({ name: 'Yoga', targetFrequency: 5 });
+    const r1 = await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 3 });
+    const r2 = await createRoutine({ name: 'Yoga', frequencyType: 'weekly', targetFrequency: 5 });
 
     // Log r1 today (completed today)
     await createLogEntry({ routineId: r1.id!, date: '2026-03-18' });
@@ -461,9 +544,26 @@ describe('getHealthAggregation', () => {
 
   it('should return null bestStreak when all streaks are zero', async () => {
     mockToday('2026-03-18');
-    await createRoutine({ name: 'Run', targetFrequency: 3 });
+    await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 3 });
 
     const agg = await getHealthAggregation();
     expect(agg.bestStreak).toBeNull();
+  });
+
+  it('should handle mix of daily and weekly routines', async () => {
+    mockToday('2026-03-18');
+
+    const r1 = await createRoutine({ name: 'Brush Teeth', frequencyType: 'daily', dailyTarget: 2 });
+    const r2 = await createRoutine({ name: 'Run', frequencyType: 'weekly', targetFrequency: 3 });
+
+    // Brush teeth: 2 logs today (daily target met)
+    await createLogEntry({ routineId: r1.id!, date: '2026-03-18' });
+    await createLogEntry({ routineId: r1.id!, date: '2026-03-18' });
+    // Run: 1 log today
+    await createLogEntry({ routineId: r2.id!, date: '2026-03-18' });
+
+    const agg = await getHealthAggregation();
+    expect(agg.totalRoutines).toBe(2);
+    expect(agg.routinesCompletedToday).toBe(2); // both met today's target
   });
 });
