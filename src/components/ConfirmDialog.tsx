@@ -53,7 +53,7 @@ export function ConfirmDialog({
       onClose={handleClose}
       className="rounded-xl shadow-xl backdrop:bg-black/50 p-0 max-w-sm w-full"
     >
-      <div className="p-6">
+      <div className="animate-slide-up p-6">
         <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
           {title}
         </h2>

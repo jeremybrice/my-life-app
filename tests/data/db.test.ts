@@ -12,8 +12,8 @@ describe('MyLifeAppDB', () => {
     await db.open();
   });
 
-  it('should create the database at version 1', () => {
-    expect(db.verno).toBe(1);
+  it('should create the database at version 2', () => {
+    expect(db.verno).toBe(2);
   });
 
   it('should have a settings table', async () => {

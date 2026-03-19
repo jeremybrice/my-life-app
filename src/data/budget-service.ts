@@ -1,6 +1,7 @@
 import { db } from '@/data/db';
 import type { BudgetMonth } from '@/lib/types';
 import { roundCurrency } from '@/lib/currency';
+import { recordQualifyingAction } from '@/data/notification-service';
 import {
   daysInMonth,
   daysElapsed as getDaysElapsed,
@@ -74,6 +75,9 @@ export async function createBudgetMonth(input: CreateBudgetMonthInput): Promise<
   };
 
   await db.budgetMonths.add(record);
+
+  recordQualifyingAction().catch(() => {});
+
   return record;
 }
 

@@ -1,15 +1,27 @@
+import { useEffect } from 'react';
 import { MilestoneCountdown } from './MilestoneCountdown';
 import { DailyBudgetCard } from './DailyBudgetCard';
 import { MonthlyPerformanceCard } from './MonthlyPerformanceCard';
 import { GoalsWidgetContainer } from './GoalsWidgetContainer';
 import { HealthWidgetContainer } from './HealthWidgetContainer';
+import { useNotificationAlerts } from '@/hooks/useNotificationAlerts';
+import { NotificationBanner } from '@/components/NotificationBanner';
+import { clearBadgeForScreen, isPushAvailable } from '@/data/notification-service';
 
 export function DashboardScreen() {
-  // Stage 2: All cards render in zero-state / placeholder mode.
-  // Stage 4 will connect DailyBudgetCard and MonthlyPerformanceCard to live data.
-  // Stage 5 will connect GoalsWidget and HealthWidget to live data.
+  const { alerts, dismiss } = useNotificationAlerts();
+
+  useEffect(() => {
+    clearBadgeForScreen('dashboard').catch(() => {});
+  }, []);
+
   return (
-    <div data-testid="dashboard-screen" className="space-y-4 p-4 pb-24">
+    <div data-testid="dashboard-screen" className="animate-fade-in space-y-4 p-4 pb-24">
+      {/* In-app notification banners (shown when push unavailable) */}
+      {!isPushAvailable() && (
+        <NotificationBanner alerts={alerts} onDismiss={dismiss} />
+      )}
+
       {/* 1. Milestone Countdown — most prominent, top of dashboard */}
       <MilestoneCountdown />
 

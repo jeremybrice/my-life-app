@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  /* --- Color tokens --- */
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
   --color-primary-200: #bfdbfe;
@@ -15,6 +16,54 @@
   --color-positive: #16a34a;
   --color-negative: #dc2626;
   --color-warning: #f59e0b;
+
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+
+  /* --- Spacing tokens --- */
+  --spacing-card: 1rem;
+  --spacing-card-gap: 0.75rem;
+  --spacing-section: 1.5rem;
+  --spacing-screen-x: 1rem;
+  --spacing-screen-y: 1.5rem;
+
+  /* --- Border radius tokens --- */
+  --radius-card: 0.75rem;
+  --radius-button: 0.5rem;
+  --radius-input: 0.5rem;
+
+  /* --- Transition duration tokens --- */
+  --transition-duration-fast: 150ms;
+  --transition-duration-normal: 200ms;
+  --transition-duration-slow: 300ms;
+
+  /* --- Font size tokens --- */
+  --font-size-heading-1: 1.5rem;
+  --font-size-heading-2: 1.25rem;
+  --font-size-heading-3: 1rem;
+  --font-size-body: 0.875rem;
+  --font-size-caption: 0.75rem;
+
+  --line-height-heading-1: 2rem;
+  --line-height-heading-2: 1.75rem;
+  --line-height-heading-3: 1.5rem;
+  --line-height-body: 1.25rem;
+  --line-height-caption: 1rem;
 }
 
 /* Base styles */
@@ -30,5 +79,90 @@ body {
   }
   .pt-safe {
     padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* --- Motion preferences --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- Shared animation classes --- */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-in {
+    animation: fadeIn 200ms ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 200ms ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 200ms ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* --- Safari-specific fixes --- */
+
+/* Fix Safari flex gap issue in older versions */
+@supports not (gap: 1rem) {
+  .flex > * + * {
+    margin-left: 0.75rem;
+  }
+}
+
+/* Fix Safari 100vh issue on iOS (address bar) */
+body {
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+/* Fix Safari input zoom on focus (prevent auto-zoom for inputs < 16px) */
+@media screen and (max-width: 768px) {
+  input[type='text'],
+  input[type='number'],
+  input[type='email'],
+  input[type='password'],
+  input[type='date'],
+  select,
+  textarea {
+    font-size: 16px;
   }
 }

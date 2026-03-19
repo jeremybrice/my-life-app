@@ -29,6 +29,11 @@ export interface Settings {
   monthlyBudget?: number;
   dailyBudget?: number;
   notificationPreferences?: NotificationPreferences;
+  notificationPromptDeferred?: number;   // count of "Not Now" taps
+  notificationPromptDeferredAtSession?: number; // session count when last deferred
+  notificationPromptLastShown?: string;  // ISO datetime of last prompt
+  hasQualifyingAction?: boolean;         // true after first budget/expense/goal action
+  sessionCount?: number;                 // incremented on each app launch
 }
 
 export interface BudgetMonth {
@@ -90,6 +95,52 @@ export interface HealthLogEntry {
   date: string; // "2026-03-17" (indexed)
   metrics?: Record<string, number>;
   createdAt: string;
+}
+
+// --- Notification system types ---
+
+export interface NotificationCapabilities {
+  pushSupported: boolean;
+  badgeSupported: boolean;
+  persistentSupported: boolean;
+  permissionState: AppNotificationPermission | 'unsupported'; // 'granted' | 'denied' | 'default' | 'unsupported'
+}
+
+export type AppNotificationPermission = 'granted' | 'denied' | 'default';
+
+export interface NotificationAlert {
+  id: string;           // unique key e.g. "budget-daily-2026-03-18" or "milestone-30-2026"
+  type: 'budget-daily' | 'budget-monthly' | 'milestone';
+  title: string;
+  body: string;
+  timestamp: string;    // ISO datetime
+  dismissed: boolean;
+  screen: 'budget' | 'dashboard'; // which screen clears this alert
+}
+
+export interface NotificationFiredRecord {
+  id: string;           // same key format as NotificationAlert.id
+  firedAt: string;      // ISO datetime
+}
+
+export interface ExportData {
+  metadata: ExportMetadata;
+  data: ExportStores;
+}
+
+export interface ExportMetadata {
+  exportDate: string;   // ISO datetime
+  appVersion: string;
+  schemaVersion: number;
+}
+
+export interface ExportStores {
+  settings: unknown[];
+  budgetMonths: unknown[];
+  expenses: unknown[];
+  goals: unknown[];
+  healthRoutines: unknown[];
+  healthLogEntries: unknown[];
 }
 
 // Dashboard card interfaces (defined in Stage 2, consumed by Stages 4 & 5)

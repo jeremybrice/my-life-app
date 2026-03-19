@@ -8,11 +8,12 @@ import { LogEntryForm } from './LogEntryForm';
 import { EmptyState } from '@/components/EmptyState';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { ErrorState } from '@/components/ErrorState';
 
 type HealthView = 'list' | 'createRoutine' | 'editRoutine' | 'log';
 
 export function HealthScreen() {
-  const { routines, loading, addRoutine, editRoutine, removeRoutine, logEntry } = useHealth();
+  const { routines, loading, error, addRoutine, editRoutine, removeRoutine, logEntry } = useHealth();
   const [view, setView] = useState<HealthView>('list');
   const [editingRoutine, setEditingRoutine] = useState<RoutineWithAdherence | null>(null);
   const [preSelectedRoutineId, setPreSelectedRoutineId] = useState<number | undefined>();
@@ -98,11 +99,20 @@ export function HealthScreen() {
 
   // Main list view
   if (loading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner label="Loading health routines..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorState
+        message="Could not load health routines."
+        onRetry={() => window.location.reload()}
+      />
+    );
   }
 
   return (
-    <div className="mx-auto max-w-2xl p-4">
+    <div className="animate-fade-in mx-auto max-w-2xl p-4">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Health Routines</h1>
         <button
