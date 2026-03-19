@@ -23,16 +23,24 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
+  const closedByEscape = useRef(false);
+
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
-    if (open && !dialog.open) {
+    if (open && !dialog.open && !closedByEscape.current) {
       dialog.showModal();
     } else if (!open && dialog.open) {
       dialog.close();
     }
+    closedByEscape.current = false;
   }, [open]);
+
+  const handleClose = () => {
+    closedByEscape.current = true;
+    onCancel();
+  };
 
   const confirmButtonClass =
     variant === 'danger'
@@ -42,7 +50,7 @@ export function ConfirmDialog({
   return (
     <dialog
       ref={dialogRef}
-      onClose={onCancel}
+      onClose={handleClose}
       className="rounded-xl shadow-xl backdrop:bg-black/50 p-0 max-w-sm w-full"
     >
       <div className="p-6">
