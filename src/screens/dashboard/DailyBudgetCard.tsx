@@ -1,6 +1,10 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import { getDailyBudgetCardData, type DailyBudgetCardData } from '@/data/budget-service';
+import { formatCurrency } from '@/lib/currency';
+
 /**
- * DailyBudgetCardProps — Stage 4 will pass live data to this interface.
- * Do NOT modify this interface's type shape when connecting live data.
+ * DailyBudgetCardProps — preserved for type compatibility.
  */
 export interface DailyBudgetCardProps {
   /** Today's remaining balance (daily allowance - today's spending + carry-over fraction) */
@@ -15,46 +19,82 @@ export interface DailyBudgetCardProps {
   onNavigate?: () => void;
 }
 
-interface DailyBudgetCardInternalProps {
-  data?: DailyBudgetCardProps;
-}
+export function DailyBudgetCard() {
+  const navigate = useNavigate();
+  const [data, setData] = useState<DailyBudgetCardData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export function DailyBudgetCard({ data }: DailyBudgetCardInternalProps) {
-  if (!data) {
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadData() {
+      setLoading(true);
+      try {
+        const cardData = await getDailyBudgetCardData();
+        if (!cancelled) {
+          setData(cardData);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadData();
+    return () => { cancelled = true; };
+  }, []);
+
+  const handleClick = () => {
+    navigate('/budget');
+  };
+
+  if (loading) {
     return (
-      <div data-testid="daily-budget-card" className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-          Daily Budget
-        </h3>
-        <div data-testid="daily-budget-zero-state" className="mt-3 text-center">
-          <p className="text-2xl font-bold text-gray-300">--</p>
-          <p className="mt-2 text-sm text-gray-400">
-            Set up your monthly budget in the Budget tab to see your daily spending allowance here.
-          </p>
-        </div>
+      <div className="bg-white rounded-xl shadow-sm p-4 animate-pulse" data-testid="daily-budget-card">
+        <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
+        <div className="h-8 bg-gray-200 rounded w-1/2"></div>
       </div>
     );
   }
 
-  const isOver = data.status === 'over';
+  if (!data) {
+    return (
+      <div
+        className="bg-white rounded-xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+        onClick={handleClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && handleClick()}
+        data-testid="daily-budget-card"
+      >
+        <h3 className="text-sm font-medium text-gray-500 mb-1">Daily Budget</h3>
+        <p className="text-gray-400 text-sm" data-testid="daily-budget-zero-state">
+          Set up your monthly budget to see daily tracking.
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div data-testid="daily-budget-card" className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-        Daily Budget
-      </h3>
-      <div className="mt-3">
-        <p
-          data-testid="daily-budget-remaining"
-          className={`text-3xl font-bold ${isOver ? 'text-red-600' : 'text-green-600'}`}
-        >
-          ${data.todayBalance.toFixed(2)}
-        </p>
-        <p className="mt-1 text-xs text-gray-400">remaining today</p>
+    <div
+      className="bg-white rounded-xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && handleClick()}
+      data-testid="daily-budget-card"
+    >
+      <h3 className="text-sm font-medium text-gray-500 mb-1">Daily Budget</h3>
+      <div
+        className={`text-2xl font-bold ${data.isPositive ? 'text-green-600' : 'text-red-600'}`}
+        data-testid="daily-budget-balance"
+      >
+        ${formatCurrency(data.todayBalance)}
       </div>
-      <div className="mt-3 flex justify-between text-sm text-gray-500">
-        <span data-testid="daily-budget-allowance">Budget: ${data.dailyBudget.toFixed(2)}</span>
-        <span data-testid="daily-budget-spent">Spent: ${data.todaySpending.toFixed(2)}</span>
+      <div className="flex justify-between mt-2 text-sm text-gray-500">
+        <span data-testid="daily-budget-allowance">Daily: ${formatCurrency(data.dailyBudget)}</span>
+        <span data-testid="daily-budget-today-spent">Today: ${formatCurrency(data.todaySpending)}</span>
       </div>
     </div>
   );
