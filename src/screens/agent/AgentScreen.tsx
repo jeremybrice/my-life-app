@@ -239,8 +239,8 @@ export function AgentScreen() {
       const result = await processReceipt(file, undefined, conversationHistoryRef.current);
       connectivity.markApiSuccess();
 
-      // Revoke object URL after API response (image no longer needed)
-      URL.revokeObjectURL(imageUrl);
+      // Note: do NOT revoke imageUrl here — it's still referenced by the
+      // user message thumbnail in state. Cleanup happens on unmount (line 82-84).
 
       if (result.type === 'receipt' && result.expense) {
         // Add to conversation history
@@ -292,8 +292,7 @@ export function AgentScreen() {
         addMessage(errorMsg);
       }
     } catch (error) {
-      // Revoke object URL on error too
-      URL.revokeObjectURL(imageUrl);
+      // Note: do NOT revoke imageUrl here — cleanup happens on unmount.
 
       if (error instanceof ClaudeClientError && error.errorType === 'network-error') {
         connectivity.markApiFailure();
