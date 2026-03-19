@@ -36,6 +36,9 @@ describe('DashboardScreen', () => {
   beforeEach(async () => {
     await db.budgetMonths.clear();
     await db.expenses.clear();
+    await db.goals.clear();
+    await db.healthRoutines.clear();
+    await db.healthLogEntries.clear();
   });
 
   it('should render the dashboard screen container', () => {
@@ -64,16 +67,22 @@ describe('DashboardScreen', () => {
     });
   });
 
-  it('should render the goals widget placeholder', () => {
+  it('should render the goals widget with live data', async () => {
     renderDashboard();
-    expect(screen.getByTestId('goals-widget')).toBeInTheDocument();
-    expect(screen.getByTestId('goals-widget-placeholder')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('goals-widget')).toBeInTheDocument();
+      expect(screen.getByTestId('goals-active-count')).toHaveTextContent('0');
+      expect(screen.getByTestId('goals-completed-count')).toHaveTextContent('0');
+    });
   });
 
-  it('should render the health widget placeholder', () => {
+  it('should render the health widget with live data', async () => {
     renderDashboard();
-    expect(screen.getByTestId('health-widget')).toBeInTheDocument();
-    expect(screen.getByTestId('health-widget-placeholder')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('health-widget')).toBeInTheDocument();
+      expect(screen.getByTestId('health-completed-today')).toHaveTextContent('0/0');
+      expect(screen.getByTestId('health-weekly-status')).toHaveTextContent('0');
+    });
   });
 
   it('should render components in correct scroll order (countdown, budget, goals, health)', () => {
@@ -101,6 +110,9 @@ describe('DashboardScreen - Budget Cards Integration', () => {
   beforeEach(async () => {
     await db.budgetMonths.clear();
     await db.expenses.clear();
+    await db.goals.clear();
+    await db.healthRoutines.clear();
+    await db.healthLogEntries.clear();
   });
 
   it('should display both budget cards with live data', async () => {
