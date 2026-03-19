@@ -32,7 +32,7 @@ describe('SettingsScreen', () => {
     expect(screen.getByText('Budget Configuration')).toBeInTheDocument();
   });
 
-  it('should save and retrieve all 6 fields', async () => {
+  it('should save and retrieve all fields', async () => {
     const user = userEvent.setup();
     renderSettings();
 
@@ -45,7 +45,6 @@ describe('SettingsScreen', () => {
     await user.type(screen.getByLabelText('Target Date'), '2040-06-15');
     await user.type(screen.getByLabelText('Target Date Label'), 'Financial Freedom');
     await user.type(screen.getByLabelText('Monthly Budget ($)'), '5000');
-    await user.type(screen.getByLabelText('Daily Budget ($)'), '160');
 
     await user.click(screen.getByText('Save Settings'));
 
@@ -60,7 +59,6 @@ describe('SettingsScreen', () => {
     expect(saved?.targetDate).toBe('2040-06-15');
     expect(saved?.targetDateLabel).toBe('Financial Freedom');
     expect(saved?.monthlyBudget).toBe(5000);
-    expect(saved?.dailyBudget).toBe(160);
   });
 
   it('should allow partial saves', async () => {
@@ -89,7 +87,6 @@ describe('SettingsScreen', () => {
       id: 1,
       apiKey: 'existing-key',
       monthlyBudget: 4000,
-      dailyBudget: 130,
     });
 
     renderSettings();
@@ -99,7 +96,6 @@ describe('SettingsScreen', () => {
     });
 
     expect(screen.getByLabelText('Monthly Budget ($)')).toHaveValue(4000);
-    expect(screen.getByLabelText('Daily Budget ($)')).toHaveValue(130);
   });
 
   it('should mask API key by default', async () => {
@@ -157,7 +153,7 @@ describe('SettingsScreen', () => {
     expect(birthInput).toHaveAttribute('max');
   });
 
-  it('should use number input for budget fields', async () => {
+  it('should use number input for budget field', async () => {
     renderSettings();
 
     await waitFor(() => {
@@ -165,6 +161,5 @@ describe('SettingsScreen', () => {
     });
 
     expect(screen.getByLabelText('Monthly Budget ($)')).toHaveAttribute('type', 'number');
-    expect(screen.getByLabelText('Daily Budget ($)')).toHaveAttribute('type', 'number');
   });
 });

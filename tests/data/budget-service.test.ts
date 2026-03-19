@@ -280,6 +280,7 @@ describe('initializeMonth', () => {
   });
 
   it('should create new month with carry-over from previous month ending balance', async () => {
+    await db.settings.put({ id: SETTINGS_ID, monthlyBudget: 3100 });
     await createBudgetMonth({
       yearMonth: '2026-03',
       monthlyAmount: 3100,
@@ -290,12 +291,13 @@ describe('initializeMonth', () => {
 
     const result = await initializeMonth('2026-04');
     expect(result.yearMonth).toBe('2026-04');
-    expect(result.monthlyAmount).toBe(3100); // copied from March
+    expect(result.monthlyAmount).toBe(3100); // from settings
     expect(result.carryOver).toBe(200); // 3100 - 2900
     expect(result.additionalFunds).toBe(0); // always 0 for new months
   });
 
   it('should handle negative carry-over when previous month overspent', async () => {
+    await db.settings.put({ id: SETTINGS_ID, monthlyBudget: 3100 });
     await createBudgetMonth({
       yearMonth: '2026-03',
       monthlyAmount: 3100,
@@ -325,6 +327,7 @@ describe('initializeMonth', () => {
   });
 
   it('should include previous months additionalFunds in carry-over calculation', async () => {
+    await db.settings.put({ id: SETTINGS_ID, monthlyBudget: 3100 });
     await createBudgetMonth({
       yearMonth: '2026-03',
       monthlyAmount: 3100,
@@ -339,6 +342,7 @@ describe('initializeMonth', () => {
   });
 
   it('should not copy additionalFunds from previous month', async () => {
+    await db.settings.put({ id: SETTINGS_ID, monthlyBudget: 3100 });
     await createBudgetMonth({
       yearMonth: '2026-03',
       monthlyAmount: 3100,
@@ -351,6 +355,7 @@ describe('initializeMonth', () => {
   });
 
   it('should calculate correct daily allowance for the new month', async () => {
+    await db.settings.put({ id: SETTINGS_ID, monthlyBudget: 3100 });
     await createBudgetMonth({
       yearMonth: '2026-03',
       monthlyAmount: 3100,

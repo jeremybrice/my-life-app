@@ -27,7 +27,6 @@ export interface Settings {
   targetDate?: string; // ISO date "2035-06-15"
   targetDateLabel?: string;
   monthlyBudget?: number;
-  dailyBudget?: number;
   notificationPreferences?: NotificationPreferences;
   notificationPromptDeferred?: number;   // count of "Not Now" taps
   notificationPromptDeferredAtSession?: number; // session count when last deferred
