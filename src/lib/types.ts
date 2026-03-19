@@ -91,3 +91,9 @@ export interface HealthLogEntry {
   metrics?: Record<string, number>;
   createdAt: string;
 }
+
+// Dashboard card interfaces (defined in Stage 2, consumed by Stages 4 & 5)
+export type { DailyBudgetCardProps } from '../screens/dashboard/DailyBudgetCard';
+export type { MonthlyPerformanceCardProps } from '../screens/dashboard/MonthlyPerformanceCard';
+export type { GoalsWidgetProps } from '../screens/dashboard/GoalsWidget';
+export type { HealthWidgetProps } from '../screens/dashboard/HealthWidget';
