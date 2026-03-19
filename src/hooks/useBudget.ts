@@ -5,6 +5,7 @@ import {
   calculateBalance,
   createBudgetMonth,
   updateBudgetMonth,
+  updateAdditionalFunds as updateAdditionalFundsService,
   type CreateBudgetMonthInput,
   type UpdateBudgetMonthInput,
   type BalanceSnapshot,
@@ -39,11 +40,16 @@ export function useBudget(yearMonth?: string) {
     await updateBudgetMonth(activeMonth, input);
   };
 
+  const setAdditionalFunds = async (amount: number) => {
+    return updateAdditionalFundsService(activeMonth, amount);
+  };
+
   return {
     budgetMonth: budgetMonth ?? null,
     balance: balance ?? null,
     loading,
     createMonth,
     updateMonth,
+    setAdditionalFunds,
   };
 }
