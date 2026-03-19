@@ -16,7 +16,9 @@ describe('Navigation', () => {
     const budgetLinks = screen.getAllByText('Budget');
     await user.click(budgetLinks[0]!);
 
-    expect(screen.getByText(/Track your daily and monthly spending/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/No Budget Configured/)).toBeInTheDocument();
+    });
   });
 
   it('should navigate to Goals screen', async () => {

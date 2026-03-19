@@ -1,14 +1,49 @@
+import { useBudget } from '@/hooks/useBudget';
+import { useExpenses } from '@/hooks/useExpenses';
+import { today as getToday, currentYearMonth } from '@/lib/dates';
+import { BalanceHeader } from './BalanceHeader';
+import { BudgetSetupPrompt } from './BudgetSetupPrompt';
+import { ExpenseForm } from './ExpenseForm';
+import { ExpenseTable } from './ExpenseTable';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+
 export function BudgetScreen() {
-  return (
-    <div>
-      <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-        Budget
-      </h2>
-      <div className="rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-        <p className="text-slate-500 dark:text-slate-400">
-          Track your daily and monthly spending. Expense entry, balance tracking, and budget reports will appear here.
-        </p>
+  const yearMonth = currentYearMonth();
+  const { budgetMonth, balance, loading: budgetLoading, createMonth } = useBudget(yearMonth);
+  const { expenses, loading: expensesLoading, addExpense, editExpense, removeExpense } =
+    useExpenses(yearMonth);
+
+  const loading = budgetLoading || expensesLoading;
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <LoadingSpinner />
       </div>
+    );
+  }
+
+  if (!budgetMonth) {
+    return <BudgetSetupPrompt yearMonth={yearMonth} onSetup={createMonth} />;
+  }
+
+  return (
+    <div className="pb-20" data-testid="budget-screen">
+      {/* Balance Header */}
+      {balance && <BalanceHeader balance={balance} today={getToday()} />}
+
+      {/* Expense Entry Form */}
+      <ExpenseForm onSubmit={addExpense} />
+
+      {/* Expense Table with Daily Grouping */}
+      <ExpenseTable
+        expenses={expenses}
+        dailyAllowance={budgetMonth.dailyAllowance}
+        carryOver={budgetMonth.carryOver}
+        additionalFunds={budgetMonth.additionalFunds}
+        onEdit={editExpense}
+        onDelete={removeExpense}
+      />
     </div>
   );
 }
