@@ -211,6 +211,13 @@ export async function deleteLogEntry(id: number): Promise<void> {
  * Get the Monday (start) of the ISO week containing the given date.
  * Returns YYYY-MM-DD string.
  */
+function formatLocalDate(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 function getWeekMonday(dateStr: string): string {
   const date = new Date(dateStr + 'T00:00:00');
   const day = date.getDay();
@@ -218,7 +225,7 @@ function getWeekMonday(dateStr: string): string {
   const diff = day === 0 ? -6 : 1 - day;
   const monday = new Date(date);
   monday.setDate(date.getDate() + diff);
-  return monday.toISOString().split('T')[0];
+  return formatLocalDate(monday);
 }
 
 /**
@@ -228,7 +235,7 @@ function getWeekSunday(mondayStr: string): string {
   const monday = new Date(mondayStr + 'T00:00:00');
   const sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
-  return sunday.toISOString().split('T')[0];
+  return formatLocalDate(sunday);
 }
 
 /**
@@ -238,7 +245,7 @@ function getPreviousWeekMonday(mondayStr: string): string {
   const monday = new Date(mondayStr + 'T00:00:00');
   const prev = new Date(monday);
   prev.setDate(monday.getDate() - 7);
-  return prev.toISOString().split('T')[0];
+  return formatLocalDate(prev);
 }
 
 // --- Streak calculation ---

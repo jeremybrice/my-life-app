@@ -1,5 +1,6 @@
 import { db } from '@/data/db';
 import type { Goal } from '@/lib/types';
+import { roundCurrency } from '@/lib/currency';
 
 // --- Input types ---
 
@@ -141,8 +142,8 @@ export async function createGoal(input: CreateGoalInput): Promise<Goal> {
   // Set progress-model-specific fields
   switch (input.progressModel) {
     case 'numeric':
-      goal.targetValue = input.targetValue;
-      goal.currentValue = input.currentValue ?? 0;
+      goal.targetValue = input.targetValue !== undefined ? roundCurrency(input.targetValue) : undefined;
+      goal.currentValue = roundCurrency(input.currentValue ?? 0);
       break;
     case 'date-based':
       goal.targetDate = input.targetDate;
@@ -249,6 +250,12 @@ export async function updateGoal(id: number, input: UpdateGoalInput): Promise<Go
 
   if (input.title !== undefined) {
     updates.title = input.title.trim();
+  }
+  if (input.currentValue !== undefined) {
+    updates.currentValue = roundCurrency(input.currentValue);
+  }
+  if (input.targetValue !== undefined) {
+    updates.targetValue = roundCurrency(input.targetValue);
   }
   if (input.statusLabel !== undefined) {
     updates.statusLabel = input.statusLabel.trim();

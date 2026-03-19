@@ -28,6 +28,7 @@ export interface RoutineWithAdherence extends HealthRoutine {
 export interface UseHealthReturn {
   routines: RoutineWithAdherence[];
   loading: boolean;
+  error: Error | null;
   addRoutine: (input: CreateRoutineInput) => Promise<HealthRoutine>;
   editRoutine: (id: number, input: UpdateRoutineInput) => Promise<HealthRoutine>;
   removeRoutine: (id: number) => Promise<void>;
@@ -60,6 +61,7 @@ export function useHealth(): UseHealthReturn {
   return {
     routines: routines ?? [],
     loading,
+    error: null,
     addRoutine: createRoutine,
     editRoutine: updateRoutine,
     removeRoutine: deleteRoutine,

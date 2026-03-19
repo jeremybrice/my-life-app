@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Goal } from '@/lib/types';
 import type { UpdateGoalInput } from '@/data/goal-service';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { roundCurrency } from '@/lib/currency';
 
 interface GoalDetailProps {
   goal: Goal;
@@ -43,14 +44,14 @@ export default function GoalDetail({
     try {
       let newValue: number;
       if (mode === 'absolute') {
-        newValue = parseFloat(numericValue);
+        newValue = roundCurrency(parseFloat(numericValue));
       } else {
         const inc = parseFloat(incrementValue);
         if (isNaN(inc)) {
           setError('Increment must be a number');
           return;
         }
-        newValue = (goal.currentValue ?? 0) + inc;
+        newValue = roundCurrency((goal.currentValue ?? 0) + inc);
       }
 
       if (isNaN(newValue) || newValue < 0) {

@@ -20,6 +20,7 @@ export interface UseGoalsOptions {
 export interface UseGoalsReturn {
   goals: Goal[];
   loading: boolean;
+  error: Error | null;
   addGoal: (input: CreateGoalInput) => Promise<Goal>;
   editGoal: (id: number, input: UpdateGoalInput) => Promise<Goal>;
   removeGoal: (id: number) => Promise<void>;
@@ -59,6 +60,7 @@ export function useGoals(options: UseGoalsOptions = {}): UseGoalsReturn {
   return {
     goals: goals ?? [],
     loading,
+    error: null,
     addGoal: createGoal,
     editGoal: updateGoal,
     removeGoal: deleteGoal,

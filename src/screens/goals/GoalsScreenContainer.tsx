@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Goal } from '@/lib/types';
 import { useGoals } from '@/hooks/useGoals';
 import GoalsScreen from './GoalsScreen';
@@ -11,6 +11,13 @@ type GoalsView = 'list' | 'create' | 'detail';
 export default function GoalsScreenContainer() {
   const [view, setView] = useState<GoalsView>('list');
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
+
+  // If we're in detail view but selectedGoal is null, go back to list
+  useEffect(() => {
+    if (view === 'detail' && !selectedGoal) {
+      setView('list');
+    }
+  }, [view, selectedGoal]);
 
   const { addGoal, editGoal, removeGoal, markComplete, markArchived, markActive } =
     useGoals();
@@ -41,8 +48,7 @@ export default function GoalsScreenContainer() {
 
     case 'detail':
       if (!selectedGoal) {
-        setView('list');
-        return null;
+        return null; // useEffect above will redirect to list
       }
       return (
         <GoalDetail
