@@ -190,20 +190,14 @@ export async function initializeMonth(yearMonth: string): Promise<BudgetMonth> {
     return existing;
   }
 
+  // Always use monthly budget from settings as the source of truth
+  const settings = await db.settings.get(SETTINGS_ID);
+  const monthlyAmount: number = settings?.monthlyBudget ?? 0;
+
+  // Calculate carry-over from previous month if it exists
   const prevMonth = previousYearMonth(yearMonth);
   const prevBudget = await db.budgetMonths.get(prevMonth);
-
-  let monthlyAmount: number;
-  let carryOver: number;
-
-  if (prevBudget) {
-    monthlyAmount = prevBudget.monthlyAmount;
-    carryOver = await getEndingBalance(prevMonth);
-  } else {
-    const settings = await db.settings.get(SETTINGS_ID);
-    monthlyAmount = settings?.monthlyBudget ?? 0;
-    carryOver = 0;
-  }
+  const carryOver: number = prevBudget ? await getEndingBalance(prevMonth) : 0;
 
   const days = daysInMonth(yearMonth);
   const dailyAllowance = roundCurrency(monthlyAmount / days);

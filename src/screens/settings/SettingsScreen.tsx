@@ -17,7 +17,6 @@ export function SettingsScreen() {
   const [targetDate, setTargetDate] = useState('');
   const [targetDateLabel, setTargetDateLabel] = useState('');
   const [monthlyBudget, setMonthlyBudget] = useState('');
-  const [dailyBudget, setDailyBudget] = useState('');
 
   // UI state
   const [saving, setSaving] = useState(false);
@@ -34,9 +33,6 @@ export function SettingsScreen() {
       setMonthlyBudget(
         settings.monthlyBudget !== undefined ? String(settings.monthlyBudget) : ''
       );
-      setDailyBudget(
-        settings.dailyBudget !== undefined ? String(settings.dailyBudget) : ''
-      );
     }
   }, [settings]);
 
@@ -52,7 +48,6 @@ export function SettingsScreen() {
         targetDate: targetDate || undefined,
         targetDateLabel: targetDateLabel || undefined,
         monthlyBudget: monthlyBudget && !isNaN(parseFloat(monthlyBudget)) ? roundCurrency(parseFloat(monthlyBudget)) : undefined,
-        dailyBudget: dailyBudget && !isNaN(parseFloat(dailyBudget)) ? roundCurrency(parseFloat(dailyBudget)) : undefined,
       });
       setSaveMessage('Settings saved successfully');
       setTimeout(() => setSaveMessage(''), 3000);
@@ -199,25 +194,6 @@ export function SettingsScreen() {
                 className="w-full px-3 py-2 rounded-lg border border-edge bg-surface-card text-fg placeholder-fg-muted focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
               />
             </div>
-            <div>
-              <label
-                htmlFor="dailyBudget"
-                className="block text-sm font-medium text-fg-secondary mb-1"
-              >
-                Daily Budget ($)
-              </label>
-              <input
-                id="dailyBudget"
-                type="number"
-                inputMode="decimal"
-                min="0"
-                step="0.01"
-                value={dailyBudget}
-                onChange={(e) => setDailyBudget(e.target.value)}
-                placeholder="0.00"
-                className="w-full px-3 py-2 rounded-lg border border-edge bg-surface-card text-fg placeholder-fg-muted focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
-              />
-            </div>
           </div>
         </section>
 
@@ -262,7 +238,7 @@ export function SettingsScreen() {
 
         {/* Version */}
         <p className="text-center text-xs text-fg-muted pb-4">
-          Version 0.2
+          Version 0.3
         </p>
       </div>
     </div>

@@ -1,6 +1,8 @@
 import { db } from '@/data/db';
 import { SETTINGS_ID } from '@/lib/constants';
 import type { Settings } from '@/lib/types';
+import { roundCurrency } from '@/lib/currency';
+import { currentYearMonth, daysInMonth } from '@/lib/dates';
 
 /**
  * Settings data service.
@@ -20,7 +22,6 @@ export interface SaveSettingsInput {
   targetDate?: string;
   targetDateLabel?: string;
   monthlyBudget?: number;
-  dailyBudget?: number;
   notificationPreferences?: import('@/lib/types').NotificationPreferences;
   notificationPromptDeferred?: number;
   notificationPromptDeferredAtSession?: number;
@@ -54,15 +55,6 @@ export async function saveSettings(input: SaveSettingsInput): Promise<Settings> 
       throw new Error('Monthly budget must be non-negative');
     }
   }
-  if (input.dailyBudget !== undefined) {
-    if (isNaN(input.dailyBudget)) {
-      throw new Error('Daily budget must be a valid number');
-    }
-    if (input.dailyBudget < 0) {
-      throw new Error('Daily budget must be non-negative');
-    }
-  }
-
   const existing = await db.settings.get(SETTINGS_ID);
 
   const settings: Settings = {
@@ -72,6 +64,22 @@ export async function saveSettings(input: SaveSettingsInput): Promise<Settings> 
   };
 
   await db.settings.put(settings);
+
+  // Sync monthly budget to the current month's budget record if it exists
+  if (input.monthlyBudget !== undefined && input.monthlyBudget > 0) {
+    const yearMonth = currentYearMonth();
+    const budgetMonth = await db.budgetMonths.get(yearMonth);
+    if (budgetMonth) {
+      const days = daysInMonth(yearMonth);
+      const dailyAllowance = roundCurrency(input.monthlyBudget / days);
+      await db.budgetMonths.update(yearMonth, {
+        monthlyAmount: roundCurrency(input.monthlyBudget),
+        dailyAllowance,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+  }
+
   return settings;
 }
 

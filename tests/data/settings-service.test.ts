@@ -58,14 +58,13 @@ describe('settings-service', () => {
       expect(result.birthDate).toBeUndefined();
     });
 
-    it('should save all 6 fields correctly', async () => {
+    it('should save all fields correctly', async () => {
       const result = await saveSettings({
         apiKey: 'sk-ant-api03-secret',
         birthDate: '1985-06-15',
         targetDate: '2035-06-15',
         targetDateLabel: 'Financial Freedom',
         monthlyBudget: 4000,
-        dailyBudget: 130,
       });
 
       expect(result.apiKey).toBe('sk-ant-api03-secret');
@@ -73,7 +72,6 @@ describe('settings-service', () => {
       expect(result.targetDate).toBe('2035-06-15');
       expect(result.targetDateLabel).toBe('Financial Freedom');
       expect(result.monthlyBudget).toBe(4000);
-      expect(result.dailyBudget).toBe(130);
     });
 
     it('should reject future birth date', async () => {
@@ -88,19 +86,11 @@ describe('settings-service', () => {
       ).rejects.toThrow('Monthly budget must be non-negative');
     });
 
-    it('should reject negative daily budget', async () => {
-      await expect(
-        saveSettings({ dailyBudget: -50 })
-      ).rejects.toThrow('Daily budget must be non-negative');
-    });
-
-    it('should allow zero budgets', async () => {
+    it('should allow zero budget', async () => {
       const result = await saveSettings({
         monthlyBudget: 0,
-        dailyBudget: 0,
       });
       expect(result.monthlyBudget).toBe(0);
-      expect(result.dailyBudget).toBe(0);
     });
 
     it('should overwrite existing field values', async () => {
