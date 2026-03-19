@@ -1,16 +1,20 @@
 import { sendMessage } from '@/services/claude-client';
 import { EXPENSE_SYSTEM_PROMPT } from '@/services/expense-parser-prompts';
-import { today } from '@/lib/dates';
-import { roundCurrency } from '@/lib/currency';
+import { today, currentYearMonth } from '@/lib/dates';
+import { roundCurrency, formatCurrency } from '@/lib/currency';
 import { MAX_VENDOR_LENGTH } from '@/lib/constants';
+import { getExpensesByMonth } from '@/data/expense-service';
 import type { ClaudeMessage } from '@/services/claude-client';
 import type { ParsedExpense } from '@/screens/agent/agent-types';
 
 export interface ExpenseParseResult {
-  type: 'expense' | 'clarification' | 'redirect';
+  type: 'expense' | 'expense-delete' | 'clarification' | 'redirect';
   expense?: ParsedExpense;
   message?: string;
   partial?: Partial<ParsedExpense>;
+  // For delete operations
+  expenseId?: number;
+  deleteExpense?: { amount: number; vendor: string; date: string };
 }
 
 /**
@@ -20,13 +24,29 @@ export interface ExpenseParseResult {
 export async function parseExpenseMessage(
   conversationHistory: ClaudeMessage[]
 ): Promise<ExpenseParseResult> {
-  const systemPrompt = EXPENSE_SYSTEM_PROMPT.replace(
-    '{{TODAY_DATE}}',
-    today()
-  );
+  const context = await buildExpenseContext();
+  const systemPrompt = EXPENSE_SYSTEM_PROMPT
+    .replace('{{TODAY_DATE}}', today())
+    .replace('{{EXPENSE_CONTEXT}}', context);
 
   const response = await sendMessage(conversationHistory, systemPrompt);
   return parseResponse(response.text);
+}
+
+async function buildExpenseContext(): Promise<string> {
+  try {
+    const ym = currentYearMonth();
+    const expenses = await getExpensesByMonth(ym);
+    if (expenses.length === 0) {
+      return 'RECENT EXPENSES: No expenses logged this month.';
+    }
+    const lines = expenses.slice(0, 30).map(
+      (e) => `- ID:${e.id} $${formatCurrency(e.amount)} at ${e.vendor} on ${e.date}${e.category ? ` (${e.category})` : ''}`
+    );
+    return `RECENT EXPENSES (this month, up to 30):\n${lines.join('\n')}`;
+  } catch {
+    return 'RECENT EXPENSES: Unable to load.';
+  }
 }
 
 /**
@@ -51,6 +71,19 @@ export function parseResponse(responseText: string): ExpenseParseResult {
       return {
         type: 'expense',
         expense: normalizeExpense(parsed),
+      };
+    }
+
+    if (parsed.type === 'expense-delete') {
+      return {
+        type: 'expense-delete',
+        expenseId: parsed.expenseId,
+        deleteExpense: {
+          amount: parsed.amount,
+          vendor: parsed.vendor,
+          date: parsed.date,
+        },
+        message: parsed.message,
       };
     }
 

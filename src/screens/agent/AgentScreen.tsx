@@ -1,34 +1,56 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
+import { useParams, useNavigate } from 'react-router';
 import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
-import { WELCOME_MESSAGE } from './agent-types';
+import { getPipelineConfig } from './pipelines';
 import { useAgentConnectivity } from '@/hooks/useAgentConnectivity';
 import { useExpenseConfirmation } from './use-expense-confirmation';
+import { useExpenseDeleteConfirmation } from './use-expense-delete-confirmation';
+import { useHealthConfirmation } from './use-health-confirmation';
+import { useGoalConfirmation } from './use-goal-confirmation';
 import { addToConversationHistory } from './conversation-context';
 import { validateApiKey, ClaudeClientError } from '@/services/claude-client';
 import { parseExpenseMessage } from '@/services/expense-parser';
+import { parseBudgetQuery } from '@/services/budget-insights-parser';
+import { parseHealthMessage } from '@/services/health-parser';
+import { parseGoalsMessage } from '@/services/goals-parser';
 import { processReceipt } from '@/services/receipt-processor';
 import type { ChatMessage, AgentStatus } from './agent-types';
 import type { ClaudeMessage } from '@/services/claude-client';
 
 export function AgentScreen() {
-  const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
+  const { pipelineId } = useParams<{ pipelineId: string }>();
+  const navigate = useNavigate();
+  const config = getPipelineConfig(pipelineId ?? '');
+
+  // Redirect to workflow selector if invalid pipeline
+  useEffect(() => {
+    if (!config) {
+      navigate('/agent', { replace: true });
+    }
+  }, [config, navigate]);
+
+  const welcomeMessage: ChatMessage = {
+    id: 'welcome',
+    role: 'assistant',
+    contentType: 'text',
+    text: config?.welcomeMessage ?? '',
+    timestamp: 0,
+    pipelineId: pipelineId,
+  };
+
+  const [messages, setMessages] = useState<ChatMessage[]>([welcomeMessage]);
   const [localStatus, setLocalStatus] = useState<AgentStatus>('initializing');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const connectivity = useAgentConnectivity();
 
-  // Track conversation history for API calls (Claude message format)
   const conversationHistoryRef = useRef<ClaudeMessage[]>([]);
-
-  // Track whether Anthropic disclosure has been shown this session
   const disclosureShownRef = useRef(false);
 
-  // Effective status: connectivity overrides local status
   const status: AgentStatus = !connectivity.isOnline ? 'offline' : localStatus;
-  // Show reconnection banner if was offline during session but now back online
   const showReconnectionBanner = connectivity.wasOfflineDuringSession && connectivity.isOnline && messages.length > 1;
 
-  // Validate API key on mount (and re-mount after navigation)
+  // Validate API key on mount
   useEffect(() => {
     let cancelled = false;
 
@@ -70,12 +92,12 @@ export function AgentScreen() {
     };
   }, [connectivity.isOnline]);
 
-  // Auto-scroll to bottom when messages change
+  // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Session reset: clean up on unmount
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       setMessages((prev) => {
@@ -100,33 +122,101 @@ export function AgentScreen() {
     );
   }, []);
 
-  // Expense confirmation hook
-  const {
-    handleConfirm: doConfirm,
-    handleCancel: doCancel,
-    isAffirmativeConfirmation,
-    findPendingConfirmation,
-  } = useExpenseConfirmation({ updateMessage, addMessage });
+  // Confirmation hooks
+  const expenseConfirmation = useExpenseConfirmation({ updateMessage, addMessage });
+  const expenseDeleteConfirmation = useExpenseDeleteConfirmation({ updateMessage, addMessage });
+  const healthConfirmation = useHealthConfirmation({ updateMessage, addMessage });
+  const goalConfirmation = useGoalConfirmation({ updateMessage, addMessage });
+
+  // Find any pending confirmation across all types
+  const findAnyPendingConfirmation = useCallback((msgs: ChatMessage[]): ChatMessage | undefined => {
+    return expenseConfirmation.findPendingConfirmation(msgs)
+      ?? expenseDeleteConfirmation.findPendingConfirmation(msgs)
+      ?? healthConfirmation.findPendingConfirmation(msgs)
+      ?? goalConfirmation.findPendingConfirmation(msgs);
+  }, [expenseConfirmation, expenseDeleteConfirmation, healthConfirmation, goalConfirmation]);
+
+  // Route confirm/cancel to the right handler based on content type
+  const handleConfirm = useCallback(async (messageId: string) => {
+    const msg = messages.find((m) => m.id === messageId);
+    if (!msg) return;
+
+    const ct = msg.contentType;
+    if (ct === 'expense-confirmation') {
+      await expenseConfirmation.handleConfirm(messageId, messages);
+    } else if (ct === 'expense-delete-confirmation') {
+      await expenseDeleteConfirmation.handleConfirm(messageId, messages);
+    } else if (ct.startsWith('health-')) {
+      await healthConfirmation.handleConfirm(messageId, messages);
+    } else if (ct.startsWith('goal-')) {
+      await goalConfirmation.handleConfirm(messageId, messages);
+    }
+  }, [messages, expenseConfirmation, expenseDeleteConfirmation, healthConfirmation, goalConfirmation]);
+
+  const handleCancel = useCallback((messageId: string) => {
+    const msg = messages.find((m) => m.id === messageId);
+    if (!msg) return;
+
+    const ct = msg.contentType;
+    if (ct === 'expense-confirmation') {
+      expenseConfirmation.handleCancel(messageId);
+    } else if (ct === 'expense-delete-confirmation') {
+      expenseDeleteConfirmation.handleCancel(messageId);
+    } else if (ct.startsWith('health-')) {
+      healthConfirmation.handleCancel(messageId);
+    } else if (ct.startsWith('goal-')) {
+      goalConfirmation.handleCancel(messageId);
+    }
+  }, [messages, expenseConfirmation, expenseDeleteConfirmation, healthConfirmation, goalConfirmation]);
+
+  // Dispatch message to the correct parser based on pipeline
+  const dispatchMessage = useCallback(async (conversationHistory: ClaudeMessage[]) => {
+    switch (pipelineId) {
+      case 'expense': {
+        const result = await parseExpenseMessage(conversationHistory);
+        return handleExpenseResult(result);
+      }
+      case 'budget-insights': {
+        const result = await parseBudgetQuery(conversationHistory);
+        return handleBudgetResult(result);
+      }
+      case 'health': {
+        const result = await parseHealthMessage(conversationHistory);
+        return handleHealthResult(result);
+      }
+      case 'goals': {
+        const result = await parseGoalsMessage(conversationHistory);
+        return handleGoalsResult(result);
+      }
+      default:
+        return {
+          id: crypto.randomUUID(),
+          role: 'assistant' as const,
+          contentType: 'error' as const,
+          text: 'Unknown pipeline.',
+          timestamp: Date.now(),
+        };
+    }
+  }, [pipelineId]);
 
   const handleSendMessage = useCallback(async (text: string) => {
-    // Add user message to UI
     const userMsg: ChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
       contentType: 'text',
       text,
       timestamp: Date.now(),
+      pipelineId,
     };
     addMessage(userMsg);
 
-    // Check if this is a "yes" confirmation for a pending expense
-    const pendingConfirmation = findPendingConfirmation(messages);
-    if (pendingConfirmation && isAffirmativeConfirmation(text)) {
-      await doConfirm(pendingConfirmation.id, messages);
+    // Check for affirmative confirmation of pending card
+    const pendingConfirmation = findAnyPendingConfirmation(messages);
+    if (pendingConfirmation && expenseConfirmation.isAffirmativeConfirmation(text)) {
+      await handleConfirm(pendingConfirmation.id);
       return;
     }
 
-    // Add to conversation history
     conversationHistoryRef.current = addToConversationHistory(
       conversationHistoryRef.current,
       { role: 'user', content: text }
@@ -135,103 +225,66 @@ export function AgentScreen() {
     setLocalStatus('loading');
 
     try {
-      const result = await parseExpenseMessage(conversationHistoryRef.current);
+      const response = await dispatchMessage(conversationHistoryRef.current);
       connectivity.markApiSuccess();
 
-      if (result.type === 'expense' && result.expense) {
-        // Add assistant response to conversation history
-        conversationHistoryRef.current = addToConversationHistory(
-          conversationHistoryRef.current,
-          {
-            role: 'assistant',
-            content: `I parsed the following expense: ${JSON.stringify(result.expense)}. Please confirm or cancel.`,
-          }
-        );
+      // Add assistant response to conversation history
+      const historyContent = ('parsedExpense' in response && response.parsedExpense)
+        ? `I parsed the following: ${JSON.stringify(response.parsedExpense)}. Please confirm or cancel.`
+        : response.text ?? 'Done.';
+      conversationHistoryRef.current = addToConversationHistory(
+        conversationHistoryRef.current,
+        { role: 'assistant', content: historyContent }
+      );
 
-        // Show confirmation card
-        const confirmMsg: ChatMessage = {
-          id: crypto.randomUUID(),
-          role: 'assistant',
-          contentType: 'expense-confirmation',
-          parsedExpense: result.expense,
-          confirmationStatus: 'pending',
-          timestamp: Date.now(),
-        };
-        addMessage(confirmMsg);
-      } else {
-        // Clarification, redirect, or conversational response
-        const responseText = result.message || 'I could not understand that. Could you describe the expense differently?';
-
-        // Add to conversation history
-        conversationHistoryRef.current = addToConversationHistory(
-          conversationHistoryRef.current,
-          { role: 'assistant', content: responseText }
-        );
-
-        const assistantMsg: ChatMessage = {
-          id: crypto.randomUUID(),
-          role: 'assistant',
-          contentType: 'text',
-          text: responseText,
-          timestamp: Date.now(),
-        };
-        addMessage(assistantMsg);
-      }
+      addMessage(response);
     } catch (error) {
       if (error instanceof ClaudeClientError) {
         if (error.errorType === 'network-error') {
           connectivity.markApiFailure();
         }
-
-        const errorMsg: ChatMessage = {
+        addMessage({
           id: crypto.randomUUID(),
           role: 'assistant',
           contentType: 'error',
           text: error.message,
           timestamp: Date.now(),
-        };
-        addMessage(errorMsg);
+        });
       } else {
-        const errorMsg: ChatMessage = {
+        addMessage({
           id: crypto.randomUUID(),
           role: 'assistant',
           contentType: 'error',
           text: 'An unexpected error occurred. Please try again.',
           timestamp: Date.now(),
-        };
-        addMessage(errorMsg);
+        });
       }
     } finally {
       setLocalStatus('ready');
     }
-  }, [messages, addMessage, findPendingConfirmation, isAffirmativeConfirmation, doConfirm, connectivity]);
+  }, [messages, addMessage, pipelineId, findAnyPendingConfirmation, expenseConfirmation, handleConfirm, dispatchMessage, connectivity]);
 
   const handleImageUpload = useCallback(async (file: File) => {
-    // Show Anthropic disclosure on first image upload this session
     if (!disclosureShownRef.current) {
       disclosureShownRef.current = true;
-      const disclosureMsg: ChatMessage = {
+      addMessage({
         id: crypto.randomUUID(),
         role: 'system',
         contentType: 'disclosure',
         text: 'Receipt images are sent to Anthropic (Claude API) for processing. Images are not stored and exist only in memory during processing.',
         timestamp: Date.now(),
-      };
-      addMessage(disclosureMsg);
+      });
     }
 
-    // Create object URL for thumbnail preview
     const imageUrl = URL.createObjectURL(file);
-
-    // Add user message with image thumbnail
-    const userMsg: ChatMessage = {
+    addMessage({
       id: crypto.randomUUID(),
       role: 'user',
       contentType: 'image',
       imageUrl,
       timestamp: Date.now(),
-    };
-    addMessage(userMsg);
+      pipelineId,
+    });
 
     setLocalStatus('loading');
 
@@ -239,11 +292,7 @@ export function AgentScreen() {
       const result = await processReceipt(file, undefined, conversationHistoryRef.current);
       connectivity.markApiSuccess();
 
-      // Note: do NOT revoke imageUrl here — it's still referenced by the
-      // user message thumbnail in state. Cleanup happens on unmount (line 82-84).
-
       if (result.type === 'receipt' && result.expense) {
-        // Add to conversation history
         conversationHistoryRef.current = addToConversationHistory(
           conversationHistoryRef.current,
           {
@@ -252,53 +301,41 @@ export function AgentScreen() {
           }
         );
 
-        // Show confirmation card
-        const confirmMsg: ChatMessage = {
+        addMessage({
           id: crypto.randomUUID(),
           role: 'assistant',
           contentType: 'expense-confirmation',
           parsedExpense: result.expense,
           confirmationStatus: 'pending',
           timestamp: Date.now(),
-        };
-        addMessage(confirmMsg);
+        });
       } else if (result.type === 'not-receipt') {
         const responseText = result.message || 'This image does not appear to be a receipt.';
-
         conversationHistoryRef.current = addToConversationHistory(
           conversationHistoryRef.current,
           { role: 'assistant', content: responseText }
         );
-
-        const assistantMsg: ChatMessage = {
+        addMessage({
           id: crypto.randomUUID(),
           role: 'assistant',
           contentType: 'text',
           text: responseText,
           timestamp: Date.now(),
-        };
-        addMessage(assistantMsg);
+        });
       } else {
-        // Error from receipt processing
-        const errorText = result.message || 'Could not process the receipt. Please try again.';
-
-        const errorMsg: ChatMessage = {
+        addMessage({
           id: crypto.randomUUID(),
           role: 'assistant',
           contentType: 'error',
-          text: errorText,
+          text: result.message || 'Could not process the receipt. Please try again.',
           timestamp: Date.now(),
-        };
-        addMessage(errorMsg);
+        });
       }
     } catch (error) {
-      // Note: do NOT revoke imageUrl here — cleanup happens on unmount.
-
       if (error instanceof ClaudeClientError && error.errorType === 'network-error') {
         connectivity.markApiFailure();
       }
-
-      const errorMsg: ChatMessage = {
+      addMessage({
         id: crypto.randomUUID(),
         role: 'assistant',
         contentType: 'error',
@@ -306,22 +343,15 @@ export function AgentScreen() {
           ? error.message
           : 'Failed to process receipt. Please try again.',
         timestamp: Date.now(),
-      };
-      addMessage(errorMsg);
+      });
     } finally {
       setLocalStatus('ready');
     }
-  }, [addMessage, connectivity]);
+  }, [addMessage, connectivity, pipelineId]);
 
-  const handleConfirm = useCallback(async (messageId: string) => {
-    await doConfirm(messageId, messages);
-  }, [doConfirm, messages]);
+  if (!config) return null;
 
-  const handleCancel = useCallback((messageId: string) => {
-    doCancel(messageId);
-  }, [doCancel]);
-
-  // Offline state: show full-screen offline message but preserve messages for when back online
+  // Status screens
   if (status === 'offline' && messages.length <= 1) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center" data-testid="offline-state">
@@ -366,6 +396,25 @@ export function AgentScreen() {
 
   return (
     <div className="animate-fade-in flex flex-col fixed inset-0 top-14 bottom-16 md:left-64 md:bottom-0 z-30" data-testid="agent-screen">
+      {/* Pipeline header with back button */}
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-edge bg-surface-card">
+        <button
+          type="button"
+          onClick={() => navigate('/agent')}
+          className="text-fg-muted hover:text-fg-secondary"
+          aria-label="Back to workflows"
+          data-testid="back-to-workflows"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <div>
+          <h2 className="text-sm font-semibold text-fg">{config.title}</h2>
+          <p className="text-xs text-fg-muted">{config.categoryDescription}</p>
+        </div>
+      </div>
+
       {/* Offline banner mid-conversation */}
       {status === 'offline' && messages.length > 1 && (
         <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-sm text-amber-800 text-center" data-testid="offline-banner">
@@ -410,7 +459,244 @@ export function AgentScreen() {
         onImageUpload={handleImageUpload}
         disabled={status === 'offline'}
         loading={localStatus === 'loading'}
+        placeholder={config.inputPlaceholder}
+        showImageUpload={config.supportsImageUpload}
       />
     </div>
   );
+}
+
+// --- Result handlers: convert parser output to ChatMessage ---
+
+function handleExpenseResult(result: Awaited<ReturnType<typeof parseExpenseMessage>>): ChatMessage {
+  if (result.type === 'expense' && result.expense) {
+    return {
+      id: crypto.randomUUID(),
+      role: 'assistant',
+      contentType: 'expense-confirmation',
+      parsedExpense: result.expense,
+      confirmationStatus: 'pending',
+      timestamp: Date.now(),
+    };
+  }
+  if (result.type === 'expense-delete' && result.deleteExpense) {
+    return {
+      id: crypto.randomUUID(),
+      role: 'assistant',
+      contentType: 'expense-delete-confirmation',
+      parsedExpense: {
+        amount: result.deleteExpense.amount,
+        vendor: result.deleteExpense.vendor,
+        date: result.deleteExpense.date,
+        // Store expense ID in lineItems for the delete handler
+        lineItems: [{ description: 'expense-id', amount: result.expenseId ?? 0 }],
+      },
+      confirmationStatus: 'pending',
+      timestamp: Date.now(),
+    };
+  }
+  return {
+    id: crypto.randomUUID(),
+    role: 'assistant',
+    contentType: 'text',
+    text: result.message || 'I could not understand that. Could you describe the expense differently?',
+    timestamp: Date.now(),
+  };
+}
+
+function handleBudgetResult(result: Awaited<ReturnType<typeof parseBudgetQuery>>): ChatMessage {
+  if (result.type === 'answer') {
+    return {
+      id: crypto.randomUUID(),
+      role: 'assistant',
+      contentType: 'data-answer',
+      text: result.text ?? result.message ?? '',
+      timestamp: Date.now(),
+    };
+  }
+  return {
+    id: crypto.randomUUID(),
+    role: 'assistant',
+    contentType: 'text',
+    text: result.message ?? 'That question is outside the scope of budget insights. Try the other workflows for that.',
+    timestamp: Date.now(),
+  };
+}
+
+function handleHealthResult(result: Awaited<ReturnType<typeof parseHealthMessage>>): ChatMessage {
+  switch (result.type) {
+    case 'health-log':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'health-log-confirmation',
+        parsedHealthLog: {
+          routineId: result.routineId,
+          routineName: result.routineName,
+          date: result.date,
+          metrics: result.metrics,
+        },
+        confirmationStatus: 'pending',
+        timestamp: Date.now(),
+      };
+    case 'health-delete':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'health-delete-confirmation',
+        parsedHealthLog: {
+          routineId: result.routineId,
+          routineName: result.routineName,
+          date: result.date,
+        },
+        confirmationStatus: 'pending',
+        timestamp: Date.now(),
+      };
+    case 'health-routine-create':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'health-routine-create-confirmation',
+        parsedHealthRoutineAction: {
+          action: 'create',
+          name: result.name,
+          frequencyType: result.frequencyType,
+          dailyTarget: result.dailyTarget,
+          targetFrequency: result.targetFrequency,
+          trackedMetrics: result.trackedMetrics,
+        },
+        confirmationStatus: 'pending',
+        timestamp: Date.now(),
+      };
+    case 'health-routine-delete':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'health-routine-delete-confirmation',
+        parsedHealthRoutineAction: {
+          action: 'delete',
+          routineId: result.routineId,
+          name: result.routineName,
+          message: result.message,
+        },
+        confirmationStatus: 'pending',
+        timestamp: Date.now(),
+      };
+    case 'health-answer':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'data-answer',
+        text: result.text,
+        timestamp: Date.now(),
+      };
+    case 'clarification':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'text',
+        text: result.message,
+        timestamp: Date.now(),
+      };
+    case 'redirect':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'text',
+        text: result.message,
+        timestamp: Date.now(),
+      };
+  }
+}
+
+function handleGoalsResult(result: Awaited<ReturnType<typeof parseGoalsMessage>>): ChatMessage {
+  switch (result.type) {
+    case 'goal-create':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'goal-create-confirmation',
+        parsedGoalAction: {
+          action: 'create',
+          goalTitle: result.title,
+          goalType: result.goalType,
+          progressModel: result.progressModel,
+          targetValue: result.targetValue,
+          currentValue: result.currentValue,
+          targetDate: result.targetDate,
+          description: result.description,
+        },
+        confirmationStatus: 'pending',
+        timestamp: Date.now(),
+      };
+    case 'goal-update':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'goal-update-confirmation',
+        parsedGoalAction: {
+          action: 'update',
+          goalId: result.goalId,
+          goalTitle: result.goalTitle,
+          field: result.field,
+          oldValue: result.oldValue,
+          newValue: result.newValue,
+          message: result.message,
+        },
+        confirmationStatus: 'pending',
+        timestamp: Date.now(),
+      };
+    case 'goal-edit':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'goal-edit-confirmation',
+        parsedGoalAction: {
+          action: 'edit',
+          goalId: result.goalId,
+          goalTitle: result.goalTitle,
+          updates: result.updates,
+          message: result.message,
+        },
+        confirmationStatus: 'pending',
+        timestamp: Date.now(),
+      };
+    case 'goal-delete':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'goal-delete-confirmation',
+        parsedGoalAction: {
+          action: 'delete',
+          goalId: result.goalId,
+          goalTitle: result.goalTitle,
+        },
+        confirmationStatus: 'pending',
+        timestamp: Date.now(),
+      };
+    case 'goal-answer':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'data-answer',
+        text: result.text,
+        timestamp: Date.now(),
+      };
+    case 'clarification':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'text',
+        text: result.message,
+        timestamp: Date.now(),
+      };
+    case 'redirect':
+      return {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        contentType: 'text',
+        text: result.message,
+        timestamp: Date.now(),
+      };
+  }
 }

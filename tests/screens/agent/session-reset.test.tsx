@@ -21,10 +21,39 @@ vi.mock('../../../src/services/expense-parser', () => ({
     type: 'clarification',
     message: 'Stub response',
   }),
+  extractJson: vi.fn(),
+}));
+
+vi.mock('../../../src/services/budget-insights-parser', () => ({
+  parseBudgetQuery: vi.fn(),
+}));
+
+vi.mock('../../../src/services/health-parser', () => ({
+  parseHealthMessage: vi.fn(),
+}));
+
+vi.mock('../../../src/services/goals-parser', () => ({
+  parseGoalsMessage: vi.fn(),
 }));
 
 vi.mock('../../../src/data/expense-service', () => ({
   createExpense: vi.fn(),
+  deleteExpense: vi.fn(),
+  getExpensesByMonth: vi.fn().mockResolvedValue([]),
+}));
+
+vi.mock('../../../src/data/health-service', () => ({
+  createLogEntry: vi.fn(),
+  deleteLogEntry: vi.fn(),
+  getLogEntriesByRoutine: vi.fn().mockResolvedValue([]),
+  createRoutine: vi.fn(),
+  deleteRoutine: vi.fn(),
+}));
+
+vi.mock('../../../src/data/goal-service', () => ({
+  createGoal: vi.fn(),
+  updateGoal: vi.fn(),
+  deleteGoal: vi.fn(),
 }));
 
 vi.mock('../../../src/lib/currency', () => ({
@@ -42,9 +71,10 @@ function DummyScreen() {
 
 function renderWithRoutes() {
   return render(
-    <MemoryRouter initialEntries={['/agent']}>
+    <MemoryRouter initialEntries={['/agent/expense']}>
       <Routes>
-        <Route path="/agent" element={<AgentScreen />} />
+        <Route path="/agent/:pipelineId" element={<AgentScreen />} />
+        <Route path="/agent" element={<div data-testid="workflow-selector">Selector</div>} />
         <Route path="/settings" element={<DummyScreen />} />
       </Routes>
     </MemoryRouter>
@@ -60,10 +90,10 @@ describe('session reset on navigation', () => {
     });
   });
 
-  it('should show welcome message on initial load', async () => {
+  it('should show pipeline welcome message on initial load', async () => {
     renderWithRoutes();
     await waitFor(() => {
-      expect(screen.getByText(/expense assistant/i)).toBeTruthy();
+      expect(screen.getByText(/ready to help with your expenses/i)).toBeTruthy();
     });
   });
 
@@ -85,8 +115,6 @@ describe('session reset on navigation', () => {
 
     // Component unmount/remount simulates navigation away and back
     // The session-scoped state (messages, conversation history) resets
-    // This is verified by the component using useState with initial values
-    // and useRef which resets on remount
     expect(true).toBe(true); // Documented behavior
   });
 });
