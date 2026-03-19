@@ -1,6 +1,6 @@
 # Decisions Log
 
-**Mission:** Stage 2 — Dashboard Live + Offline Verification
+**Mission:** Stage 3 — Budget Core (Data Layer + Screen + Expense CRUD)
 **Started:** 2026-03-18
 
 ---
