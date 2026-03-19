@@ -4,6 +4,7 @@ import { roundCurrency } from '@/lib/currency';
 import { today as getToday, currentYearMonth } from '@/lib/dates';
 import { MAX_VENDOR_LENGTH } from '@/lib/constants';
 import { propagateCarryOver } from '@/data/budget-service';
+import { checkBudgetThresholds, recordQualifyingAction } from '@/data/notification-service';
 
 // --- Input Types ---
 
@@ -113,6 +114,10 @@ export async function createExpense(input: CreateExpenseInput): Promise<Expense>
     await propagateCarryOver(yearMonth);
   }
 
+  // Fire-and-forget threshold check and qualifying action (do not block the write)
+  checkBudgetThresholds().catch(() => {});
+  recordQualifyingAction().catch(() => {});
+
   return expense;
 }
 
@@ -160,6 +165,8 @@ export async function updateExpense(
     await propagateCarryOver(updated.yearMonth);
   }
 
+  checkBudgetThresholds().catch(() => {});
+
   return updated;
 }
 
@@ -176,4 +183,6 @@ export async function deleteExpense(id: number): Promise<void> {
   if (yearMonth !== currentYearMonth()) {
     await propagateCarryOver(yearMonth);
   }
+
+  checkBudgetThresholds().catch(() => {});
 }

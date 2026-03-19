@@ -6,6 +6,8 @@ import type {
   Goal,
   HealthRoutine,
   HealthLogEntry,
+  NotificationAlert,
+  NotificationFiredRecord,
 } from '@/lib/types';
 
 export class MyLifeAppDB extends Dexie {
@@ -15,6 +17,8 @@ export class MyLifeAppDB extends Dexie {
   goals!: Table<Goal>;
   healthRoutines!: Table<HealthRoutine>;
   healthLogEntries!: Table<HealthLogEntry>;
+  notificationAlerts!: Table<NotificationAlert>;
+  notificationFiredRecords!: Table<NotificationFiredRecord>;
 
   constructor() {
     super('myLifeAppDB');
@@ -25,6 +29,16 @@ export class MyLifeAppDB extends Dexie {
       goals: '++id, status, type',
       healthRoutines: '++id',
       healthLogEntries: '++id, routineId, date',
+    });
+    this.version(2).stores({
+      settings: 'id',
+      budgetMonths: 'yearMonth',
+      expenses: '++id, yearMonth, date',
+      goals: '++id, status, type',
+      healthRoutines: '++id',
+      healthLogEntries: '++id, routineId, date',
+      notificationAlerts: 'id, type, screen, dismissed',
+      notificationFiredRecords: 'id',
     });
   }
 }

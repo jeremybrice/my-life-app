@@ -1,6 +1,7 @@
 import { db } from '@/data/db';
 import type { Goal } from '@/lib/types';
 import { roundCurrency } from '@/lib/currency';
+import { recordQualifyingAction } from '@/data/notification-service';
 
 // --- Input types ---
 
@@ -157,6 +158,9 @@ export async function createGoal(input: CreateGoalInput): Promise<Goal> {
   }
 
   const id = await db.goals.add(goal as Goal);
+
+  recordQualifyingAction().catch(() => {});
+
   return { ...goal, id } as Goal;
 }
 

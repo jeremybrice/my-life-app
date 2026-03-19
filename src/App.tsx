@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { AppShell } from '@/components/AppShell';
 import { DatabaseErrorBoundary } from '@/components/DatabaseErrorBoundary';
@@ -8,13 +8,21 @@ import GoalsScreenContainer from '@/screens/goals/GoalsScreenContainer';
 import { HealthScreen } from '@/screens/health/HealthScreen';
 import { AgentScreen } from '@/screens/agent/AgentScreen';
 import { SettingsScreen } from '@/screens/settings/SettingsScreen';
-import { runAppLaunchChecks, incrementSessionCount, detectCapabilities } from '@/data/notification-service';
+import { NotificationPrompt } from '@/components/NotificationPrompt';
+import { runAppLaunchChecks, incrementSessionCount, detectCapabilities, shouldShowPermissionPrompt } from '@/data/notification-service';
 
 export default function App() {
+  const [showPrompt, setShowPrompt] = useState(false);
+
   useEffect(() => {
     detectCapabilities();
     incrementSessionCount().catch(() => {});
     runAppLaunchChecks().catch(() => {});
+
+    // Check if we should show the notification permission prompt
+    shouldShowPermissionPrompt().then(should => {
+      if (should) setShowPrompt(true);
+    }).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -29,6 +37,9 @@ export default function App() {
 
   return (
     <DatabaseErrorBoundary>
+      {showPrompt && (
+        <NotificationPrompt onClose={() => setShowPrompt(false)} />
+      )}
       <BrowserRouter>
         <Routes>
           <Route element={<AppShell />}>

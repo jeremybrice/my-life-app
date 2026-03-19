@@ -107,14 +107,9 @@ export async function importData(data: ExportData): Promise<void> {
     await db.healthRoutines.clear();
     await db.healthLogEntries.clear();
 
-    // Also clear notification stores if they exist (v2 schema)
-    if (db.tables.some(t => t.name === 'notificationAlerts')) {
-      await (db as Record<string, unknown>)['notificationAlerts' as keyof typeof db] &&
-        db.table('notificationAlerts').clear();
-    }
-    if (db.tables.some(t => t.name === 'notificationFiredRecords')) {
-      await db.table('notificationFiredRecords').clear();
-    }
+    // Also clear notification stores
+    await db.notificationAlerts.clear();
+    await db.notificationFiredRecords.clear();
 
     // Write imported data
     if (data.data.settings.length > 0) {

@@ -1,6 +1,6 @@
 # Decisions Log
 
-**Mission:** Stage 6 — AI Agent Integration
+**Mission:** Stage 7 — Notifications, Import/Export & Polish
 **Started:** 2026-03-18
 
 ---

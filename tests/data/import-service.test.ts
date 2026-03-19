@@ -94,6 +94,8 @@ describe('data import', () => {
     await db.goals.clear();
     await db.healthRoutines.clear();
     await db.healthLogEntries.clear();
+    await db.notificationAlerts.clear();
+    await db.notificationFiredRecords.clear();
 
     // Pre-populate with existing data that should be replaced
     await db.settings.put({ id: SETTINGS_ID, monthlyBudget: 1000 });
@@ -134,5 +136,29 @@ describe('data import', () => {
 
     const settings = await db.settings.get(SETTINGS_ID);
     expect(settings?.monthlyBudget).toBe(500);
+  });
+
+  it('should clear notification stores during import', async () => {
+    await db.notificationAlerts.put({
+      id: 'budget-daily-2026-03-18',
+      type: 'budget-daily',
+      title: 'Over budget',
+      body: 'You have exceeded your daily budget',
+      timestamp: '2026-03-18T12:00:00Z',
+      dismissed: false,
+      screen: 'budget',
+    });
+    await db.notificationFiredRecords.put({
+      id: 'budget-daily-2026-03-18',
+      firedAt: '2026-03-18T12:00:00Z',
+    });
+
+    const exportData = makeValidExport();
+    await importData(exportData);
+
+    const alerts = await db.notificationAlerts.toArray();
+    expect(alerts).toHaveLength(0);
+    const firedRecords = await db.notificationFiredRecords.toArray();
+    expect(firedRecords).toHaveLength(0);
   });
 });

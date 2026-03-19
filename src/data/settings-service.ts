@@ -21,6 +21,11 @@ export interface SaveSettingsInput {
   targetDateLabel?: string;
   monthlyBudget?: number;
   dailyBudget?: number;
+  notificationPreferences?: import('@/lib/types').NotificationPreferences;
+  notificationPromptDeferred?: number;
+  notificationPromptLastShown?: string;
+  hasQualifyingAction?: boolean;
+  sessionCount?: number;
 }
 
 /**
