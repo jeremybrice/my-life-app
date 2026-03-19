@@ -32,3 +32,88 @@ body {
     padding-top: env(safe-area-inset-top);
   }
 }
+
+/* --- Motion preferences --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- Shared animation classes --- */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-in {
+    animation: fadeIn 200ms ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 200ms ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 200ms ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* --- Safari-specific fixes --- */
+
+/* Fix Safari flex gap issue in older versions */
+@supports not (gap: 1rem) {
+  .flex > * + * {
+    margin-left: 0.75rem;
+  }
+}
+
+/* Fix Safari 100vh issue on iOS (address bar) */
+body {
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+/* Fix Safari input zoom on focus (prevent auto-zoom for inputs < 16px) */
+@media screen and (max-width: 768px) {
+  input[type='text'],
+  input[type='number'],
+  input[type='email'],
+  input[type='password'],
+  input[type='date'],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}

@@ -1,16 +1,68 @@
+import { useState, useEffect } from 'react';
+
 interface LoadingSpinnerProps {
-  /** Optional message to display below the spinner */
+  /** Delay in ms before showing the spinner (prevents flash for fast loads) */
+  delay?: number;
+  /** Size variant */
+  size?: 'sm' | 'md' | 'lg';
+  /** Optional label for accessibility */
+  label?: string;
+  /** Optional message to display below the spinner (legacy prop) */
   message?: string;
 }
 
-export function LoadingSpinner({ message }: LoadingSpinnerProps) {
+const SIZE_CLASSES = {
+  sm: 'h-5 w-5',
+  md: 'h-8 w-8',
+  lg: 'h-12 w-12',
+};
+
+export function LoadingSpinner({
+  delay = 100,
+  size = 'md',
+  label,
+  message,
+}: LoadingSpinnerProps) {
+  const [visible, setVisible] = useState(delay === 0);
+
+  useEffect(() => {
+    if (delay === 0) return;
+    const timer = setTimeout(() => setVisible(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  if (!visible) return null;
+
+  const accessibleLabel = label || message || 'Loading...';
+
   return (
-    <div className="flex flex-col items-center justify-center py-12">
-      <div className="w-8 h-8 border-4 border-slate-200 dark:border-slate-700 border-t-primary-600 rounded-full animate-spin" />
-      {message && (
+    <div className="flex flex-col items-center justify-center py-12" role="status" aria-label={accessibleLabel}>
+      <svg
+        className={`${SIZE_CLASSES[size]} animate-spin text-primary-600`}
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+        />
+      </svg>
+      {message ? (
         <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
           {message}
         </p>
+      ) : (
+        <span className="sr-only">{accessibleLabel}</span>
       )}
     </div>
   );
