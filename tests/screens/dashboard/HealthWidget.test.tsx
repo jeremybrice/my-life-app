@@ -61,8 +61,8 @@ describe('HealthWidget', () => {
     expect(screen.getByTestId('health-behind-count')).toHaveTextContent('1 routine behind this week');
   });
 
-  it('should have the section title "Health Routines"', () => {
+  it('should have the section title "Health & Habits"', () => {
     render(<HealthWidget />);
-    expect(screen.getByText('Health Routines')).toBeInTheDocument();
+    expect(screen.getByText('Health & Habits')).toBeInTheDocument();
   });
 });

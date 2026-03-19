@@ -1,16 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { WELCOME_MESSAGE } from '../../../src/screens/agent/agent-types';
-import type { ChatMessage, ParsedExpense, AgentStatus } from '../../../src/screens/agent/agent-types';
+import type { ChatMessage, ParsedExpense, ParsedHealthLog, ParsedGoalAction, AgentStatus } from '../../../src/screens/agent/agent-types';
 
 describe('agent-types', () => {
-  it('should export WELCOME_MESSAGE with correct shape', () => {
-    expect(WELCOME_MESSAGE.id).toBe('welcome');
-    expect(WELCOME_MESSAGE.role).toBe('assistant');
-    expect(WELCOME_MESSAGE.contentType).toBe('text');
-    expect(WELCOME_MESSAGE.text).toBeTruthy();
-    expect(WELCOME_MESSAGE.timestamp).toBe(0);
-  });
-
   it('should allow creating a user text message', () => {
     const msg: ChatMessage = {
       id: '1',
@@ -42,11 +33,60 @@ describe('agent-types', () => {
     expect(msg.confirmationStatus).toBe('pending');
   });
 
+  it('should allow creating a health log confirmation message', () => {
+    const log: ParsedHealthLog = {
+      routineId: 1,
+      routineName: 'Running',
+      date: '2026-03-18',
+      metrics: { distance: 5 },
+    };
+    const msg: ChatMessage = {
+      id: '3',
+      role: 'assistant',
+      contentType: 'health-log-confirmation',
+      parsedHealthLog: log,
+      confirmationStatus: 'pending',
+      timestamp: Date.now(),
+    };
+    expect(msg.parsedHealthLog?.routineName).toBe('Running');
+  });
+
+  it('should allow creating a goal confirmation message', () => {
+    const goal: ParsedGoalAction = {
+      action: 'create',
+      goalTitle: 'Save $5000',
+      goalType: 'financial',
+      progressModel: 'numeric',
+      targetValue: 5000,
+    };
+    const msg: ChatMessage = {
+      id: '4',
+      role: 'assistant',
+      contentType: 'goal-create-confirmation',
+      parsedGoalAction: goal,
+      confirmationStatus: 'pending',
+      timestamp: Date.now(),
+    };
+    expect(msg.parsedGoalAction?.goalTitle).toBe('Save $5000');
+  });
+
   it('should support all AgentStatus values', () => {
     const statuses: AgentStatus[] = [
       'initializing', 'ready', 'loading', 'offline',
       'no-api-key', 'invalid-api-key', 'error',
     ];
     expect(statuses).toHaveLength(7);
+  });
+
+  it('should support pipelineId on messages', () => {
+    const msg: ChatMessage = {
+      id: '5',
+      role: 'user',
+      contentType: 'text',
+      text: 'Test',
+      timestamp: Date.now(),
+      pipelineId: 'expense',
+    };
+    expect(msg.pipelineId).toBe('expense');
   });
 });

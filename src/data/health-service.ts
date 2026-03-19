@@ -6,12 +6,16 @@ import { today as getToday } from '@/lib/dates';
 
 export interface CreateRoutineInput {
   name: string;
-  targetFrequency: number;
+  frequencyType: 'daily' | 'weekly';
+  dailyTarget?: number; // required when frequencyType is 'daily', defaults to 1
+  targetFrequency?: number; // required when frequencyType is 'weekly'
   trackedMetrics?: TrackedMetric[];
 }
 
 export interface UpdateRoutineInput {
   name?: string;
+  frequencyType?: 'daily' | 'weekly';
+  dailyTarget?: number;
   targetFrequency?: number;
   trackedMetrics?: TrackedMetric[];
 }
@@ -42,6 +46,29 @@ function validateTargetFrequency(frequency: unknown): asserts frequency is numbe
   ) {
     throw new Error('Target frequency must be a positive integer');
   }
+}
+
+function validateFrequencyType(type: unknown): asserts type is 'daily' | 'weekly' {
+  if (type !== 'daily' && type !== 'weekly') {
+    throw new Error('Frequency type must be "daily" or "weekly"');
+  }
+}
+
+/**
+ * Resolve targetFrequency from input based on frequencyType.
+ * - daily: targetFrequency = dailyTarget * 7
+ * - weekly: targetFrequency = input.targetFrequency
+ */
+function resolveFrequency(input: { frequencyType: 'daily' | 'weekly'; dailyTarget?: number; targetFrequency?: number }): { dailyTarget: number; targetFrequency: number } {
+  if (input.frequencyType === 'daily') {
+    const dailyTarget = input.dailyTarget ?? 1;
+    validateTargetFrequency(dailyTarget);
+    return { dailyTarget, targetFrequency: dailyTarget * 7 };
+  }
+  // weekly
+  const targetFrequency = input.targetFrequency!;
+  validateTargetFrequency(targetFrequency);
+  return { dailyTarget: 1, targetFrequency };
 }
 
 function validateTrackedMetrics(metrics: TrackedMetric[] | undefined): void {
@@ -82,13 +109,16 @@ function validateMetricValues(metrics: Record<string, number> | undefined): void
 
 export async function createRoutine(input: CreateRoutineInput): Promise<HealthRoutine> {
   validateRoutineName(input.name);
-  validateTargetFrequency(input.targetFrequency);
+  validateFrequencyType(input.frequencyType);
+  const { dailyTarget, targetFrequency } = resolveFrequency(input);
   validateTrackedMetrics(input.trackedMetrics);
 
   const now = new Date().toISOString();
   const routine: Omit<HealthRoutine, 'id'> = {
     name: input.name.trim(),
-    targetFrequency: input.targetFrequency,
+    frequencyType: input.frequencyType,
+    dailyTarget,
+    targetFrequency,
     trackedMetrics: input.trackedMetrics ?? [],
     createdAt: now,
     updatedAt: now,
@@ -119,20 +149,35 @@ export async function updateRoutine(
   if (input.name !== undefined) {
     validateRoutineName(input.name);
   }
-  if (input.targetFrequency !== undefined) {
-    validateTargetFrequency(input.targetFrequency);
+  if (input.frequencyType !== undefined) {
+    validateFrequencyType(input.frequencyType);
   }
   if (input.trackedMetrics !== undefined) {
     validateTrackedMetrics(input.trackedMetrics);
   }
 
   const updates: Partial<HealthRoutine> = {
-    ...input,
     updatedAt: new Date().toISOString(),
   };
 
   if (input.name !== undefined) {
     updates.name = input.name.trim();
+  }
+  if (input.trackedMetrics !== undefined) {
+    updates.trackedMetrics = input.trackedMetrics;
+  }
+
+  // Resolve frequency updates
+  const effectiveType = input.frequencyType ?? existing.frequencyType ?? 'weekly';
+  if (input.frequencyType !== undefined || input.dailyTarget !== undefined || input.targetFrequency !== undefined) {
+    const resolved = resolveFrequency({
+      frequencyType: effectiveType,
+      dailyTarget: input.dailyTarget ?? existing.dailyTarget,
+      targetFrequency: input.targetFrequency ?? existing.targetFrequency,
+    });
+    updates.frequencyType = effectiveType;
+    updates.dailyTarget = resolved.dailyTarget;
+    updates.targetFrequency = resolved.targetFrequency;
   }
 
   await db.healthRoutines.update(id, updates);
@@ -326,13 +371,37 @@ export async function getWeeklyCount(routineId: number): Promise<number> {
 }
 
 /**
+ * Get the number of log entries for a routine on a specific date.
+ */
+export async function getDailyCount(routineId: number, date?: string): Promise<number> {
+  const dateStr = date ?? getToday();
+  const entries = await db.healthLogEntries
+    .where('routineId')
+    .equals(routineId)
+    .toArray();
+  return entries.filter((e) => e.date === dateStr).length;
+}
+
+/**
  * Get the number of distinct routines completed today.
+ * A routine is "completed today" if its daily target is met (or at least 1 log for weekly routines).
  */
 export async function getRoutinesCompletedToday(): Promise<number> {
   const todayStr = getToday();
   const entries = await db.healthLogEntries.where('date').equals(todayStr).toArray();
-  const uniqueRoutineIds = new Set(entries.map((e) => e.routineId));
-  return uniqueRoutineIds.size;
+  const countByRoutine = new Map<number, number>();
+  for (const e of entries) {
+    countByRoutine.set(e.routineId, (countByRoutine.get(e.routineId) ?? 0) + 1);
+  }
+
+  let completed = 0;
+  for (const [routineId, count] of countByRoutine) {
+    const routine = await db.healthRoutines.get(routineId);
+    if (!routine) continue;
+    const target = routine.frequencyType === 'daily' ? (routine.dailyTarget ?? 1) : 1;
+    if (count >= target) completed++;
+  }
+  return completed;
 }
 
 /**

@@ -8,6 +8,7 @@ import {
   createLogEntry,
   deleteLogEntry,
   getWeeklyCount,
+  getDailyCount,
   calculateStreak,
   getHealthAggregation,
 } from '@/data/health-service';
@@ -22,6 +23,7 @@ import type {
 
 export interface RoutineWithAdherence extends HealthRoutine {
   weeklyCount: number;
+  dailyCount: number;
   streak: number;
 }
 
@@ -45,8 +47,9 @@ export function useHealth(): UseHealthReturn {
       const enriched: RoutineWithAdherence[] = await Promise.all(
         allRoutines.map(async (routine) => {
           const weeklyCount = await getWeeklyCount(routine.id!);
+          const dailyCount = await getDailyCount(routine.id!);
           const streak = await calculateStreak(routine.id!);
-          return { ...routine, weeklyCount, streak };
+          return { ...routine, weeklyCount, dailyCount, streak };
         })
       );
 

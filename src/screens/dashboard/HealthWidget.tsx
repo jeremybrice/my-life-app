@@ -26,12 +26,12 @@ export function HealthWidget({ data }: HealthWidgetInternalProps) {
     return (
       <div data-testid="health-widget" className="rounded-xl border border-edge bg-surface-card p-4 shadow-sm">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-fg-muted">
-          Health Routines
+          Health &amp; Habits
         </h3>
         <div data-testid="health-widget-placeholder" className="mt-3 text-center">
           <p className="text-3xl">&#128170;</p>
           <p className="mt-2 text-sm text-fg-muted">
-            Build healthy habits with routine tracking. Define your first routine in the Health tab to see your progress here.
+            Track daily and weekly health habits. Define your first routine in the Health tab to see your progress here.
           </p>
         </div>
       </div>
@@ -41,7 +41,7 @@ export function HealthWidget({ data }: HealthWidgetInternalProps) {
   return (
     <div data-testid="health-widget" className="rounded-xl border border-edge bg-surface-card p-4 shadow-sm">
       <h3 className="text-sm font-semibold uppercase tracking-wide text-fg-muted">
-        Health Routines
+        Health &amp; Habits
       </h3>
       <div className="mt-3 grid grid-cols-3 gap-2 text-center">
         <div>

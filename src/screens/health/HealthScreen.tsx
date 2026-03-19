@@ -135,20 +135,33 @@ export function HealthScreen() {
           }}
         />
       ) : (
-        <div className="space-y-3" data-testid="routines-list">
-          {routines.map((routine) => (
-            <RoutineCard
-              key={routine.id}
-              routine={routine}
-              onQuickLog={handleQuickLog}
-              onEdit={handleEditRoutineNav}
-              onDelete={(id) => {
-                const r = routines.find((r) => r.id === id);
-                setDeleteTarget({ id, name: r?.name ?? '' });
-              }}
-            />
-          ))}
-        </div>
+        <>
+          <div className="space-y-2" data-testid="routines-list">
+            {routines.map((routine) => (
+              <RoutineCard
+                key={routine.id}
+                routine={routine}
+                onQuickLog={handleQuickLog}
+                onEdit={handleEditRoutineNav}
+                onDelete={(id) => {
+                  const r = routines.find((r) => r.id === id);
+                  setDeleteTarget({ id, name: r?.name ?? '' });
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Daily summary footer */}
+          <div
+            className="mt-4 rounded-lg border border-edge bg-surface-card px-4 py-2.5 text-center text-sm text-fg-muted"
+            data-testid="daily-summary"
+          >
+            Today: {routines.filter((r) => {
+              if (r.frequencyType === 'daily') return r.dailyCount >= (r.dailyTarget ?? 1);
+              return r.dailyCount >= 1;
+            }).length} of {routines.length} routines done
+          </div>
+        </>
       )}
 
       <ConfirmDialog

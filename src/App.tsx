@@ -7,6 +7,7 @@ import { BudgetScreen } from '@/screens/budget/BudgetScreen';
 import GoalsScreenContainer from '@/screens/goals/GoalsScreenContainer';
 import { HealthScreen } from '@/screens/health/HealthScreen';
 import { AgentScreen } from '@/screens/agent/AgentScreen';
+import { WorkflowSelector } from '@/screens/agent/WorkflowSelector';
 import { SettingsScreen } from '@/screens/settings/SettingsScreen';
 import { NotificationPrompt } from '@/components/NotificationPrompt';
 import { runAppLaunchChecks, incrementSessionCount, detectCapabilities, shouldShowPermissionPrompt } from '@/data/notification-service';
@@ -47,7 +48,8 @@ export default function App() {
             <Route path="/budget" element={<BudgetScreen />} />
             <Route path="/goals" element={<GoalsScreenContainer />} />
             <Route path="/health" element={<HealthScreen />} />
-            <Route path="/agent" element={<AgentScreen />} />
+            <Route path="/agent" element={<WorkflowSelector />} />
+            <Route path="/agent/:pipelineId" element={<AgentScreen />} />
             <Route path="/settings" element={<SettingsScreen />} />
           </Route>
         </Routes>

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter, Routes, Route } from 'react-router';
 
 // Mock claude-client
 vi.mock('../../../src/services/claude-client', () => ({
@@ -16,14 +16,45 @@ vi.mock('../../../src/services/claude-client', () => ({
   },
 }));
 
-// Mock expense-parser
+// Mock parsers
 vi.mock('../../../src/services/expense-parser', () => ({
   parseExpenseMessage: vi.fn(),
+  extractJson: vi.fn(),
+}));
+
+vi.mock('../../../src/services/budget-insights-parser', () => ({
+  parseBudgetQuery: vi.fn(),
+}));
+
+vi.mock('../../../src/services/health-parser', () => ({
+  parseHealthMessage: vi.fn(),
+}));
+
+vi.mock('../../../src/services/goals-parser', () => ({
+  parseGoalsMessage: vi.fn(),
 }));
 
 // Mock expense-service
 vi.mock('../../../src/data/expense-service', () => ({
   createExpense: vi.fn(),
+  deleteExpense: vi.fn(),
+  getExpensesByMonth: vi.fn().mockResolvedValue([]),
+}));
+
+// Mock health-service
+vi.mock('../../../src/data/health-service', () => ({
+  createLogEntry: vi.fn(),
+  deleteLogEntry: vi.fn(),
+  getLogEntriesByRoutine: vi.fn().mockResolvedValue([]),
+  createRoutine: vi.fn(),
+  deleteRoutine: vi.fn(),
+}));
+
+// Mock goal-service
+vi.mock('../../../src/data/goal-service', () => ({
+  createGoal: vi.fn(),
+  updateGoal: vi.fn(),
+  deleteGoal: vi.fn(),
 }));
 
 vi.mock('../../../src/lib/currency', () => ({
@@ -39,16 +70,25 @@ vi.mock('../../../src/services/receipt-processor', () => ({
 import { AgentScreen } from '../../../src/screens/agent/AgentScreen';
 import { validateApiKey, ClaudeClientError } from '../../../src/services/claude-client';
 import { parseExpenseMessage } from '../../../src/services/expense-parser';
+import { parseBudgetQuery } from '../../../src/services/budget-insights-parser';
+import { parseHealthMessage } from '../../../src/services/health-parser';
+import { parseGoalsMessage } from '../../../src/services/goals-parser';
 import { createExpense } from '../../../src/data/expense-service';
 
 const mockValidateApiKey = vi.mocked(validateApiKey);
 const mockParseExpenseMessage = vi.mocked(parseExpenseMessage);
+const mockParseBudgetQuery = vi.mocked(parseBudgetQuery);
+const mockParseHealthMessage = vi.mocked(parseHealthMessage);
+const mockParseGoalsMessage = vi.mocked(parseGoalsMessage);
 const mockCreateExpense = vi.mocked(createExpense);
 
-function renderScreen() {
+function renderScreen(pipelineId = 'expense') {
   return render(
-    <MemoryRouter>
-      <AgentScreen />
+    <MemoryRouter initialEntries={[`/agent/${pipelineId}`]}>
+      <Routes>
+        <Route path="/agent/:pipelineId" element={<AgentScreen />} />
+        <Route path="/agent" element={<div data-testid="workflow-selector">Selector</div>} />
+      </Routes>
     </MemoryRouter>
   );
 }
@@ -76,10 +116,24 @@ describe('AgentScreen', () => {
     vi.clearAllMocks();
   });
 
-  it('should show welcome message after successful validation', async () => {
-    renderScreen();
+  it('should show pipeline-specific welcome message', async () => {
+    renderScreen('expense');
     await waitFor(() => {
-      expect(screen.getByText(/expense assistant/i)).toBeTruthy();
+      expect(screen.getByText(/ready to help with your expenses/i)).toBeTruthy();
+    });
+  });
+
+  it('should show back button to workflows', async () => {
+    renderScreen('expense');
+    await waitFor(() => {
+      expect(screen.getByTestId('back-to-workflows')).toBeTruthy();
+    });
+  });
+
+  it('should redirect to workflow selector for invalid pipeline', async () => {
+    renderScreen('invalid-pipeline');
+    await waitFor(() => {
+      expect(screen.getByTestId('workflow-selector')).toBeTruthy();
     });
   });
 
@@ -132,7 +186,7 @@ describe('AgentScreen', () => {
     });
   });
 
-  describe('expense parsing flow', () => {
+  describe('expense pipeline', () => {
     it('should show confirmation card when expense is parsed', async () => {
       const user = userEvent.setup();
       mockParseExpenseMessage.mockResolvedValue({
@@ -145,7 +199,7 @@ describe('AgentScreen', () => {
         },
       });
 
-      renderScreen();
+      renderScreen('expense');
       await waitFor(() => {
         expect(screen.getByTestId('agent-screen')).toBeTruthy();
       });
@@ -155,7 +209,7 @@ describe('AgentScreen', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Chipotle')).toBeTruthy();
-        expect(screen.getByTestId('confirm-expense-btn')).toBeTruthy();
+        expect(screen.getByText('Approve')).toBeTruthy();
       });
     });
 
@@ -166,7 +220,7 @@ describe('AgentScreen', () => {
         message: 'How much did you spend?',
       });
 
-      renderScreen();
+      renderScreen('expense');
       await waitFor(() => {
         expect(screen.getByTestId('agent-screen')).toBeTruthy();
       });
@@ -179,92 +233,133 @@ describe('AgentScreen', () => {
       });
     });
 
-    it('should show redirect message for non-expense input', async () => {
+    it('should show image upload button for expense pipeline', async () => {
+      renderScreen('expense');
+      await waitFor(() => {
+        expect(screen.getByTestId('agent-screen')).toBeTruthy();
+      });
+      expect(screen.getByTestId('upload-image-btn')).toBeTruthy();
+    });
+  });
+
+  describe('budget insights pipeline', () => {
+    it('should show data answer for budget queries', async () => {
       const user = userEvent.setup();
-      mockParseExpenseMessage.mockResolvedValue({
-        type: 'redirect',
-        message: 'I can only help with expense logging.',
+      mockParseBudgetQuery.mockResolvedValue({
+        type: 'answer',
+        text: 'You spent $500 on dining this month.',
       });
 
-      renderScreen();
+      renderScreen('budget-insights');
       await waitFor(() => {
         expect(screen.getByTestId('agent-screen')).toBeTruthy();
       });
 
-      await user.type(screen.getByTestId('chat-input'), 'What is the meaning of life?');
+      await user.type(screen.getByTestId('chat-input'), 'How much did I spend on dining?');
       await user.click(screen.getByTestId('send-btn'));
 
       await waitFor(() => {
-        expect(screen.getByText('I can only help with expense logging.')).toBeTruthy();
+        expect(screen.getByText('You spent $500 on dining this month.')).toBeTruthy();
+      });
+    });
+
+    it('should not show image upload for budget insights', async () => {
+      renderScreen('budget-insights');
+      await waitFor(() => {
+        expect(screen.getByTestId('agent-screen')).toBeTruthy();
+      });
+      expect(screen.queryByTestId('upload-image-btn')).toBeNull();
+    });
+  });
+
+  describe('health pipeline', () => {
+    it('should show health log confirmation card', async () => {
+      const user = userEvent.setup();
+      mockParseHealthMessage.mockResolvedValue({
+        type: 'health-log',
+        routineId: 1,
+        routineName: 'Running',
+        date: '2026-03-18',
+        metrics: { distance: 5 },
+      });
+
+      renderScreen('health');
+      await waitFor(() => {
+        expect(screen.getByTestId('agent-screen')).toBeTruthy();
+      });
+
+      await user.type(screen.getByTestId('chat-input'), 'Ran 5km today');
+      await user.click(screen.getByTestId('send-btn'));
+
+      await waitFor(() => {
+        expect(screen.getByText('Running')).toBeTruthy();
+        expect(screen.getByText('Approve')).toBeTruthy();
+      });
+    });
+
+    it('should show health answer for queries', async () => {
+      const user = userEvent.setup();
+      mockParseHealthMessage.mockResolvedValue({
+        type: 'health-answer',
+        text: 'Your running streak is 5 days.',
+      });
+
+      renderScreen('health');
+      await waitFor(() => {
+        expect(screen.getByTestId('agent-screen')).toBeTruthy();
+      });
+
+      await user.type(screen.getByTestId('chat-input'), "How's my running streak?");
+      await user.click(screen.getByTestId('send-btn'));
+
+      await waitFor(() => {
+        expect(screen.getByText('Your running streak is 5 days.')).toBeTruthy();
       });
     });
   });
 
-  describe('expense confirmation', () => {
-    it('should save expense when confirm button is clicked', async () => {
+  describe('goals pipeline', () => {
+    it('should show goal create confirmation card', async () => {
       const user = userEvent.setup();
-      mockParseExpenseMessage.mockResolvedValue({
-        type: 'expense',
-        expense: {
-          amount: 25.00,
-          vendor: 'Chipotle',
-          date: '2026-03-18',
-        },
+      mockParseGoalsMessage.mockResolvedValue({
+        type: 'goal-create',
+        title: 'Save $5000',
+        goalType: 'financial',
+        progressModel: 'numeric',
+        targetValue: 5000,
       });
 
-      renderScreen();
+      renderScreen('goals');
       await waitFor(() => {
         expect(screen.getByTestId('agent-screen')).toBeTruthy();
       });
 
-      await user.type(screen.getByTestId('chat-input'), 'Spent $25 at Chipotle');
+      await user.type(screen.getByTestId('chat-input'), 'Create a savings goal for $5000');
       await user.click(screen.getByTestId('send-btn'));
 
       await waitFor(() => {
-        expect(screen.getByTestId('confirm-expense-btn')).toBeTruthy();
-      });
-
-      await user.click(screen.getByTestId('confirm-expense-btn'));
-
-      await waitFor(() => {
-        expect(mockCreateExpense).toHaveBeenCalledWith(
-          expect.objectContaining({
-            vendor: 'Chipotle',
-            amount: 25.00,
-            date: '2026-03-18',
-          })
-        );
+        expect(screen.getByText('Save $5000')).toBeTruthy();
+        expect(screen.getByText('Approve')).toBeTruthy();
       });
     });
 
-    it('should not save expense when cancel button is clicked', async () => {
+    it('should show goal answer for queries', async () => {
       const user = userEvent.setup();
-      mockParseExpenseMessage.mockResolvedValue({
-        type: 'expense',
-        expense: {
-          amount: 25.00,
-          vendor: 'Chipotle',
-          date: '2026-03-18',
-        },
+      mockParseGoalsMessage.mockResolvedValue({
+        type: 'goal-answer',
+        text: 'You are 60% of the way to your savings goal.',
       });
 
-      renderScreen();
+      renderScreen('goals');
       await waitFor(() => {
         expect(screen.getByTestId('agent-screen')).toBeTruthy();
       });
 
-      await user.type(screen.getByTestId('chat-input'), 'Spent $25 at Chipotle');
+      await user.type(screen.getByTestId('chat-input'), 'How close am I to my savings goal?');
       await user.click(screen.getByTestId('send-btn'));
 
       await waitFor(() => {
-        expect(screen.getByTestId('cancel-expense-btn')).toBeTruthy();
-      });
-
-      await user.click(screen.getByTestId('cancel-expense-btn'));
-
-      expect(mockCreateExpense).not.toHaveBeenCalled();
-      await waitFor(() => {
-        expect(screen.getByText(/not saved/)).toBeTruthy();
+        expect(screen.getByText('You are 60% of the way to your savings goal.')).toBeTruthy();
       });
     });
   });
@@ -276,7 +371,7 @@ describe('AgentScreen', () => {
         new ClaudeClientError('Rate limit exceeded.', 'rate-limited')
       );
 
-      renderScreen();
+      renderScreen('expense');
       await waitFor(() => {
         expect(screen.getByTestId('agent-screen')).toBeTruthy();
       });

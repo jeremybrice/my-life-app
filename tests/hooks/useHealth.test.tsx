@@ -28,6 +28,7 @@ describe('useHealth', () => {
     await act(async () => {
       await result.current.addRoutine({
         name: 'Morning Run',
+        frequencyType: 'weekly',
         targetFrequency: 3,
       });
     });
@@ -36,6 +37,7 @@ describe('useHealth', () => {
       expect(result.current.routines).toHaveLength(1);
       expect(result.current.routines[0].name).toBe('Morning Run');
       expect(result.current.routines[0].weeklyCount).toBe(0);
+      expect(result.current.routines[0].dailyCount).toBe(0);
       expect(result.current.routines[0].streak).toBe(0);
     });
   });
@@ -48,6 +50,7 @@ describe('useHealth', () => {
     await act(async () => {
       const r = await result.current.addRoutine({
         name: 'Delete Me',
+        frequencyType: 'weekly',
         targetFrequency: 1,
       });
       routineId = r.id!;

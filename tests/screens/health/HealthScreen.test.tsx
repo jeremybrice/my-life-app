@@ -34,6 +34,7 @@ describe('HealthScreen', () => {
   it('should display routines with adherence indicators', async () => {
     const routine = await createRoutine({
       name: 'Morning Run',
+      frequencyType: 'weekly',
       targetFrequency: 3,
     });
     await createLogEntry({ routineId: routine.id!, date: '2026-03-16' });
@@ -43,9 +44,8 @@ describe('HealthScreen', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Morning Run')).toBeInTheDocument();
-      expect(screen.getByText('3x / week')).toBeInTheDocument();
       expect(screen.getByTestId(`adherence-${routine.id}`)).toHaveTextContent(
-        '2 of 3 this week'
+        '2/3 this week'
       );
     });
   });

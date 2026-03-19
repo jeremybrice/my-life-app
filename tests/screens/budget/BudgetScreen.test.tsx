@@ -125,7 +125,7 @@ describe('BudgetScreen - Summary Tab', () => {
     render(<BudgetScreen />);
 
     await waitFor(() => {
-      expect(screen.getByTestId('tab-expenses')).toHaveClass('border-blue-600');
+      expect(screen.getByTestId('tab-expenses')).toHaveClass('border-accent');
     });
   });
 

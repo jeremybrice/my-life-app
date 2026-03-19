@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { DashboardScreen } from '../../src/screens/dashboard/DashboardScreen';
 import { AgentScreen } from '../../src/screens/agent/AgentScreen';
+import { WorkflowSelector } from '../../src/screens/agent/WorkflowSelector';
 
 // Mock claude-client so AgentScreen's validateApiKey call resolves
 vi.mock('../../src/services/claude-client', () => ({
@@ -17,14 +18,47 @@ vi.mock('../../src/services/claude-client', () => ({
   },
 }));
 
-// Mock expense-parser (imported by AgentScreen)
+// Mock parsers (imported by AgentScreen)
 vi.mock('../../src/services/expense-parser', () => ({
   parseExpenseMessage: vi.fn().mockResolvedValue({ type: 'clarification', message: 'ok' }),
+  extractJson: vi.fn(),
+}));
+
+vi.mock('../../src/services/budget-insights-parser', () => ({
+  parseBudgetQuery: vi.fn(),
+}));
+
+vi.mock('../../src/services/health-parser', () => ({
+  parseHealthMessage: vi.fn(),
+}));
+
+vi.mock('../../src/services/goals-parser', () => ({
+  parseGoalsMessage: vi.fn(),
 }));
 
 // Mock receipt-processor (imported by AgentScreen)
 vi.mock('../../src/services/receipt-processor', () => ({
   processReceipt: vi.fn(),
+}));
+
+vi.mock('../../src/data/expense-service', () => ({
+  createExpense: vi.fn(),
+  deleteExpense: vi.fn(),
+  getExpensesByMonth: vi.fn().mockResolvedValue([]),
+}));
+
+vi.mock('../../src/data/health-service', () => ({
+  createLogEntry: vi.fn(),
+  deleteLogEntry: vi.fn(),
+  getLogEntriesByRoutine: vi.fn().mockResolvedValue([]),
+  createRoutine: vi.fn(),
+  deleteRoutine: vi.fn(),
+}));
+
+vi.mock('../../src/data/goal-service', () => ({
+  createGoal: vi.fn(),
+  updateGoal: vi.fn(),
+  deleteGoal: vi.fn(),
 }));
 
 // Mock dependencies
@@ -80,25 +114,39 @@ describe('Offline Verification (Story 008)', () => {
     expect(screen.queryByText(/no connection/i)).not.toBeInTheDocument();
   });
 
-  it('should render Agent screen with chat UI when online', async () => {
+  it('should render workflow selector at /agent', () => {
     render(
       <MemoryRouter initialEntries={['/agent']}>
         <Routes>
-          <Route path="/agent" element={<AgentScreen />} />
+          <Route path="/agent" element={<WorkflowSelector />} />
+        </Routes>
+      </MemoryRouter>
+    );
+    expect(screen.getByTestId('workflow-selector')).toBeInTheDocument();
+    expect(screen.getByText('How can I help?')).toBeInTheDocument();
+  });
+
+  it('should render Agent screen with chat UI when online', async () => {
+    render(
+      <MemoryRouter initialEntries={['/agent/expense']}>
+        <Routes>
+          <Route path="/agent/:pipelineId" element={<AgentScreen />} />
+          <Route path="/agent" element={<WorkflowSelector />} />
         </Routes>
       </MemoryRouter>
     );
     await waitFor(() => {
       expect(screen.getByTestId('agent-screen')).toBeInTheDocument();
     });
-    expect(screen.getByText(/expense assistant/i)).toBeInTheDocument();
+    expect(screen.getByText(/ready to help with your expenses/i)).toBeInTheDocument();
   });
 
   it('should show chat input on Agent screen', async () => {
     render(
-      <MemoryRouter initialEntries={['/agent']}>
+      <MemoryRouter initialEntries={['/agent/expense']}>
         <Routes>
-          <Route path="/agent" element={<AgentScreen />} />
+          <Route path="/agent/:pipelineId" element={<AgentScreen />} />
+          <Route path="/agent" element={<WorkflowSelector />} />
         </Routes>
       </MemoryRouter>
     );

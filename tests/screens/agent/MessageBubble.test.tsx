@@ -75,8 +75,8 @@ describe('MessageBubble', () => {
     };
     render(<MessageBubble message={msg} />);
     expect(screen.getByText('Chipotle')).toBeTruthy();
-    expect(screen.getByTestId('confirm-expense-btn')).toBeTruthy();
-    expect(screen.getByTestId('cancel-expense-btn')).toBeTruthy();
+    expect(screen.getByTestId('confirm-btn-5')).toBeTruthy();
+    expect(screen.getByTestId('cancel-btn-5')).toBeTruthy();
   });
 
   it('should call onConfirm when confirm button is clicked', async () => {
@@ -95,7 +95,7 @@ describe('MessageBubble', () => {
       timestamp: Date.now(),
     };
     render(<MessageBubble message={msg} onConfirm={onConfirm} />);
-    await user.click(screen.getByTestId('confirm-expense-btn'));
+    await user.click(screen.getByTestId('confirm-btn-5'));
     expect(onConfirm).toHaveBeenCalledWith('5');
   });
 
@@ -115,7 +115,7 @@ describe('MessageBubble', () => {
       timestamp: Date.now(),
     };
     render(<MessageBubble message={msg} onCancel={onCancel} />);
-    await user.click(screen.getByTestId('cancel-expense-btn'));
+    await user.click(screen.getByTestId('cancel-btn-5'));
     expect(onCancel).toHaveBeenCalledWith('5');
   });
 
@@ -133,7 +133,7 @@ describe('MessageBubble', () => {
       timestamp: Date.now(),
     };
     render(<MessageBubble message={msg} />);
-    expect(screen.queryByTestId('confirm-expense-btn')).toBeNull();
+    expect(screen.queryByTestId('confirm-btn-5')).toBeNull();
     expect(screen.getByText(/Saved/)).toBeTruthy();
   });
 
