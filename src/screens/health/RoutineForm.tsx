@@ -82,14 +82,14 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
 
   return (
     <div className="mx-auto max-w-lg p-4">
-      <h1 className="mb-6 text-2xl font-bold text-slate-900 dark:text-white">
+      <h1 className="mb-6 text-2xl font-bold text-fg">
         {isEditing ? 'Edit Routine' : 'Create Routine'}
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-4" data-testid="routine-form">
         {/* Name */}
         <div>
-          <label htmlFor="routineName" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label htmlFor="routineName" className="block text-sm font-medium text-fg-secondary">
             Routine Name *
           </label>
           <input
@@ -98,7 +98,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Morning Run, Yoga, Meditation"
-            className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-white"
+            className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2 text-fg"
             data-testid="routine-name-input"
           />
           {errors.name && (
@@ -110,7 +110,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
 
         {/* Frequency */}
         <div>
-          <label htmlFor="frequency" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label htmlFor="frequency" className="block text-sm font-medium text-fg-secondary">
             Target Frequency (per week) *
           </label>
           <input
@@ -121,7 +121,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
             value={frequency}
             onChange={(e) => setFrequency(e.target.value)}
             placeholder="e.g., 3"
-            className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-white"
+            className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2 text-fg"
             data-testid="frequency-input"
           />
           {errors.frequency && (
@@ -134,13 +134,13 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
         {/* Tracked Metrics */}
         <div>
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            <label className="block text-sm font-medium text-fg-secondary">
               Tracked Metrics (optional)
             </label>
             <button
               type="button"
               onClick={addMetric}
-              className="text-sm text-primary-600 hover:underline"
+              className="text-sm text-accent hover:underline"
               data-testid="add-metric-button"
             >
               + Add Metric
@@ -152,13 +152,13 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
               {metrics.map((metric, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 rounded border border-slate-200 dark:border-slate-600 p-2"
+                  className="flex items-center gap-2 rounded border border-edge p-2"
                   data-testid={`metric-${index}`}
                 >
                   <select
                     value={metric.type}
                     onChange={(e) => updateMetric(index, 'type', e.target.value)}
-                    className="rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm text-slate-900 dark:text-white"
+                    className="rounded border border-edge bg-surface-card px-2 py-1 text-sm text-fg"
                     data-testid={`metric-type-${index}`}
                   >
                     {METRIC_TYPE_OPTIONS.map((opt) => (
@@ -173,7 +173,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
                       value={metric.unit ?? ''}
                       onChange={(e) => updateMetric(index, 'unit', e.target.value)}
                       placeholder="Unit (e.g., km, lbs)"
-                      className="rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm text-slate-900 dark:text-white"
+                      className="rounded border border-edge bg-surface-card px-2 py-1 text-sm text-fg"
                       data-testid={`metric-unit-${index}`}
                     />
                   )}
@@ -204,7 +204,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
           <button
             type="submit"
             disabled={submitting}
-            className="flex-1 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50 transition-colors"
+            className="flex-1 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
             data-testid="submit-routine-button"
           >
             {submitting
@@ -216,7 +216,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+            className="flex-1 rounded-lg border border-edge px-4 py-2 text-sm font-medium text-fg-secondary hover:bg-surface-hover transition-colors"
             data-testid="cancel-routine-button"
           >
             Cancel

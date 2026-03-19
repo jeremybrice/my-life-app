@@ -106,7 +106,7 @@ function DailyGroupRow({
       {/* Date Header */}
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+        className="w-full flex items-center justify-between px-3 py-2 bg-surface-secondary rounded-lg hover:bg-surface-hover transition-colors"
         aria-expanded={expanded}
         aria-label={`${group.date}: spent ${formatCurrency(group.dailyTotal)} of ${formatCurrency(dailyAllowance)}`}
       >
@@ -116,10 +116,10 @@ function DailyGroupRow({
           >
             &#9654;
           </span>
-          <span className="font-medium text-sm text-gray-800">{group.date}</span>
+          <span className="font-medium text-sm text-fg">{group.date}</span>
         </div>
 
-        <div className="flex items-center gap-4 text-xs text-gray-500">
+        <div className="flex items-center gap-4 text-xs text-fg-muted">
           <span>Budget: ${formatCurrency(dailyAllowance)}</span>
           <span>Spent: ${formatCurrency(group.dailyTotal)}</span>
           <span
@@ -137,21 +137,21 @@ function DailyGroupRow({
             <button
               key={expense.id}
               onClick={() => onExpenseClick(expense)}
-              className="w-full flex items-center justify-between px-3 py-2 bg-white border border-gray-100 rounded hover:bg-gray-50 transition-colors text-left"
+              className="w-full flex items-center justify-between px-3 py-2 bg-surface-card border border-edge rounded hover:bg-surface-hover transition-colors text-left"
               data-testid={`expense-row-${expense.id}`}
             >
               <div>
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-fg-secondary">
                   {expense.vendor}
                 </span>
                 {expense.category && (
-                  <span className="ml-2 text-xs text-gray-400">{expense.category}</span>
+                  <span className="ml-2 text-xs text-fg-muted">{expense.category}</span>
                 )}
                 {expense.description && (
-                  <p className="text-xs text-gray-400 mt-0.5">{expense.description}</p>
+                  <p className="text-xs text-fg-muted mt-0.5">{expense.description}</p>
                 )}
               </div>
-              <span className="text-sm font-semibold text-gray-800">
+              <span className="text-sm font-semibold text-fg">
                 ${formatCurrency(expense.amount)}
               </span>
             </button>

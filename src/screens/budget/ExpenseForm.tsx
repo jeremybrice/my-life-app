@@ -74,15 +74,15 @@ export function ExpenseForm({ onSubmit }: ExpenseFormProps) {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="px-4 py-4 border-b border-gray-200"
+      className="px-4 py-4 border-b border-edge"
       data-testid="expense-form"
     >
-      <h3 className="text-lg font-semibold text-gray-700 mb-3">Add Expense</h3>
+      <h3 className="text-lg font-semibold text-fg-secondary mb-3">Add Expense</h3>
 
       <div className="grid grid-cols-2 gap-3">
         {/* Date */}
         <div>
-          <label htmlFor="expense-date" className="block text-xs font-medium text-gray-600 mb-1">
+          <label htmlFor="expense-date" className="block text-xs font-medium text-fg-secondary mb-1">
             Date
           </label>
           <input
@@ -90,13 +90,13 @@ export function ExpenseForm({ onSubmit }: ExpenseFormProps) {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-2 py-1.5 border border-edge rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent"
           />
         </div>
 
         {/* Category */}
         <div>
-          <label htmlFor="expense-category" className="block text-xs font-medium text-gray-600 mb-1">
+          <label htmlFor="expense-category" className="block text-xs font-medium text-fg-secondary mb-1">
             Category
           </label>
           <input
@@ -105,13 +105,13 @@ export function ExpenseForm({ onSubmit }: ExpenseFormProps) {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             placeholder="e.g. Food"
-            className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-2 py-1.5 border border-edge rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent"
           />
         </div>
 
         {/* Vendor */}
         <div>
-          <label htmlFor="expense-vendor" className="block text-xs font-medium text-gray-600 mb-1">
+          <label htmlFor="expense-vendor" className="block text-xs font-medium text-fg-secondary mb-1">
             Vendor *
           </label>
           <div className="relative">
@@ -126,14 +126,14 @@ export function ExpenseForm({ onSubmit }: ExpenseFormProps) {
               }}
               maxLength={MAX_VENDOR_LENGTH}
               placeholder="e.g. Starbucks"
-              className={`w-full px-2 py-1.5 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.vendor ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-2 py-1.5 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent ${
+                errors.vendor ? 'border-danger-500' : 'border-edge'
               }`}
               aria-describedby="vendor-counter"
             />
             <span
               id="vendor-counter"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-fg-muted"
             >
               {vendor.length}/{MAX_VENDOR_LENGTH}
             </span>
@@ -147,7 +147,7 @@ export function ExpenseForm({ onSubmit }: ExpenseFormProps) {
 
         {/* Amount */}
         <div>
-          <label htmlFor="expense-amount" className="block text-xs font-medium text-gray-600 mb-1">
+          <label htmlFor="expense-amount" className="block text-xs font-medium text-fg-secondary mb-1">
             Amount *
           </label>
           <input
@@ -158,8 +158,8 @@ export function ExpenseForm({ onSubmit }: ExpenseFormProps) {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0.00"
-            className={`w-full px-2 py-1.5 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.amount ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-2 py-1.5 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent ${
+              errors.amount ? 'border-danger-500' : 'border-edge'
             }`}
           />
           {errors.amount && (
@@ -172,7 +172,7 @@ export function ExpenseForm({ onSubmit }: ExpenseFormProps) {
 
       {/* Description (full width) */}
       <div className="mt-3">
-        <label htmlFor="expense-description" className="block text-xs font-medium text-gray-600 mb-1">
+        <label htmlFor="expense-description" className="block text-xs font-medium text-fg-secondary mb-1">
           Description
         </label>
         <input
@@ -181,7 +181,7 @@ export function ExpenseForm({ onSubmit }: ExpenseFormProps) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Optional notes"
-          className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-2 py-1.5 border border-edge rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent"
         />
       </div>
 
@@ -196,7 +196,7 @@ export function ExpenseForm({ onSubmit }: ExpenseFormProps) {
       <button
         type="submit"
         disabled={submitting}
-        className="mt-3 w-full py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="mt-3 w-full py-2 bg-accent text-white rounded-lg font-medium text-sm hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {submitting ? 'Adding...' : 'Add Expense'}
       </button>

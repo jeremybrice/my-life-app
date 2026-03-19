@@ -52,7 +52,7 @@ export default function BudgetSummary({ yearMonth }: BudgetSummaryProps) {
   }, [yearMonth]);
 
   if (loading) {
-    return <div data-testid="summary-loading" className="p-4 text-center text-gray-500">Loading summary...</div>;
+    return <div data-testid="summary-loading" className="p-4 text-center text-fg-muted">Loading summary...</div>;
   }
 
   if (error) {
@@ -66,20 +66,20 @@ export default function BudgetSummary({ yearMonth }: BudgetSummaryProps) {
         <section>
           <h3 className="text-lg font-semibold mb-3">Monthly Statistics</h3>
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-gray-50 rounded-lg p-3">
-              <div className="text-sm text-gray-600">Total Budget</div>
+            <div className="bg-surface-secondary rounded-lg p-3">
+              <div className="text-sm text-fg-secondary">Total Budget</div>
               <div className="text-lg font-bold" data-testid="stats-total-budget">
                 ${formatCurrency(stats.totalBudget)}
               </div>
             </div>
-            <div className="bg-gray-50 rounded-lg p-3">
-              <div className="text-sm text-gray-600">Total Spent</div>
+            <div className="bg-surface-secondary rounded-lg p-3">
+              <div className="text-sm text-fg-secondary">Total Spent</div>
               <div className="text-lg font-bold" data-testid="stats-total-spent">
                 ${formatCurrency(stats.totalSpent)}
               </div>
             </div>
-            <div className="bg-gray-50 rounded-lg p-3">
-              <div className="text-sm text-gray-600">Net Change</div>
+            <div className="bg-surface-secondary rounded-lg p-3">
+              <div className="text-sm text-fg-secondary">Net Change</div>
               <div
                 className={`text-lg font-bold ${stats.netChange >= 0 ? 'text-green-600' : 'text-red-600'}`}
                 data-testid="stats-net-change"
@@ -87,8 +87,8 @@ export default function BudgetSummary({ yearMonth }: BudgetSummaryProps) {
                 ${formatCurrency(stats.netChange)}
               </div>
             </div>
-            <div className="bg-gray-50 rounded-lg p-3">
-              <div className="text-sm text-gray-600">Avg Daily Spending</div>
+            <div className="bg-surface-secondary rounded-lg p-3">
+              <div className="text-sm text-fg-secondary">Avg Daily Spending</div>
               <div className="text-lg font-bold" data-testid="stats-avg-daily">
                 ${formatCurrency(stats.avgDailySpending)}
               </div>
@@ -101,11 +101,11 @@ export default function BudgetSummary({ yearMonth }: BudgetSummaryProps) {
       <section>
         <h3 className="text-lg font-semibold mb-3">Spending by Category</h3>
         {categoryBreakdown.length === 0 ? (
-          <p className="text-gray-500 text-sm">No expenses recorded this month.</p>
+          <p className="text-fg-muted text-sm">No expenses recorded this month.</p>
         ) : (
           <ul className="space-y-2" data-testid="category-breakdown">
             {categoryBreakdown.map((entry) => (
-              <li key={entry.label} className="flex justify-between items-center py-2 border-b border-gray-100">
+              <li key={entry.label} className="flex justify-between items-center py-2 border-b border-edge">
                 <span className="text-sm font-medium">{entry.label}</span>
                 <span className="text-sm font-semibold">${formatCurrency(entry.total)}</span>
               </li>
@@ -118,11 +118,11 @@ export default function BudgetSummary({ yearMonth }: BudgetSummaryProps) {
       <section>
         <h3 className="text-lg font-semibold mb-3">Spending by Vendor</h3>
         {vendorBreakdown.length === 0 ? (
-          <p className="text-gray-500 text-sm">No expenses recorded this month.</p>
+          <p className="text-fg-muted text-sm">No expenses recorded this month.</p>
         ) : (
           <ul className="space-y-2" data-testid="vendor-breakdown">
             {vendorBreakdown.map((entry) => (
-              <li key={entry.label} className="flex justify-between items-center py-2 border-b border-gray-100">
+              <li key={entry.label} className="flex justify-between items-center py-2 border-b border-edge">
                 <span className="text-sm font-medium">{entry.label}</span>
                 <span className="text-sm font-semibold">${formatCurrency(entry.total)}</span>
               </li>

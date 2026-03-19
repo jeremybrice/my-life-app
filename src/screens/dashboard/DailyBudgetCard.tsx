@@ -51,9 +51,9 @@ export function DailyBudgetCard() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-4 animate-pulse" data-testid="daily-budget-card">
-        <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
-        <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+      <div className="bg-surface-card rounded-xl shadow-sm p-4 animate-pulse" data-testid="daily-budget-card">
+        <div className="h-4 bg-surface-tertiary rounded w-1/3 mb-2"></div>
+        <div className="h-8 bg-surface-tertiary rounded w-1/2"></div>
       </div>
     );
   }
@@ -61,15 +61,15 @@ export function DailyBudgetCard() {
   if (!data) {
     return (
       <div
-        className="bg-white rounded-xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+        className="bg-surface-card rounded-xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
         onClick={handleClick}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === 'Enter' && handleClick()}
         data-testid="daily-budget-card"
       >
-        <h3 className="text-sm font-medium text-gray-500 mb-1">Daily Budget</h3>
-        <p className="text-gray-400 text-sm" data-testid="daily-budget-zero-state">
+        <h3 className="text-sm font-medium text-fg-muted mb-1">Daily Budget</h3>
+        <p className="text-fg-muted text-sm" data-testid="daily-budget-zero-state">
           Set up your monthly budget to see daily tracking.
         </p>
       </div>
@@ -78,21 +78,21 @@ export function DailyBudgetCard() {
 
   return (
     <div
-      className="bg-white rounded-xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
+      className="bg-surface-card rounded-xl shadow-sm p-4 cursor-pointer hover:shadow-md transition-shadow"
       onClick={handleClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
       data-testid="daily-budget-card"
     >
-      <h3 className="text-sm font-medium text-gray-500 mb-1">Daily Budget</h3>
+      <h3 className="text-sm font-medium text-fg-muted mb-1">Daily Budget</h3>
       <div
         className={`text-2xl font-bold ${data.isPositive ? 'text-green-600' : 'text-red-600'}`}
         data-testid="daily-budget-balance"
       >
         ${formatCurrency(data.todayBalance)}
       </div>
-      <div className="flex justify-between mt-2 text-sm text-gray-500">
+      <div className="flex justify-between mt-2 text-sm text-fg-muted">
         <span data-testid="daily-budget-allowance">Daily: ${formatCurrency(data.dailyBudget)}</span>
         <span data-testid="daily-budget-today-spent">Today: ${formatCurrency(data.todaySpending)}</span>
       </div>

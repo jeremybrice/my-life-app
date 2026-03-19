@@ -114,11 +114,11 @@ export function HealthScreen() {
   return (
     <div className="animate-fade-in mx-auto max-w-2xl p-4">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Health Routines</h1>
+        <h1 className="text-2xl font-bold text-fg">Health Routines</h1>
         <button
           type="button"
           onClick={() => setView('createRoutine')}
-          className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors"
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover transition-colors"
           data-testid="create-routine-button"
         >
           + New Routine

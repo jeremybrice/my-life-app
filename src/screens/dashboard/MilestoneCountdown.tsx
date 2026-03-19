@@ -25,7 +25,7 @@ export function MilestoneCountdown() {
   if (loading) {
     return (
       <div data-testid="countdown-loading" className="p-6 text-center">
-        <p className="text-gray-400">Loading...</p>
+        <p className="text-fg-muted">Loading...</p>
       </div>
     );
   }
@@ -37,9 +37,9 @@ export function MilestoneCountdown() {
   // No dates configured
   if (!birthDate && !targetDate) {
     return (
-      <div data-testid="countdown-unconfigured" className="rounded-2xl bg-gray-50 p-6 text-center">
-        <p className="text-lg font-semibold text-gray-700">Set Your Milestone</p>
-        <p className="mt-2 text-sm text-gray-500">
+      <div data-testid="countdown-unconfigured" className="rounded-2xl bg-surface-secondary p-6 text-center">
+        <p className="text-lg font-semibold text-fg-secondary">Set Your Milestone</p>
+        <p className="mt-2 text-sm text-fg-muted">
           Go to Settings to add your birth date and a target date to see your life countdown.
         </p>
       </div>
@@ -49,9 +49,9 @@ export function MilestoneCountdown() {
   // Only one date configured
   if (!birthDate || !targetDate) {
     return (
-      <div data-testid="countdown-partial" className="rounded-2xl bg-gray-50 p-6 text-center">
-        <p className="text-lg font-semibold text-gray-700">Almost There</p>
-        <p className="mt-2 text-sm text-gray-500">
+      <div data-testid="countdown-partial" className="rounded-2xl bg-surface-secondary p-6 text-center">
+        <p className="text-lg font-semibold text-fg-secondary">Almost There</p>
+        <p className="mt-2 text-sm text-fg-muted">
           Both a birth date and a target date are needed for the countdown. Check Settings.
         </p>
       </div>
@@ -65,7 +65,7 @@ export function MilestoneCountdown() {
   const progressPercent = Math.round(progress * 100);
 
   return (
-    <div data-testid="countdown-display" className="rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 p-6 text-white shadow-lg">
+    <div data-testid="countdown-display" className="rounded-2xl bg-gradient-to-br from-[#c76140] to-[#a8502f] p-6 text-white shadow-lg">
       {isTargetToday ? (
         <>
           <p className="text-center text-lg font-medium opacity-90">

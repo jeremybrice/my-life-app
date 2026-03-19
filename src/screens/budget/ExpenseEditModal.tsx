@@ -95,14 +95,14 @@ export function ExpenseEditModal({
 
       {/* Modal */}
       <div
-        className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto"
+        className="fixed inset-x-0 bottom-0 z-50 bg-surface-card rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto"
         data-testid="expense-edit-modal"
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-700">Edit Expense</h3>
+          <h3 className="text-lg font-semibold text-fg-secondary">Edit Expense</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl"
+            className="text-fg-muted hover:text-fg-secondary text-xl"
             aria-label="Close"
           >
             &times;
@@ -112,7 +112,7 @@ export function ExpenseEditModal({
         <form onSubmit={handleSave} noValidate className="space-y-3">
           {/* Date */}
           <div>
-            <label htmlFor="edit-date" className="block text-xs font-medium text-gray-600 mb-1">
+            <label htmlFor="edit-date" className="block text-xs font-medium text-fg-secondary mb-1">
               Date
             </label>
             <input
@@ -120,13 +120,13 @@ export function ExpenseEditModal({
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-1.5 border border-edge rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
 
           {/* Category */}
           <div>
-            <label htmlFor="edit-category" className="block text-xs font-medium text-gray-600 mb-1">
+            <label htmlFor="edit-category" className="block text-xs font-medium text-fg-secondary mb-1">
               Category
             </label>
             <input
@@ -135,13 +135,13 @@ export function ExpenseEditModal({
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               placeholder="e.g. Food"
-              className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-1.5 border border-edge rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
 
           {/* Vendor */}
           <div>
-            <label htmlFor="edit-vendor" className="block text-xs font-medium text-gray-600 mb-1">
+            <label htmlFor="edit-vendor" className="block text-xs font-medium text-fg-secondary mb-1">
               Vendor *
             </label>
             <div className="relative">
@@ -155,11 +155,11 @@ export function ExpenseEditModal({
                   }
                 }}
                 maxLength={MAX_VENDOR_LENGTH}
-                className={`w-full px-2 py-1.5 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.vendor ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-2 py-1.5 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent ${
+                  errors.vendor ? 'border-danger-500' : 'border-edge'
                 }`}
               />
-              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-fg-muted">
                 {vendor.length}/{MAX_VENDOR_LENGTH}
               </span>
             </div>
@@ -172,7 +172,7 @@ export function ExpenseEditModal({
 
           {/* Amount */}
           <div>
-            <label htmlFor="edit-amount" className="block text-xs font-medium text-gray-600 mb-1">
+            <label htmlFor="edit-amount" className="block text-xs font-medium text-fg-secondary mb-1">
               Amount *
             </label>
             <input
@@ -182,8 +182,8 @@ export function ExpenseEditModal({
               min="0.01"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className={`w-full px-2 py-1.5 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.amount ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-2 py-1.5 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent ${
+                errors.amount ? 'border-danger-500' : 'border-edge'
               }`}
             />
             {errors.amount && (
@@ -195,7 +195,7 @@ export function ExpenseEditModal({
 
           {/* Description */}
           <div>
-            <label htmlFor="edit-description" className="block text-xs font-medium text-gray-600 mb-1">
+            <label htmlFor="edit-description" className="block text-xs font-medium text-fg-secondary mb-1">
               Description
             </label>
             <input
@@ -204,7 +204,7 @@ export function ExpenseEditModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Optional notes"
-              className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-1.5 border border-edge rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent"
             />
           </div>
 
@@ -220,7 +220,7 @@ export function ExpenseEditModal({
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-2 bg-accent text-white rounded-lg font-medium text-sm hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? 'Saving...' : 'Save Changes'}
             </button>

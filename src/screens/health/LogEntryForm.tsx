@@ -97,7 +97,7 @@ export function LogEntryForm({
 
   return (
     <div className="mx-auto max-w-lg p-4">
-      <h1 className="mb-6 text-2xl font-bold text-slate-900 dark:text-white">Log Routine</h1>
+      <h1 className="mb-6 text-2xl font-bold text-fg">Log Routine</h1>
 
       {showSuccess && (
         <div
@@ -111,7 +111,7 @@ export function LogEntryForm({
       <form onSubmit={handleSubmit} className="space-y-4" data-testid="log-entry-form">
         {/* Routine select */}
         <div>
-          <label htmlFor="routineSelect" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label htmlFor="routineSelect" className="block text-sm font-medium text-fg-secondary">
             Routine *
           </label>
           <select
@@ -120,7 +120,7 @@ export function LogEntryForm({
             onChange={(e) =>
               handleRoutineChange(e.target.value ? parseInt(e.target.value, 10) : '')
             }
-            className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-white"
+            className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2 text-fg"
             data-testid="routine-select"
           >
             <option value="">Select routine...</option>
@@ -139,7 +139,7 @@ export function LogEntryForm({
 
         {/* Date */}
         <div>
-          <label htmlFor="logDate" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label htmlFor="logDate" className="block text-sm font-medium text-fg-secondary">
             Date *
           </label>
           <input
@@ -148,7 +148,7 @@ export function LogEntryForm({
             value={date}
             max={getToday()}
             onChange={(e) => setDate(e.target.value)}
-            className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-white"
+            className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2 text-fg"
             data-testid="log-date-input"
           />
           {errors.date && (
@@ -161,12 +161,12 @@ export function LogEntryForm({
         {/* Metric fields (dynamic based on selected routine) */}
         {selectedRoutine && selectedRoutine.trackedMetrics.length > 0 && (
           <div className="space-y-3">
-            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Metrics (optional)</p>
+            <p className="text-sm font-medium text-fg-secondary">Metrics (optional)</p>
             {selectedRoutine.trackedMetrics.map((metric) => (
               <div key={metric.type}>
                 <label
                   htmlFor={`metric-${metric.type}`}
-                  className="block text-sm text-slate-600 dark:text-slate-400"
+                  className="block text-sm text-fg-secondary"
                 >
                   {metric.type.charAt(0).toUpperCase() + metric.type.slice(1)}
                   {metric.unit ? ` (${metric.unit})` : ''}
@@ -180,7 +180,7 @@ export function LogEntryForm({
                   onChange={(e) =>
                     setMetricValues({ ...metricValues, [metric.type]: e.target.value })
                   }
-                  className="mt-1 block w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-white"
+                  className="mt-1 block w-full rounded-lg border border-edge bg-surface-card px-3 py-2 text-fg"
                   data-testid={`metric-input-${metric.type}`}
                 />
                 {errors[`metric_${metric.type}`] && (
@@ -205,7 +205,7 @@ export function LogEntryForm({
           <button
             type="submit"
             disabled={submitting}
-            className="flex-1 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50 transition-colors"
+            className="flex-1 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
             data-testid="submit-log-button"
           >
             {submitting ? 'Logging...' : 'Log Entry'}
@@ -213,7 +213,7 @@ export function LogEntryForm({
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+            className="flex-1 rounded-lg border border-edge px-4 py-2 text-sm font-medium text-fg-secondary hover:bg-surface-hover transition-colors"
             data-testid="cancel-log-button"
           >
             Cancel

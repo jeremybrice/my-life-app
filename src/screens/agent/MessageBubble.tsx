@@ -13,7 +13,7 @@ export function MessageBubble({ message, onConfirm, onCancel }: MessageBubblePro
   if (message.contentType === 'expense-confirmation' && message.parsedExpense) {
     return (
       <div className="flex justify-start mb-3">
-        <div className="max-w-[85%] rounded-lg bg-white border border-gray-200 shadow-sm p-4">
+        <div className="max-w-[85%] rounded-lg bg-surface-card border border-edge shadow-sm p-4">
           <ExpenseCard
             message={message}
             onConfirm={onConfirm}
@@ -49,8 +49,8 @@ export function MessageBubble({ message, onConfirm, onCancel }: MessageBubblePro
       <div
         className={`max-w-[85%] rounded-lg px-4 py-2 ${
           isUser
-            ? 'bg-blue-600 text-white'
-            : 'bg-gray-100 text-gray-900'
+            ? 'bg-accent text-white'
+            : 'bg-surface-tertiary text-fg'
         }`}
       >
         {message.imageUrl && (
@@ -82,39 +82,39 @@ function ExpenseCard({
 
   return (
     <div>
-      <p className="text-sm font-semibold text-gray-700 mb-2">
+      <p className="text-sm font-semibold text-fg-secondary mb-2">
         Expense to confirm:
       </p>
       <div className="space-y-1 text-sm">
         <div className="flex justify-between">
-          <span className="text-gray-500">Amount</span>
+          <span className="text-fg-muted">Amount</span>
           <span className="font-medium">${formatCurrency(expense.amount)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Vendor</span>
+          <span className="text-fg-muted">Vendor</span>
           <span className="font-medium">{expense.vendor}</span>
         </div>
         {expense.category && (
           <div className="flex justify-between">
-            <span className="text-gray-500">Category</span>
+            <span className="text-fg-muted">Category</span>
             <span className="font-medium">{expense.category}</span>
           </div>
         )}
         <div className="flex justify-between">
-          <span className="text-gray-500">Date</span>
+          <span className="text-fg-muted">Date</span>
           <span className="font-medium">{expense.date}</span>
         </div>
         {expense.description && (
           <div className="flex justify-between">
-            <span className="text-gray-500">Description</span>
+            <span className="text-fg-muted">Description</span>
             <span className="font-medium">{expense.description}</span>
           </div>
         )}
         {expense.lineItems && expense.lineItems.length > 0 && (
-          <div className="mt-2 pt-2 border-t border-gray-100">
-            <p className="text-gray-500 mb-1">Line items:</p>
+          <div className="mt-2 pt-2 border-t border-edge">
+            <p className="text-fg-muted mb-1">Line items:</p>
             {expense.lineItems.map((item, i) => (
-              <div key={i} className="flex justify-between text-xs text-gray-600">
+              <div key={i} className="flex justify-between text-xs text-fg-secondary">
                 <span>{item.description}</span>
                 <span>${formatCurrency(item.amount)}</span>
               </div>
@@ -134,7 +134,7 @@ function ExpenseCard({
           </button>
           <button
             onClick={() => onCancel?.(message.id)}
-            className="flex-1 bg-gray-200 text-gray-700 text-sm font-medium py-2 rounded hover:bg-gray-300"
+            className="flex-1 bg-surface-tertiary text-fg-secondary text-sm font-medium py-2 rounded hover:bg-surface-hover"
             data-testid="cancel-expense-btn"
           >
             Cancel
@@ -143,7 +143,7 @@ function ExpenseCard({
       )}
 
       {status === 'saving' && (
-        <p className="mt-3 text-sm text-blue-600">Saving...</p>
+        <p className="mt-3 text-sm text-accent">Saving...</p>
       )}
 
       {status === 'saved' && (
@@ -153,7 +153,7 @@ function ExpenseCard({
       )}
 
       {status === 'cancelled' && (
-        <p className="mt-3 text-sm text-gray-500">Cancelled. No expense was saved.</p>
+        <p className="mt-3 text-sm text-fg-muted">Cancelled. No expense was saved.</p>
       )}
 
       {status === 'error' && (

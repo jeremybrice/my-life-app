@@ -38,7 +38,7 @@ export function LoadingSpinner({
   return (
     <div className="flex flex-col items-center justify-center py-12" role="status" aria-label={accessibleLabel}>
       <svg
-        className={`${SIZE_CLASSES[size]} animate-spin text-primary-600`}
+        className={`${SIZE_CLASSES[size]} animate-spin text-accent`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -58,7 +58,7 @@ export function LoadingSpinner({
         />
       </svg>
       {message ? (
-        <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-3 text-sm text-fg-muted">
           {message}
         </p>
       ) : (

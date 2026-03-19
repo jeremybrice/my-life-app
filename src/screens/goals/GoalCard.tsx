@@ -13,10 +13,10 @@ function GoalProgressIndicator({ goal }: { goal: Goal }) {
       const pct = Math.min(100, Math.round((current / target) * 100));
       return (
         <div>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-fg-secondary">
             {current.toLocaleString()} / {target.toLocaleString()}
           </div>
-          <div className="mt-1 h-2 w-full rounded-full bg-gray-200">
+          <div className="mt-1 h-2 w-full rounded-full bg-surface-tertiary">
             <div
               className="h-2 rounded-full bg-blue-500"
               style={{ width: `${pct}%` }}
@@ -39,7 +39,7 @@ function GoalProgressIndicator({ goal }: { goal: Goal }) {
       const diffMs = target.getTime() - now.getTime();
       const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
       return (
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-fg-secondary">
           {diffDays > 0
             ? `${diffDays} day${diffDays !== 1 ? 's' : ''} remaining`
             : diffDays === 0
@@ -53,8 +53,8 @@ function GoalProgressIndicator({ goal }: { goal: Goal }) {
       const pct = goal.percentage ?? 0;
       return (
         <div>
-          <div className="text-sm text-gray-600">{pct}%</div>
-          <div className="mt-1 h-2 w-full rounded-full bg-gray-200">
+          <div className="text-sm text-fg-secondary">{pct}%</div>
+          <div className="mt-1 h-2 w-full rounded-full bg-surface-tertiary">
             <div
               className="h-2 rounded-full bg-green-500"
               style={{ width: `${pct}%` }}
@@ -71,7 +71,7 @@ function GoalProgressIndicator({ goal }: { goal: Goal }) {
 
     case 'freeform':
       return (
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-fg-secondary">
           {goal.statusLabel ?? 'No status'}
         </div>
       );
@@ -96,12 +96,12 @@ export default function GoalCard({ goal, onSelect }: GoalCardProps) {
     <button
       type="button"
       onClick={() => onSelect(goal)}
-      className={`w-full rounded-lg border p-4 text-left transition-colors hover:bg-gray-50 ${
+      className={`w-full rounded-lg border p-4 text-left transition-colors hover:bg-surface-hover ${
         isCompleted
           ? 'border-green-200 bg-green-50 opacity-75'
           : isArchived
-            ? 'border-gray-200 bg-gray-50 opacity-60'
-            : 'border-gray-200 bg-white'
+            ? 'border-edge bg-surface-secondary opacity-60'
+            : 'border-edge bg-surface-card'
       }`}
       data-testid={`goal-card-${goal.id}`}
     >
@@ -109,12 +109,12 @@ export default function GoalCard({ goal, onSelect }: GoalCardProps) {
         <div className="flex-1">
           <h3
             className={`font-medium ${
-              isCompleted ? 'text-green-800 line-through' : 'text-gray-900'
+              isCompleted ? 'text-green-800 line-through' : 'text-fg'
             }`}
           >
             {goal.title}
           </h3>
-          <span className="mt-1 inline-block rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+          <span className="mt-1 inline-block rounded-full bg-surface-tertiary px-2 py-0.5 text-xs text-fg-secondary">
             {TYPE_LABELS[goal.type]}
           </span>
         </div>

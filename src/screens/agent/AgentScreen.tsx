@@ -325,8 +325,8 @@ export function AgentScreen() {
   if (status === 'offline' && messages.length <= 1) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center" data-testid="offline-state">
-        <p className="text-lg font-medium text-gray-700 mb-2">Agent Unavailable</p>
-        <p className="text-sm text-gray-500">
+        <p className="text-lg font-medium text-fg-secondary mb-2">Agent Unavailable</p>
+        <p className="text-sm text-fg-muted">
           An internet connection is required to use the AI agent. Other features continue to work offline.
         </p>
       </div>
@@ -336,9 +336,9 @@ export function AgentScreen() {
   if (status === 'no-api-key') {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center" data-testid="no-api-key-state">
-        <p className="text-lg font-medium text-gray-700 mb-2">API Key Required</p>
-        <p className="text-sm text-gray-500">
-          Please add your Claude API key in <a href="/settings" className="text-blue-600 underline">Settings</a> to use the AI agent.
+        <p className="text-lg font-medium text-fg-secondary mb-2">API Key Required</p>
+        <p className="text-sm text-fg-muted">
+          Please add your Claude API key in <a href="/settings" className="text-accent underline">Settings</a> to use the AI agent.
         </p>
       </div>
     );
@@ -347,9 +347,9 @@ export function AgentScreen() {
   if (status === 'invalid-api-key') {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center" data-testid="invalid-api-key-state">
-        <p className="text-lg font-medium text-gray-700 mb-2">Invalid API Key</p>
-        <p className="text-sm text-gray-500">
-          Your Claude API key appears to be invalid. Please update it in <a href="/settings" className="text-blue-600 underline">Settings</a>.
+        <p className="text-lg font-medium text-fg-secondary mb-2">Invalid API Key</p>
+        <p className="text-sm text-fg-muted">
+          Your Claude API key appears to be invalid. Please update it in <a href="/settings" className="text-accent underline">Settings</a>.
         </p>
       </div>
     );
@@ -358,8 +358,8 @@ export function AgentScreen() {
   if (status === 'initializing') {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8" data-testid="initializing-state">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-3"></div>
-        <p className="text-sm text-gray-500">Initializing agent...</p>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mb-3"></div>
+        <p className="text-sm text-fg-muted">Initializing agent...</p>
       </div>
     );
   }
@@ -392,11 +392,11 @@ export function AgentScreen() {
         ))}
         {localStatus === 'loading' && (
           <div className="flex justify-start mb-3" data-testid="typing-indicator">
-            <div className="bg-gray-100 rounded-lg px-4 py-2">
+            <div className="bg-surface-tertiary rounded-lg px-4 py-2">
               <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                <div className="w-2 h-2 bg-fg-muted rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-fg-muted rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-2 h-2 bg-fg-muted rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
             </div>
           </div>
