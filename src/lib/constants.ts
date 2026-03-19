@@ -26,7 +26,7 @@ export const NAV_ITEMS = [
   { path: ROUTES.BUDGET, label: 'Budget', icon: 'wallet' },
   { path: ROUTES.GOALS, label: 'Goals', icon: 'target' },
   { path: ROUTES.HEALTH, label: 'Health', icon: 'heart' },
-  { path: ROUTES.AGENT, label: 'AI Agent', icon: 'bot' },
+  { path: ROUTES.AGENT, label: 'Agents', icon: 'bot' },
   { path: ROUTES.SETTINGS, label: 'Settings', icon: 'settings' },
 ] as const;
 
