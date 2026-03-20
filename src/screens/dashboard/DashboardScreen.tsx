@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { MilestoneCountdown } from './MilestoneCountdown';
 import { DailyBudgetCard } from './DailyBudgetCard';
-import { MonthlyPerformanceCard } from './MonthlyPerformanceCard';
 import { GoalsWidgetContainer } from './GoalsWidgetContainer';
 import { HealthWidgetContainer } from './HealthWidgetContainer';
 import { useNotificationAlerts } from '@/hooks/useNotificationAlerts';
@@ -25,11 +24,8 @@ export function DashboardScreen() {
       {/* 1. Milestone Countdown — most prominent, top of dashboard */}
       <MilestoneCountdown />
 
-      {/* 2. Budget Summary Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <DailyBudgetCard />
-        <MonthlyPerformanceCard />
-      </div>
+      {/* 2. Daily Budget */}
+      <DailyBudgetCard />
 
       {/* 3. Goals Aggregation */}
       <GoalsWidgetContainer />
