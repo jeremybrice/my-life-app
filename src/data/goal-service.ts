@@ -2,6 +2,7 @@ import { db } from '@/data/db';
 import type { Goal } from '@/lib/types';
 import { roundCurrency } from '@/lib/currency';
 import { recordQualifyingAction } from '@/data/notification-service';
+import { getUrgencyTier } from '@/lib/urgency';
 
 // --- Input types ---
 
@@ -343,6 +344,9 @@ export interface GoalAggregation {
   activeCount: number;
   completedCount: number;
   aggregateProgress: number | null;
+  criticalCount: number;
+  warningCount: number;
+  normalCount: number;
 }
 
 export async function getGoalAggregation(): Promise<GoalAggregation> {
@@ -350,6 +354,17 @@ export async function getGoalAggregation(): Promise<GoalAggregation> {
 
   const activeGoals = allGoals.filter((g) => g.status === 'active');
   const completedGoals = allGoals.filter((g) => g.status === 'completed');
+
+  let criticalCount = 0;
+  let warningCount = 0;
+  let normalCount = 0;
+
+  for (const goal of activeGoals) {
+    const tier = getUrgencyTier(goal);
+    if (tier === 'critical') criticalCount++;
+    else if (tier === 'warning') warningCount++;
+    else normalCount++;
+  }
 
   // Calculate aggregate progress from active numeric and percentage goals
   const calculableGoals = activeGoals.filter(
@@ -375,5 +390,8 @@ export async function getGoalAggregation(): Promise<GoalAggregation> {
     activeCount: activeGoals.length,
     completedCount: completedGoals.length,
     aggregateProgress,
+    criticalCount,
+    warningCount,
+    normalCount,
   };
 }
