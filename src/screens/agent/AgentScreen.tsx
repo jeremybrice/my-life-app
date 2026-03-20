@@ -395,9 +395,9 @@ export function AgentScreen() {
   }
 
   return (
-    <div className="animate-fade-in flex flex-col fixed inset-0 top-14 bottom-16 md:left-64 md:bottom-0 z-30" data-testid="agent-screen">
+    <div className="animate-fade-in flex flex-col fixed inset-0 top-0 bottom-16 md:left-64 md:bottom-0 z-30" data-testid="agent-screen">
       {/* Pipeline header with back button */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-edge bg-surface-card">
+      <div className="flex items-center gap-3 px-4 py-3 pt-safe border-b border-edge bg-surface-card">
         <button
           type="button"
           onClick={() => navigate('/agent')}
