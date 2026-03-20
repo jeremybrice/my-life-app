@@ -67,12 +67,13 @@ describe('DashboardScreen', () => {
     });
   });
 
-  it('should render the goals widget with live data', async () => {
+  it('should render the targets widget with live data', async () => {
     renderDashboard();
     await waitFor(() => {
       expect(screen.getByTestId('goals-widget')).toBeInTheDocument();
-      expect(screen.getByTestId('goals-active-count')).toHaveTextContent('0');
-      expect(screen.getByTestId('goals-completed-count')).toHaveTextContent('0');
+      expect(screen.getByTestId('targets-critical-count')).toHaveTextContent('0');
+      expect(screen.getByTestId('targets-warning-count')).toHaveTextContent('0');
+      expect(screen.getByTestId('targets-normal-count')).toHaveTextContent('0');
     });
   });
 

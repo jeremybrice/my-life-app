@@ -88,15 +88,15 @@ describe('Navigation', () => {
     });
   });
 
-  it('should navigate to Goals screen', async () => {
+  it('should navigate to Targets screen', async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const goalLinks = screen.getAllByText('Goals');
-    await user.click(goalLinks[0]!);
+    const targetLinks = screen.getAllByText('Targets');
+    await user.click(targetLinks[0]!);
 
     await waitFor(() => {
-      expect(screen.getByText(/No goals yet/i)).toBeInTheDocument();
+      expect(screen.getByText(/No targets yet/i)).toBeInTheDocument();
     });
   });
 
@@ -142,7 +142,7 @@ describe('Navigation', () => {
     // Mobile bottom nav renders all items
     expect(screen.getAllByText('Dashboard').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Budget').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText('Goals').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Targets').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Health').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Agents').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Settings').length).toBeGreaterThanOrEqual(1);
