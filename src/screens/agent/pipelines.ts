@@ -54,16 +54,16 @@ export const PIPELINES: PipelineConfig[] = [
   },
   {
     id: 'goals',
-    title: 'Goals',
-    description: 'Create goals, log progress, and check your status',
+    title: 'Targets',
+    description: 'Create targets, log progress, and check your status',
     icon: 'target',
     welcomeMessage:
-      "I can help you create goals, log progress, or check how you're doing. Try \"how close am I to my savings goal?\" or \"add $200 to my savings goal.\"",
-    categoryLabel: 'Goals',
+      "I can help you create targets, log progress, or check how you're doing. Try \"how close am I to my savings target?\" or \"add $200 to my savings target.\"",
+    categoryLabel: 'Targets',
     categoryDescription:
-      'Create goals, update progress, or check your status.',
+      'Create targets, update progress, or check your status.',
     supportsImageUpload: false,
-    inputPlaceholder: 'Ask about goals or log progress...',
+    inputPlaceholder: 'Ask about targets or log progress...',
   },
 ];
 

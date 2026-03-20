@@ -238,7 +238,7 @@ export function SettingsScreen() {
 
         {/* Version */}
         <p className="text-center text-xs text-fg-muted pb-4">
-          Version 0.5.1
+          Version 0.6.0
         </p>
       </div>
     </div>

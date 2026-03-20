@@ -383,6 +383,9 @@ describe('getGoalAggregation', () => {
     expect(agg.activeCount).toBe(0);
     expect(agg.completedCount).toBe(0);
     expect(agg.aggregateProgress).toBeNull();
+    expect(agg.criticalCount).toBe(0);
+    expect(agg.warningCount).toBe(0);
+    expect(agg.normalCount).toBe(0);
   });
 
   it('should count active and completed goals', async () => {
@@ -426,5 +429,26 @@ describe('getGoalAggregation', () => {
     const agg = await getGoalAggregation();
     expect(agg.activeCount).toBe(2);
     expect(agg.aggregateProgress).toBeNull();
+  });
+
+  it('returns risk counts for active goals', async () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const fiveDays = new Date();
+    fiveDays.setDate(fiveDays.getDate() + 5);
+    const thirtyDays = new Date();
+    thirtyDays.setDate(thirtyDays.getDate() + 30);
+
+    // Critical: due today (0 days remaining)
+    await createGoal(dateGoalInput({ title: 'Due today', targetDate: new Date().toISOString().split('T')[0] }));
+    // Warning: due in 5 days
+    await createGoal(dateGoalInput({ title: 'Due in 5 days', targetDate: fiveDays.toISOString().split('T')[0] }));
+    // Normal: due in 30 days
+    await createGoal(dateGoalInput({ title: 'Due in 30 days', targetDate: thirtyDays.toISOString().split('T')[0] }));
+
+    const agg = await getGoalAggregation();
+    expect(agg.criticalCount).toBe(1);
+    expect(agg.warningCount).toBe(1);
+    expect(agg.normalCount).toBe(1);
   });
 });

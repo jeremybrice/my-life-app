@@ -12,6 +12,9 @@ export function GoalsWidgetContainer() {
         activeCount: aggregation.activeCount,
         completedCount: aggregation.completedCount,
         aggregateProgress: aggregation.aggregateProgress,
+        criticalCount: aggregation.criticalCount,
+        warningCount: aggregation.warningCount,
+        normalCount: aggregation.normalCount,
         onNavigate: () => navigate('/goals'),
       }}
     />

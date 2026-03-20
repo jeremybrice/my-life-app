@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/data/db';
 import type { Goal } from '@/lib/types';
+import { sortByUrgency } from '@/lib/urgency';
 import {
   createGoal,
   updateGoal,
@@ -46,8 +47,12 @@ export function useGoals(options: UseGoalsOptions = {}): UseGoalsReturn {
         result = result.filter((g) => g.type === type);
       }
 
-      // Sort by updatedAt descending
-      result.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+      // Sort active goals by urgency; others by updatedAt descending
+      if (!status || status === 'active') {
+        result = sortByUrgency(result);
+      } else {
+        result.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+      }
 
       return result;
     },
@@ -80,6 +85,9 @@ export function useGoalAggregation(): UseGoalAggregationReturn {
     activeCount: 0,
     completedCount: 0,
     aggregateProgress: null,
+    criticalCount: 0,
+    warningCount: 0,
+    normalCount: 0,
   };
 
   const aggregation = useLiveQuery(

@@ -39,13 +39,13 @@ export default function GoalsScreen({ onCreateGoal, onSelectGoal }: GoalsScreenP
   });
 
   if (loading) {
-    return <LoadingSpinner label="Loading goals..." />;
+    return <LoadingSpinner label="Loading targets..." />;
   }
 
   if (error) {
     return (
       <ErrorState
-        message="Could not load your goals."
+        message="Could not load your targets."
         onRetry={() => window.location.reload()}
       />
     );
@@ -54,14 +54,14 @@ export default function GoalsScreen({ onCreateGoal, onSelectGoal }: GoalsScreenP
   return (
     <div className="animate-fade-in mx-auto max-w-2xl p-4">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-fg">Goals</h1>
+        <h1 className="text-2xl font-bold text-fg">Targets</h1>
         <button
           type="button"
           onClick={onCreateGoal}
           className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover"
           data-testid="create-goal-button"
         >
-          + New Goal
+          + New Target
         </button>
       </div>
 
@@ -100,14 +100,14 @@ export default function GoalsScreen({ onCreateGoal, onSelectGoal }: GoalsScreenP
       {goals.length === 0 ? (
         statusFilter === 'active' && typeFilter === 'all' ? (
           <EmptyState
-            title="No goals yet"
-            description="Create your first goal to get started!"
-            action={{ label: 'Create Goal', onClick: onCreateGoal }}
+            title="No targets yet"
+            description="Create your first target to get started!"
+            action={{ label: 'Create Target', onClick: onCreateGoal }}
           />
         ) : (
           <EmptyState
-            title="No goals match"
-            description="No goals match the selected filters."
+            title="No targets match"
+            description="No targets match the selected filters."
           />
         )
       ) : (

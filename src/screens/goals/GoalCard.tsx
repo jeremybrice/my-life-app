@@ -1,4 +1,5 @@
 import type { Goal } from '@/lib/types';
+import { getUrgencyTier, URGENCY_STRIP_CLASSES, URGENCY_TEXT_CLASSES } from '@/lib/urgency';
 
 interface GoalCardProps {
   goal: Goal;
@@ -33,13 +34,16 @@ function GoalProgressIndicator({ goal }: { goal: Goal }) {
 
     case 'date-based': {
       if (!goal.targetDate) return null;
-      const target = new Date(goal.targetDate);
+      // Parse as local time to avoid UTC timezone offset issues
+      const target = new Date(goal.targetDate + 'T00:00:00');
       const now = new Date();
       now.setHours(0, 0, 0, 0);
       const diffMs = target.getTime() - now.getTime();
       const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+      const tier = getUrgencyTier(goal);
+      const textClass = URGENCY_TEXT_CLASSES[tier];
       return (
-        <div className="text-sm text-fg-secondary">
+        <div className={`text-sm font-medium ${textClass}`}>
           {diffDays > 0
             ? `${diffDays} day${diffDays !== 1 ? 's' : ''} remaining`
             : diffDays === 0
@@ -91,17 +95,19 @@ const TYPE_LABELS: Record<Goal['type'], string> = {
 export default function GoalCard({ goal, onSelect }: GoalCardProps) {
   const isCompleted = goal.status === 'completed';
   const isArchived = goal.status === 'archived';
+  const tier = getUrgencyTier(goal);
+  const stripClass = URGENCY_STRIP_CLASSES[tier];
 
   return (
     <button
       type="button"
       onClick={() => onSelect(goal)}
-      className={`w-full rounded-lg border p-4 text-left transition-colors hover:bg-surface-hover ${
+      className={`w-full rounded-lg border p-4 text-left transition-colors hover:bg-surface-hover border-l-[3px] ${
         isCompleted
-          ? 'border-green-200 bg-green-50 opacity-75'
+          ? 'border-green-200 bg-green-50 opacity-75 border-l-green-400'
           : isArchived
-            ? 'border-edge bg-surface-secondary opacity-60'
-            : 'border-edge bg-surface-card'
+            ? 'border-edge bg-surface-secondary opacity-60 border-l-transparent'
+            : `border-edge bg-surface-card ${stripClass}`
       }`}
       data-testid={`goal-card-${goal.id}`}
     >

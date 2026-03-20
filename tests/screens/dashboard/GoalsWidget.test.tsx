@@ -8,29 +8,35 @@ describe('GoalsWidget', () => {
     render(<GoalsWidget />);
     expect(screen.getByTestId('goals-widget')).toBeInTheDocument();
     expect(screen.getByTestId('goals-widget-placeholder')).toBeInTheDocument();
-    expect(screen.getByText(/create your first goal/i)).toBeInTheDocument();
+    expect(screen.getByText(/create your first target/i)).toBeInTheDocument();
   });
 
-  it('should render with live data', () => {
+  it('should render risk counts with live data', () => {
     const data: GoalsWidgetProps = {
       activeCount: 5,
       completedCount: 3,
       aggregateProgress: 62,
+      criticalCount: 1,
+      warningCount: 2,
+      normalCount: 2,
     };
     render(<GoalsWidget data={data} />);
-    expect(screen.getByTestId('goals-active-count')).toHaveTextContent('5');
-    expect(screen.getByTestId('goals-completed-count')).toHaveTextContent('3');
-    expect(screen.getByTestId('goals-avg-progress')).toHaveTextContent('62%');
+    expect(screen.getByTestId('targets-critical-count')).toHaveTextContent('1');
+    expect(screen.getByTestId('targets-warning-count')).toHaveTextContent('2');
+    expect(screen.getByTestId('targets-normal-count')).toHaveTextContent('2');
   });
 
-  it('should show "--" when average progress is null', () => {
+  it('should show completed count when completedCount > 0', () => {
     const data: GoalsWidgetProps = {
       activeCount: 2,
-      completedCount: 0,
+      completedCount: 3,
       aggregateProgress: null,
+      criticalCount: 0,
+      warningCount: 1,
+      normalCount: 1,
     };
     render(<GoalsWidget data={data} />);
-    expect(screen.getByTestId('goals-avg-progress')).toHaveTextContent('--');
+    expect(screen.getByText('3 completed')).toBeInTheDocument();
   });
 
   it('should show zero counts correctly', () => {
@@ -38,14 +44,18 @@ describe('GoalsWidget', () => {
       activeCount: 0,
       completedCount: 0,
       aggregateProgress: null,
+      criticalCount: 0,
+      warningCount: 0,
+      normalCount: 0,
     };
     render(<GoalsWidget data={data} />);
-    expect(screen.getByTestId('goals-active-count')).toHaveTextContent('0');
-    expect(screen.getByTestId('goals-completed-count')).toHaveTextContent('0');
+    expect(screen.getByTestId('targets-critical-count')).toHaveTextContent('0');
+    expect(screen.getByTestId('targets-warning-count')).toHaveTextContent('0');
+    expect(screen.getByTestId('targets-normal-count')).toHaveTextContent('0');
   });
 
-  it('should have the section title "Goals"', () => {
+  it('should have the section title "Targets"', () => {
     render(<GoalsWidget />);
-    expect(screen.getByText('Goals')).toBeInTheDocument();
+    expect(screen.getByText('Targets')).toBeInTheDocument();
   });
 });

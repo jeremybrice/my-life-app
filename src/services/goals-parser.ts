@@ -149,10 +149,10 @@ async function buildGoalsContext(): Promise<string> {
   const goals = await getAllGoals();
 
   if (goals.length === 0) {
-    return 'No goals defined yet.';
+    return 'No targets defined yet.';
   }
 
-  const lines: string[] = ['Active and recent goals:'];
+  const lines: string[] = ['Active and recent targets:'];
 
   for (const g of goals) {
     let progress = '';
