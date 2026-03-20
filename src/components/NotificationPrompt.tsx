@@ -31,7 +31,7 @@ export function NotificationPrompt({ onClose }: NotificationPromptProps) {
   if (permissionResult === 'granted') {
     return (
       <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center">
-        <div className="mx-4 mb-4 w-full max-w-md rounded-2xl bg-surface-card p-6 shadow-xl sm:mb-0">
+        <div className="mx-4 mb-20 w-full max-w-md rounded-2xl bg-surface-card p-6 shadow-xl sm:mb-0">
           <div className="text-center">
             <p className="text-lg font-semibold text-green-700">
               Notifications enabled!
@@ -48,7 +48,7 @@ export function NotificationPrompt({ onClose }: NotificationPromptProps) {
   if (permissionResult === 'denied') {
     return (
       <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center">
-        <div className="mx-4 mb-4 w-full max-w-md rounded-2xl bg-surface-card p-6 shadow-xl sm:mb-0">
+        <div className="mx-4 mb-20 w-full max-w-md rounded-2xl bg-surface-card p-6 shadow-xl sm:mb-0">
           <div className="text-center">
             <p className="text-lg font-semibold text-amber-700">
               Notifications blocked
@@ -71,7 +71,7 @@ export function NotificationPrompt({ onClose }: NotificationPromptProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center">
-      <div className="mx-4 mb-4 w-full max-w-md rounded-2xl bg-surface-card p-6 shadow-xl sm:mb-0">
+      <div className="mx-4 mb-20 w-full max-w-md rounded-2xl bg-surface-card p-6 shadow-xl sm:mb-0">
         <h2 className="text-lg font-semibold text-fg">
           Stay on top of your goals
         </h2>
