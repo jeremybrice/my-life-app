@@ -2,6 +2,7 @@ import type { Goal } from '@/lib/types';
 
 export type UrgencyTier = 'critical' | 'warning' | 'normal' | 'none';
 
+/** Returns the urgency tier for a target based on its progress model and status. */
 export function getUrgencyTier(goal: Goal): UrgencyTier {
   if (goal.status === 'completed' || goal.status === 'archived') {
     return 'none';
@@ -28,6 +29,7 @@ export function getUrgencyTier(goal: Goal): UrgencyTier {
   }
 }
 
+/** Returns a numeric sort score (lower = more urgent). */
 export function getUrgencySortScore(goal: Goal): number {
   if (goal.status === 'completed' || goal.status === 'archived') {
     return 9999;
@@ -46,6 +48,7 @@ export function getUrgencySortScore(goal: Goal): number {
   return 5000;
 }
 
+/** Sorts targets by urgency (most urgent first). Returns a new array. */
 export function sortByUrgency(goals: Goal[]): Goal[] {
   return [...goals].sort((a, b) => getUrgencySortScore(a) - getUrgencySortScore(b));
 }
