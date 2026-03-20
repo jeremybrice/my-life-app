@@ -1,15 +1,10 @@
-/**
- * GoalsWidgetProps — Stage 5 will pass live data to this interface.
- * Do NOT modify this interface's type shape when connecting live data.
- */
 export interface GoalsWidgetProps {
-  /** Number of goals in 'active' status */
   activeCount: number;
-  /** Number of goals in 'completed' status */
   completedCount: number;
-  /** Aggregate progress percentage across numeric/percentage goals (0-100), or null if none */
   aggregateProgress: number | null;
-  /** Optional callback to navigate to the Goals tab */
+  criticalCount: number;
+  warningCount: number;
+  normalCount: number;
   onNavigate?: () => void;
 }
 
@@ -22,12 +17,12 @@ export function GoalsWidget({ data }: GoalsWidgetInternalProps) {
     return (
       <div data-testid="goals-widget" className="rounded-xl border border-edge bg-surface-card p-4 shadow-sm">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-fg-muted">
-          Goals
+          Targets
         </h3>
         <div data-testid="goals-widget-placeholder" className="mt-3 text-center">
           <p className="text-3xl">&#127919;</p>
           <p className="mt-2 text-sm text-fg-muted">
-            Track financial, personal, and strategic goals. Create your first goal in the Goals tab to see progress here.
+            Track financial, personal, and strategic targets. Create your first target in the Targets tab to see progress here.
           </p>
         </div>
       </div>
@@ -37,28 +32,33 @@ export function GoalsWidget({ data }: GoalsWidgetInternalProps) {
   return (
     <div data-testid="goals-widget" className="rounded-xl border border-edge bg-surface-card p-4 shadow-sm">
       <h3 className="text-sm font-semibold uppercase tracking-wide text-fg-muted">
-        Goals
+        Targets
       </h3>
       <div className="mt-3 grid grid-cols-3 gap-2 text-center">
         <div>
-          <p data-testid="goals-active-count" className="text-2xl font-bold text-accent">
-            {data.activeCount}
+          <p data-testid="targets-critical-count" className="text-2xl font-bold text-danger-600">
+            {data.criticalCount}
           </p>
-          <p className="text-xs text-fg-muted">Active</p>
+          <p className="text-xs text-fg-muted">Urgent</p>
         </div>
         <div>
-          <p data-testid="goals-completed-count" className="text-2xl font-bold text-green-600">
-            {data.completedCount}
+          <p data-testid="targets-warning-count" className="text-2xl font-bold text-warning-600">
+            {data.warningCount}
           </p>
-          <p className="text-xs text-fg-muted">Done</p>
+          <p className="text-xs text-fg-muted">Soon</p>
         </div>
         <div>
-          <p data-testid="goals-avg-progress" className="text-2xl font-bold text-accent">
-            {data.aggregateProgress !== null ? `${data.aggregateProgress}%` : '--'}
+          <p data-testid="targets-normal-count" className="text-2xl font-bold text-success-600">
+            {data.normalCount}
           </p>
-          <p className="text-xs text-fg-muted">Avg Progress</p>
+          <p className="text-xs text-fg-muted">On Track</p>
         </div>
       </div>
+      {data.completedCount > 0 && (
+        <p className="mt-2 text-center text-xs text-fg-muted">
+          {data.completedCount} completed
+        </p>
+      )}
     </div>
   );
 }
