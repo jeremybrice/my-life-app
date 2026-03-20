@@ -85,6 +85,9 @@ export function useGoalAggregation(): UseGoalAggregationReturn {
     activeCount: 0,
     completedCount: 0,
     aggregateProgress: null,
+    criticalCount: 0,
+    warningCount: 0,
+    normalCount: 0,
   };
 
   const aggregation = useLiveQuery(
