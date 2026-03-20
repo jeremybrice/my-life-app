@@ -1,13 +1,10 @@
 import { NavLink } from 'react-router';
-import { NAV_ITEMS, APP_NAME } from '@/lib/constants';
+import { NAV_ITEMS } from '@/lib/constants';
 import { NavIcon } from '@/components/NavIcon';
 
 export function Sidebar() {
   return (
     <aside className="hidden md:flex md:flex-col md:w-64 md:fixed md:inset-y-0 bg-[#262625] text-white">
-      <div className="flex items-center h-16 px-6 border-b border-[#565551]">
-        <h1 className="text-xl font-bold">{APP_NAME}</h1>
-      </div>
       <nav className="flex-1 px-3 py-4 overflow-y-auto">
         <ul className="space-y-1">
           {NAV_ITEMS.map((item) => (
