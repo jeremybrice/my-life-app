@@ -142,7 +142,7 @@ body {
     padding-bottom: env(safe-area-inset-bottom);
   }
   .pt-safe {
-    padding-top: env(safe-area-inset-top);
+    padding-top: max(0.75rem, env(safe-area-inset-top));
   }
 }
 
