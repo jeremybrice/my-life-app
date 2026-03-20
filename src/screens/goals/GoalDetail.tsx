@@ -125,7 +125,7 @@ export default function GoalDetail({
       await onComplete(goal.id!);
       setShowCompletionPrompt(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not complete goal');
+      setError(err instanceof Error ? err.message : 'Could not complete target');
     }
   }
 
@@ -133,7 +133,7 @@ export default function GoalDetail({
     try {
       await onArchive(goal.id!);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not archive goal');
+      setError(err instanceof Error ? err.message : 'Could not archive target');
     }
   }
 
@@ -141,7 +141,7 @@ export default function GoalDetail({
     try {
       await onReactivate(goal.id!);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not reactivate goal');
+      setError(err instanceof Error ? err.message : 'Could not reactivate target');
     }
   }
 
@@ -150,7 +150,7 @@ export default function GoalDetail({
       await onDelete(goal.id!);
       onBack();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not delete goal');
+      setError(err instanceof Error ? err.message : 'Could not delete target');
     }
   }
 
@@ -309,7 +309,7 @@ export default function GoalDetail({
         className="mb-4 text-sm text-accent hover:underline"
         data-testid="back-button"
       >
-        &larr; Back to Goals
+        &larr; Back to Targets
       </button>
 
       <div className="rounded-lg border border-edge bg-surface-card p-6">
@@ -383,7 +383,7 @@ export default function GoalDetail({
             className="mt-3 rounded-lg border border-yellow-200 bg-yellow-50 p-3 text-sm text-yellow-800"
             data-testid="target-reached-prompt"
           >
-            You have reached your target! Would you like to mark this goal as complete?
+            You have reached your target! Would you like to mark this target as complete?
             <button
               type="button"
               onClick={handleComplete}
@@ -491,7 +491,7 @@ export default function GoalDetail({
       {/* Delete confirmation dialog */}
       <ConfirmDialog
         open={showDeleteConfirm}
-        title="Delete Goal"
+        title="Delete Target"
         message={`Are you sure you want to permanently delete "${goal.title}"? This cannot be undone.`}
         confirmLabel="Delete"
         onConfirm={handleDelete}
@@ -502,7 +502,7 @@ export default function GoalDetail({
       {/* Completion prompt dialog */}
       <ConfirmDialog
         open={showCompletionPrompt}
-        title="Goal Target Reached!"
+        title="Target Reached!"
         message={`You have reached the target for "${goal.title}". Would you like to mark it as complete?`}
         confirmLabel="Mark Complete"
         onConfirm={handleComplete}

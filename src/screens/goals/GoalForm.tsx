@@ -121,7 +121,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
 
       await onSubmit(input);
     } catch (err) {
-      setErrors({ form: err instanceof Error ? err.message : 'Failed to create goal' });
+      setErrors({ form: err instanceof Error ? err.message : 'Failed to create target' });
     } finally {
       setSubmitting(false);
     }
@@ -251,7 +251,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
 
   return (
     <div className="mx-auto max-w-lg p-4">
-      <h1 className="mb-6 text-2xl font-bold text-fg">Create Goal</h1>
+      <h1 className="mb-6 text-2xl font-bold text-fg">Create Target</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4" data-testid="goal-form">
         {/* Title */}
@@ -361,7 +361,7 @@ export default function GoalForm({ onSubmit, onCancel }: GoalFormProps) {
             className="flex-1 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50"
             data-testid="submit-button"
           >
-            {submitting ? 'Creating...' : 'Create Goal'}
+            {submitting ? 'Creating...' : 'Create Target'}
           </button>
           <button
             type="button"

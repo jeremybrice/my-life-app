@@ -24,7 +24,7 @@ export const ROUTES = {
 export const NAV_ITEMS = [
   { path: ROUTES.DASHBOARD, label: 'Dashboard', icon: 'home' },
   { path: ROUTES.BUDGET, label: 'Budget', icon: 'wallet' },
-  { path: ROUTES.GOALS, label: 'Goals', icon: 'target' },
+  { path: ROUTES.GOALS, label: 'Targets', icon: 'target' },
   { path: ROUTES.HEALTH, label: 'Health', icon: 'heart' },
   { path: ROUTES.AGENT, label: 'Agents', icon: 'bot' },
   { path: ROUTES.SETTINGS, label: 'Settings', icon: 'settings' },

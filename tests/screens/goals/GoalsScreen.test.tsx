@@ -19,7 +19,7 @@ describe('GoalsScreen', () => {
     render(<GoalsScreen {...defaultProps} />);
     await waitFor(() => {
       expect(
-        screen.getByText(/no goals yet/i)
+        screen.getByText(/no targets yet/i)
       ).toBeInTheDocument();
     });
   });
