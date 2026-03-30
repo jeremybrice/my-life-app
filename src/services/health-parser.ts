@@ -7,6 +7,7 @@ import {
   getWeeklyCount,
   getDailyCount,
   calculateStreak,
+  getAccumulatedDays,
   getLogEntriesByDate,
 } from '@/data/health-service';
 import type { ClaudeMessage } from '@/services/claude-client';
@@ -30,7 +31,7 @@ export interface HealthDeleteAction {
 export interface HealthRoutineCreateAction {
   type: 'health-routine-create';
   name: string;
-  frequencyType: 'daily' | 'weekly';
+  frequencyType: 'daily' | 'weekly' | 'accumulating';
   dailyTarget?: number;
   targetFrequency?: number;
   trackedMetrics: { type: string; unit: string }[];
@@ -112,7 +113,7 @@ function parseResponse(responseText: string): HealthParseResult {
         return {
           type: 'health-routine-create',
           name: parsed.name ?? '',
-          frequencyType: parsed.frequencyType === 'daily' ? 'daily' : 'weekly',
+          frequencyType: parsed.frequencyType === 'daily' ? 'daily' : parsed.frequencyType === 'accumulating' ? 'accumulating' : 'weekly',
           dailyTarget: parsed.dailyTarget ?? undefined,
           targetFrequency: parsed.targetFrequency ?? undefined,
           trackedMetrics: Array.isArray(parsed.trackedMetrics)
@@ -163,20 +164,28 @@ async function buildHealthContext(): Promise<string> {
   const lines: string[] = ['Routines:'];
 
   for (const r of routines) {
-    const weekly = await getWeeklyCount(r.id!);
-    const daily = await getDailyCount(r.id!);
-    const streak = await calculateStreak(r.id!);
-    const freqLabel =
-      r.frequencyType === 'daily'
-        ? `daily ${r.dailyTarget}x`
-        : `weekly ${r.targetFrequency}x`;
     const metricsLabel =
       r.trackedMetrics.length > 0
         ? ` | tracks: ${r.trackedMetrics.map((m) => `${m.type} (${m.unit})`).join(', ')}`
         : '';
-    lines.push(
-      `- ${r.name} (id:${r.id}) | ${freqLabel} | ${weekly}/${r.targetFrequency} this week | ${daily}/${r.frequencyType === 'daily' ? r.dailyTarget : 1} today | ${streak}wk streak${metricsLabel}`
-    );
+
+    if (r.frequencyType === 'accumulating') {
+      const accumulated = await getAccumulatedDays(r.id!);
+      lines.push(
+        `- ${r.name} (id:${r.id}) | accumulating (days since) | ${accumulated} days since last log${metricsLabel}`
+      );
+    } else {
+      const weekly = await getWeeklyCount(r.id!);
+      const daily = await getDailyCount(r.id!);
+      const streak = await calculateStreak(r.id!);
+      const freqLabel =
+        r.frequencyType === 'daily'
+          ? `daily ${r.dailyTarget}x`
+          : `weekly ${r.targetFrequency}x`;
+      lines.push(
+        `- ${r.name} (id:${r.id}) | ${freqLabel} | ${weekly}/${r.targetFrequency} this week | ${daily}/${r.frequencyType === 'daily' ? r.dailyTarget : 1} today | ${streak}wk streak${metricsLabel}`
+      );
+    }
   }
 
   // Today's logs

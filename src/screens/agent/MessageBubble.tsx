@@ -238,9 +238,11 @@ function getCardContent(message: ChatMessage): {
 
   if (contentType === 'health-routine-create-confirmation' && message.parsedHealthRoutineAction) {
     const a = message.parsedHealthRoutineAction;
-    const freqLabel = a.frequencyType === 'daily'
-      ? `${a.dailyTarget ?? 1}x daily`
-      : `${a.targetFrequency ?? 1}x per week`;
+    const freqLabel = a.frequencyType === 'accumulating'
+      ? 'days since'
+      : a.frequencyType === 'daily'
+        ? `${a.dailyTarget ?? 1}x daily`
+        : `${a.targetFrequency ?? 1}x per week`;
     return {
       title: 'Create new routine',
       fields: [

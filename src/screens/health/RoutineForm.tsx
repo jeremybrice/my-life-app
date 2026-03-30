@@ -18,7 +18,7 @@ const METRIC_TYPE_OPTIONS: { value: TrackedMetric['type']; label: string }[] = [
 export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
   const isEditing = !!routine;
   const [name, setName] = useState(routine?.name ?? '');
-  const [frequencyType, setFrequencyType] = useState<'daily' | 'weekly'>(
+  const [frequencyType, setFrequencyType] = useState<'daily' | 'weekly' | 'accumulating'>(
     routine?.frequencyType ?? 'daily'
   );
   const [dailyTarget, setDailyTarget] = useState(
@@ -42,12 +42,13 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
       if (!dailyTarget || isNaN(target) || target <= 0 || !Number.isInteger(target)) {
         errs.dailyTarget = 'Daily target must be a positive whole number';
       }
-    } else {
+    } else if (frequencyType === 'weekly') {
       const freq = parseInt(weeklyFrequency, 10);
       if (!weeklyFrequency || isNaN(freq) || freq <= 0 || !Number.isInteger(freq)) {
         errs.weeklyFrequency = 'Frequency must be a positive whole number';
       }
     }
+    // No target validation needed for accumulating
     return errs;
   }
 
@@ -87,7 +88,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
         dailyTarget: frequencyType === 'daily' ? parseInt(dailyTarget, 10) : undefined,
         targetFrequency: frequencyType === 'weekly' ? parseInt(weeklyFrequency, 10) : undefined,
         trackedMetrics: metrics,
-      };
+      } as CreateRoutineInput;
       await onSubmit(input);
     } catch (err) {
       setErrors({
@@ -142,7 +143,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
               }`}
               data-testid="frequency-type-daily"
             >
-              Times per day
+              Per day
             </button>
             <button
               type="button"
@@ -154,13 +155,29 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
               }`}
               data-testid="frequency-type-weekly"
             >
-              Times per week
+              Per week
+            </button>
+            <button
+              type="button"
+              onClick={() => setFrequencyType('accumulating')}
+              className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                frequencyType === 'accumulating'
+                  ? 'bg-accent text-white'
+                  : 'border border-edge text-fg-secondary hover:bg-surface-hover'
+              }`}
+              data-testid="frequency-type-accumulating"
+            >
+              Days since
             </button>
           </div>
         </div>
 
-        {/* Daily Target or Weekly Frequency */}
-        {frequencyType === 'daily' ? (
+        {/* Daily Target or Weekly Frequency (hidden for accumulating) */}
+        {frequencyType === 'accumulating' ? (
+          <p className="text-sm text-fg-muted" data-testid="accumulating-description">
+            Tracks the number of days since you last logged this activity. Logging an entry resets the counter to 0.
+          </p>
+        ) : frequencyType === 'daily' ? (
           <div>
             <label htmlFor="dailyTarget" className="block text-sm font-medium text-fg-secondary">
               How many times per day? *

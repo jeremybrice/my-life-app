@@ -10,6 +10,7 @@ import {
   getWeeklyCount,
   getDailyCount,
   calculateStreak,
+  getAccumulatedDays,
   getHealthAggregation,
 } from '@/data/health-service';
 import type {
@@ -25,6 +26,7 @@ export interface RoutineWithAdherence extends HealthRoutine {
   weeklyCount: number;
   dailyCount: number;
   streak: number;
+  accumulatedDays: number;
 }
 
 export interface UseHealthReturn {
@@ -49,7 +51,10 @@ export function useHealth(): UseHealthReturn {
           const weeklyCount = await getWeeklyCount(routine.id!);
           const dailyCount = await getDailyCount(routine.id!);
           const streak = await calculateStreak(routine.id!);
-          return { ...routine, weeklyCount, dailyCount, streak };
+          const accumulatedDays = routine.frequencyType === 'accumulating'
+            ? await getAccumulatedDays(routine.id!)
+            : 0;
+          return { ...routine, weeklyCount, dailyCount, streak, accumulatedDays };
         })
       );
 
