@@ -6,7 +6,7 @@ import { today as getToday } from '@/lib/dates';
 
 export interface CreateRoutineInput {
   name: string;
-  frequencyType: 'daily' | 'weekly';
+  frequencyType: 'daily' | 'weekly' | 'accumulating';
   dailyTarget?: number; // required when frequencyType is 'daily', defaults to 1
   targetFrequency?: number; // required when frequencyType is 'weekly'
   trackedMetrics?: TrackedMetric[];
@@ -14,7 +14,7 @@ export interface CreateRoutineInput {
 
 export interface UpdateRoutineInput {
   name?: string;
-  frequencyType?: 'daily' | 'weekly';
+  frequencyType?: 'daily' | 'weekly' | 'accumulating';
   dailyTarget?: number;
   targetFrequency?: number;
   trackedMetrics?: TrackedMetric[];
@@ -48,9 +48,9 @@ function validateTargetFrequency(frequency: unknown): asserts frequency is numbe
   }
 }
 
-function validateFrequencyType(type: unknown): asserts type is 'daily' | 'weekly' {
-  if (type !== 'daily' && type !== 'weekly') {
-    throw new Error('Frequency type must be "daily" or "weekly"');
+function validateFrequencyType(type: unknown): asserts type is 'daily' | 'weekly' | 'accumulating' {
+  if (type !== 'daily' && type !== 'weekly' && type !== 'accumulating') {
+    throw new Error('Frequency type must be "daily", "weekly", or "accumulating"');
   }
 }
 
@@ -58,8 +58,12 @@ function validateFrequencyType(type: unknown): asserts type is 'daily' | 'weekly
  * Resolve targetFrequency from input based on frequencyType.
  * - daily: targetFrequency = dailyTarget * 7
  * - weekly: targetFrequency = input.targetFrequency
+ * - accumulating: dailyTarget = 0, targetFrequency = 0 (not used)
  */
-function resolveFrequency(input: { frequencyType: 'daily' | 'weekly'; dailyTarget?: number; targetFrequency?: number }): { dailyTarget: number; targetFrequency: number } {
+function resolveFrequency(input: { frequencyType: 'daily' | 'weekly' | 'accumulating'; dailyTarget?: number; targetFrequency?: number }): { dailyTarget: number; targetFrequency: number } {
+  if (input.frequencyType === 'accumulating') {
+    return { dailyTarget: 0, targetFrequency: 0 };
+  }
   if (input.frequencyType === 'daily') {
     const dailyTarget = input.dailyTarget ?? 1;
     validateTargetFrequency(dailyTarget);
@@ -308,6 +312,9 @@ export async function calculateStreak(routineId: number): Promise<number> {
   const routine = await db.healthRoutines.get(routineId);
   if (!routine) return 0;
 
+  // Streaks don't apply to accumulating routines
+  if (routine.frequencyType === 'accumulating') return 0;
+
   const allEntries = await db.healthLogEntries
     .where('routineId')
     .equals(routineId)
@@ -398,6 +405,8 @@ export async function getRoutinesCompletedToday(): Promise<number> {
   for (const [routineId, count] of countByRoutine) {
     const routine = await db.healthRoutines.get(routineId);
     if (!routine) continue;
+    // Accumulating routines don't count toward "completed today"
+    if (routine.frequencyType === 'accumulating') continue;
     const target = routine.frequencyType === 'daily' ? (routine.dailyTarget ?? 1) : 1;
     if (count >= target) completed++;
   }
@@ -416,6 +425,12 @@ export async function isRoutineOnTrack(routineId: number): Promise<boolean> {
   const routine = await db.healthRoutines.get(routineId);
   if (!routine) return false;
 
+  // For accumulating routines, "on track" means past the red zone (>= 4 days)
+  if (routine.frequencyType === 'accumulating') {
+    const days = await getAccumulatedDays(routineId);
+    return days >= 4;
+  }
+
   const weeklyCount = await getWeeklyCount(routineId);
 
   if (weeklyCount >= routine.targetFrequency) return true;
@@ -433,6 +448,40 @@ export async function isRoutineOnTrack(routineId: number): Promise<boolean> {
   const remainingNeeded = routine.targetFrequency - weeklyCount;
 
   return remainingNeeded <= remainingDays;
+}
+
+// --- Accumulated days (for accumulating routines) ---
+
+/**
+ * Get the number of days since the most recent log entry for a routine.
+ * If no entries exist, counts from the routine's creation date.
+ */
+export async function getAccumulatedDays(routineId: number): Promise<number> {
+  const routine = await db.healthRoutines.get(routineId);
+  if (!routine) return 0;
+
+  const allEntries = await db.healthLogEntries
+    .where('routineId')
+    .equals(routineId)
+    .toArray();
+
+  const todayStr = getToday();
+  const todayDate = new Date(todayStr + 'T00:00:00');
+
+  let lastDate: Date;
+  if (allEntries.length === 0) {
+    // Use creation date as starting point
+    const createdDate = routine.createdAt.slice(0, 10); // "YYYY-MM-DD"
+    lastDate = new Date(createdDate + 'T00:00:00');
+  } else {
+    // Find the most recent entry date
+    const sortedDates = allEntries.map(e => e.date).sort();
+    const mostRecent = sortedDates[sortedDates.length - 1]!;
+    lastDate = new Date(mostRecent + 'T00:00:00');
+  }
+
+  const diffMs = todayDate.getTime() - lastDate.getTime();
+  return Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
 }
 
 // --- Dashboard aggregation ---
@@ -459,6 +508,7 @@ export async function getHealthAggregation(): Promise<HealthAggregation> {
   }
 
   const routinesCompletedToday = await getRoutinesCompletedToday();
+  const nonAccumulatingCount = routines.filter(r => r.frequencyType !== 'accumulating').length;
 
   let onTrackCount = 0;
   let behindCount = 0;
@@ -485,7 +535,7 @@ export async function getHealthAggregation(): Promise<HealthAggregation> {
 
   return {
     routinesCompletedToday,
-    totalRoutines: routines.length,
+    totalRoutines: nonAccumulatingCount,
     onTrackCount,
     behindCount,
     bestStreak,

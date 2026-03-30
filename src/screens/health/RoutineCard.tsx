@@ -18,10 +18,11 @@ export function RoutineCard({
   const menuRef = useRef<HTMLDivElement>(null);
 
   const isDaily = routine.frequencyType === 'daily';
+  const isAccumulating = routine.frequencyType === 'accumulating';
   const dailyTarget = routine.dailyTarget ?? 1;
   const dailyDone = isDaily && routine.dailyCount >= dailyTarget;
-  const weeklyDone = routine.weeklyCount >= routine.targetFrequency;
-  const isOnTarget = weeklyDone;
+  const weeklyDone = !isAccumulating && routine.weeklyCount >= routine.targetFrequency;
+  const isOnTarget = isAccumulating ? routine.accumulatedDays >= 4 : weeklyDone;
 
   // Close menu on outside click
   useEffect(() => {
@@ -36,28 +37,47 @@ export function RoutineCard({
   }, [menuOpen]);
 
   // Status dot color
-  const dotColor = isOnTarget
-    ? 'bg-green-500'
-    : routine.weeklyCount > 0
-      ? 'bg-amber-500'
-      : 'bg-red-400';
+  let dotColor: string;
+  if (isAccumulating) {
+    const days = routine.accumulatedDays;
+    if (days > 14) dotColor = 'bg-green-500';
+    else if (days >= 8) dotColor = 'bg-yellow-500';
+    else if (days >= 4) dotColor = 'bg-amber-500';
+    else dotColor = 'bg-red-400';
+  } else {
+    dotColor = isOnTarget
+      ? 'bg-green-500'
+      : routine.weeklyCount > 0
+        ? 'bg-amber-500'
+        : 'bg-red-400';
+  }
 
   // Primary progress display
-  const progressText = isDaily
-    ? `${routine.dailyCount}/${dailyTarget} today`
-    : `${routine.weeklyCount}/${routine.targetFrequency} this week`;
+  let progressText: string;
+  if (isAccumulating) {
+    progressText = `${routine.accumulatedDays} day${routine.accumulatedDays !== 1 ? 's' : ''}`;
+  } else if (isDaily) {
+    progressText = `${routine.dailyCount}/${dailyTarget} today`;
+  } else {
+    progressText = `${routine.weeklyCount}/${routine.targetFrequency} this week`;
+  }
 
   // Frequency label
-  const freqLabel = isDaily
-    ? `${dailyTarget}x daily`
-    : `${routine.targetFrequency}x / week`;
+  let freqLabel: string;
+  if (isAccumulating) {
+    freqLabel = 'days since';
+  } else if (isDaily) {
+    freqLabel = `${dailyTarget}x daily`;
+  } else {
+    freqLabel = `${routine.targetFrequency}x / week`;
+  }
 
   // Secondary info line
   const parts: string[] = [freqLabel];
   if (isDaily) {
     parts.push(`${routine.weeklyCount} of ${routine.targetFrequency} this week`);
   }
-  if (routine.streak > 0) {
+  if (!isAccumulating && routine.streak > 0) {
     parts.push(`${routine.streak}wk streak`);
   }
 
@@ -79,18 +99,26 @@ export function RoutineCard({
           <span className="truncate font-medium text-fg text-sm">{routine.name}</span>
           <span
             className={`shrink-0 text-xs font-medium ${
-              isDaily
-                ? dailyDone
+              isAccumulating
+                ? routine.accumulatedDays > 14
                   ? 'text-green-600'
-                  : 'text-fg-secondary'
-                : isOnTarget
-                  ? 'text-green-600'
-                  : 'text-fg-secondary'
+                  : routine.accumulatedDays >= 8
+                    ? 'text-yellow-600'
+                    : routine.accumulatedDays >= 4
+                      ? 'text-amber-600'
+                      : 'text-red-600'
+                : isDaily
+                  ? dailyDone
+                    ? 'text-green-600'
+                    : 'text-fg-secondary'
+                  : isOnTarget
+                    ? 'text-green-600'
+                    : 'text-fg-secondary'
             }`}
             data-testid={`adherence-${routine.id}`}
           >
             {progressText}
-            {(isDaily ? dailyDone : weeklyDone) && ' \u2713'}
+            {!isAccumulating && (isDaily ? dailyDone : weeklyDone) && ' \u2713'}
           </span>
         </div>
         <div className="mt-0.5 text-xs text-fg-muted" data-testid={`routine-details-${routine.id}`}>

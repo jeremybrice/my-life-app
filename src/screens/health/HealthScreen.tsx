@@ -157,9 +157,10 @@ export function HealthScreen() {
             data-testid="daily-summary"
           >
             Today: {routines.filter((r) => {
+              if (r.frequencyType === 'accumulating') return false;
               if (r.frequencyType === 'daily') return r.dailyCount >= (r.dailyTarget ?? 1);
               return r.dailyCount >= 1;
-            }).length} of {routines.length} routines done
+            }).length} of {routines.filter(r => r.frequencyType !== 'accumulating').length} routines done
           </div>
         </>
       )}

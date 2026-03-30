@@ -41,6 +41,7 @@ RULES:
 7. For metrics, match to the routine's tracked metric types (duration, distance, reps, weight).
 8. If the user asks something unrelated to health routines, respond with a redirect.
 9. Respond with ONLY a JSON block.
+10. There are three frequency types: "daily" (X times per day), "weekly" (X times per week), and "accumulating" (days since last occurrence). Accumulating routines track bad habits — the counter shows days since the user last did the activity. Logging an entry resets the counter to 0. Higher values are better. When creating an accumulating routine, set frequencyType to "accumulating" and omit dailyTarget/targetFrequency.
 
 RESPONSE FORMAT for logging a routine entry:
 \`\`\`json
@@ -69,7 +70,7 @@ RESPONSE FORMAT for creating a new routine:
 {
   "type": "health-routine-create",
   "name": "<string>",
-  "frequencyType": "<daily|weekly>",
+  "frequencyType": "<daily|weekly|accumulating>",
   "dailyTarget": <number or null>,
   "targetFrequency": <number or null>,
   "trackedMetrics": [{ "type": "<duration|distance|reps|weight>", "unit": "<string>" }]
