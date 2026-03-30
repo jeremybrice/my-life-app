@@ -42,7 +42,7 @@ export interface ParsedHealthRoutineAction {
   action: 'create' | 'delete';
   routineId?: number;
   name: string;
-  frequencyType?: 'daily' | 'weekly';
+  frequencyType?: 'daily' | 'weekly' | 'accumulating';
   dailyTarget?: number;
   targetFrequency?: number;
   trackedMetrics?: { type: string; unit: string }[];
