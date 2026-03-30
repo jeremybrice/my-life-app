@@ -143,7 +143,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
               }`}
               data-testid="frequency-type-daily"
             >
-              Times per day
+              Per day
             </button>
             <button
               type="button"
@@ -155,7 +155,7 @@ export function RoutineForm({ routine, onSubmit, onCancel }: RoutineFormProps) {
               }`}
               data-testid="frequency-type-weekly"
             >
-              Times per week
+              Per week
             </button>
             <button
               type="button"
