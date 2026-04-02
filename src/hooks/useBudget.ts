@@ -5,6 +5,7 @@ import {
   createBudgetMonth,
   updateBudgetMonth,
   updateAdditionalFunds as updateAdditionalFundsService,
+  updateCarryOver as updateCarryOverService,
   type CreateBudgetMonthInput,
   type UpdateBudgetMonthInput,
 } from '@/data/budget-service';
@@ -42,6 +43,10 @@ export function useBudget(yearMonth?: string) {
     return updateAdditionalFundsService(activeMonth, amount);
   };
 
+  const setCarryOver = async (amount: number) => {
+    return updateCarryOverService(activeMonth, amount);
+  };
+
   return {
     budgetMonth: budgetMonth ?? null,
     balance: balance ?? null,
@@ -49,5 +54,6 @@ export function useBudget(yearMonth?: string) {
     createMonth,
     updateMonth,
     setAdditionalFunds,
+    setCarryOver,
   };
 }

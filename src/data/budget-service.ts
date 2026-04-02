@@ -194,10 +194,11 @@ export async function initializeMonth(yearMonth: string): Promise<BudgetMonth> {
   const settings = await db.settings.get(SETTINGS_ID);
   const monthlyAmount: number = settings?.monthlyBudget ?? 0;
 
-  // Calculate carry-over from previous month if it exists
+  // Calculate carry-over from previous month if rollover is enabled
+  const rolloverEnabled = settings?.balanceRolloverEnabled !== false;
   const prevMonth = previousYearMonth(yearMonth);
   const prevBudget = await db.budgetMonths.get(prevMonth);
-  const carryOver: number = prevBudget ? await getEndingBalance(prevMonth) : 0;
+  const carryOver: number = rolloverEnabled && prevBudget ? await getEndingBalance(prevMonth) : 0;
 
   const days = daysInMonth(yearMonth);
   const dailyAllowance = roundCurrency(monthlyAmount / days);
@@ -226,6 +227,9 @@ export async function initializeMonth(yearMonth: string): Promise<BudgetMonth> {
  * Called after any expense change in a past month.
  */
 export async function propagateCarryOver(startYearMonth: string): Promise<void> {
+  const settings = await db.settings.get(SETTINGS_ID);
+  const rolloverEnabled = settings?.balanceRolloverEnabled !== false;
+
   let currentMonth = startYearMonth;
 
   while (true) {
@@ -236,7 +240,7 @@ export async function propagateCarryOver(startYearMonth: string): Promise<void> 
       break;
     }
 
-    const newCarryOver = await getEndingBalance(currentMonth);
+    const newCarryOver = rolloverEnabled ? await getEndingBalance(currentMonth) : 0;
 
     await db.budgetMonths.update(next, {
       carryOver: roundCurrency(newCarryOver),
@@ -272,6 +276,38 @@ export async function updateAdditionalFunds(
 
   await db.budgetMonths.update(yearMonth, {
     additionalFunds: rounded,
+    updatedAt: now,
+  });
+
+  if (yearMonth !== currentYearMonth()) {
+    await propagateCarryOver(yearMonth);
+  }
+
+  const updated = await db.budgetMonths.get(yearMonth);
+  return updated!;
+}
+
+// --- Carry-Over Update ---
+
+/**
+ * Update the carry-over for a given budget month.
+ * Allows the user to manually edit carry-over.
+ * After updating, propagates carry-over forward if this is a past month.
+ */
+export async function updateCarryOver(
+  yearMonth: string,
+  carryOver: number
+): Promise<BudgetMonth> {
+  const budgetMonth = await db.budgetMonths.get(yearMonth);
+  if (!budgetMonth) {
+    throw new Error(`No budget month found for ${yearMonth}`);
+  }
+
+  const rounded = roundCurrency(carryOver);
+  const now = new Date().toISOString();
+
+  await db.budgetMonths.update(yearMonth, {
+    carryOver: rounded,
     updatedAt: now,
   });
 

@@ -10,6 +10,7 @@ import { ExpenseForm } from './ExpenseForm';
 import { ExpenseTable } from './ExpenseTable';
 import MonthSelector from './MonthSelector';
 import AdditionalFundsInput from './AdditionalFundsInput';
+import CarryOverInput from './CarryOverInput';
 import BudgetSummary from './BudgetSummary';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 
@@ -30,7 +31,7 @@ export function BudgetScreen() {
     await initializeMonth(yearMonth);
   };
 
-  const { budgetMonth, balance, loading: budgetLoading, createMonth, setAdditionalFunds } = useBudget(selectedMonth);
+  const { budgetMonth, balance, loading: budgetLoading, createMonth, setAdditionalFunds, setCarryOver } = useBudget(selectedMonth);
   const { expenses, loading: expensesLoading, addExpense, editExpense, removeExpense } =
     useExpenses(selectedMonth);
 
@@ -66,8 +67,14 @@ export function BudgetScreen() {
       {/* Balance Header */}
       {balance && <BalanceHeader balance={balance} today={getToday()} />}
 
-      {/* Additional Funds */}
-      <div className="px-4 py-2">
+      {/* Carry Over & Additional Funds */}
+      <div className="px-4 py-2 space-y-1">
+        <CarryOverInput
+          currentAmount={budgetMonth.carryOver}
+          onUpdate={async (amount) => {
+            await setCarryOver(amount);
+          }}
+        />
         <AdditionalFundsInput
           currentAmount={budgetMonth.additionalFunds}
           onUpdate={async (amount) => {
