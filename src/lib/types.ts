@@ -33,6 +33,7 @@ export interface Settings {
   notificationPromptLastShown?: string;  // ISO datetime of last prompt
   hasQualifyingAction?: boolean;         // true after first budget/expense/goal action
   sessionCount?: number;                 // incremented on each app launch
+  balanceRolloverEnabled?: boolean;      // whether to carry over balance between months (default true)
 }
 
 export interface BudgetMonth {

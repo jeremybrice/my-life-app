@@ -28,6 +28,7 @@ export interface SaveSettingsInput {
   notificationPromptLastShown?: string;
   hasQualifyingAction?: boolean;
   sessionCount?: number;
+  balanceRolloverEnabled?: boolean;
 }
 
 /**

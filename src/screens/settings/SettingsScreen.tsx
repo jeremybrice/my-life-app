@@ -17,6 +17,7 @@ export function SettingsScreen() {
   const [targetDate, setTargetDate] = useState('');
   const [targetDateLabel, setTargetDateLabel] = useState('');
   const [monthlyBudget, setMonthlyBudget] = useState('');
+  const [balanceRolloverEnabled, setBalanceRolloverEnabled] = useState(true);
 
   // UI state
   const [saving, setSaving] = useState(false);
@@ -33,6 +34,7 @@ export function SettingsScreen() {
       setMonthlyBudget(
         settings.monthlyBudget !== undefined ? String(settings.monthlyBudget) : ''
       );
+      setBalanceRolloverEnabled(settings.balanceRolloverEnabled !== false);
     }
   }, [settings]);
 
@@ -48,6 +50,7 @@ export function SettingsScreen() {
         targetDate: targetDate || undefined,
         targetDateLabel: targetDateLabel || undefined,
         monthlyBudget: monthlyBudget && !isNaN(parseFloat(monthlyBudget)) ? roundCurrency(parseFloat(monthlyBudget)) : undefined,
+        balanceRolloverEnabled,
       });
       setSaveMessage('Settings saved successfully');
       setTimeout(() => setSaveMessage(''), 3000);
@@ -194,6 +197,35 @@ export function SettingsScreen() {
                 className="w-full px-3 py-2 rounded-lg border border-edge bg-surface-card text-fg placeholder-fg-muted focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors"
               />
             </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <label
+                  htmlFor="balanceRollover"
+                  className="block text-sm font-medium text-fg-secondary"
+                >
+                  Balance Rollover
+                </label>
+                <p className="text-xs text-fg-muted">
+                  Carry over remaining balance to the next month automatically
+                </p>
+              </div>
+              <button
+                id="balanceRollover"
+                type="button"
+                role="switch"
+                aria-checked={balanceRolloverEnabled}
+                onClick={() => setBalanceRolloverEnabled(!balanceRolloverEnabled)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  balanceRolloverEnabled ? 'bg-accent' : 'bg-gray-300 dark:bg-gray-600'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    balanceRolloverEnabled ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
           </div>
         </section>
 
@@ -238,7 +270,7 @@ export function SettingsScreen() {
 
         {/* Version */}
         <p className="text-center text-xs text-fg-muted pb-4">
-          Version 0.6.4
+          Version 0.6.7
         </p>
       </div>
     </div>
