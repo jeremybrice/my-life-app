@@ -1,7 +1,7 @@
 import { sendMessage } from '@/services/claude-client';
 import { HEALTH_SYSTEM_PROMPT } from '@/services/agent-prompts';
 import { extractJson } from '@/services/expense-parser';
-import { today } from '@/lib/dates';
+import { today, weekStart } from '@/lib/dates';
 import {
   getAllRoutines,
   getWeeklyCount,
@@ -9,6 +9,7 @@ import {
   calculateStreak,
   getAccumulatedDays,
   getLogEntriesByDate,
+  getLogEntriesByRoutineAndDateRange,
 } from '@/data/health-service';
 import type { ClaudeMessage } from '@/services/claude-client';
 
@@ -185,6 +186,31 @@ async function buildHealthContext(): Promise<string> {
       lines.push(
         `- ${r.name} (id:${r.id}) | ${freqLabel} | ${weekly}/${r.targetFrequency} this week | ${daily}/${r.frequencyType === 'daily' ? r.dailyTarget : 1} today | ${streak}wk streak${metricsLabel}`
       );
+    }
+  }
+
+  // This week's log history (per routine, with dates)
+  const mondayStr = weekStart(todayStr);
+  const sundayDate = new Date(mondayStr + 'T00:00:00');
+  sundayDate.setDate(sundayDate.getDate() + 6);
+  const sundayStr = `${sundayDate.getFullYear()}-${String(sundayDate.getMonth() + 1).padStart(2, '0')}-${String(sundayDate.getDate()).padStart(2, '0')}`;
+
+  lines.push('\nThis week\'s log history:');
+  for (const r of routines) {
+    const entries = await getLogEntriesByRoutineAndDateRange(r.id!, mondayStr, sundayStr);
+    if (entries.length > 0) {
+      const dates = entries
+        .map((e) => {
+          const metricsStr = e.metrics
+            ? ' (' + Object.entries(e.metrics).map(([k, v]) => `${k}:${v}`).join(', ') + ')'
+            : '';
+          return `${e.date}${metricsStr}`;
+        })
+        .sort()
+        .join(', ');
+      lines.push(`- ${r.name}: ${dates}`);
+    } else {
+      lines.push(`- ${r.name}: no entries this week`);
     }
   }
 
